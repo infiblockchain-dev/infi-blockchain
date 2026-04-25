@@ -48,12 +48,14 @@ It currently supports:
 - one-click add network
 - one-click switch network
 - public RPC check/wake before wallet import
+- mobile no-provider fallback that opens MetaMask's wallet browser
 - MetaMask mobile deep link
 - Coinbase Wallet mobile deep link
 - Trust Wallet mobile deep link
 - copyable full network setup
 - copyable manual setup fields
 - chain metadata JSON fallback
+- WalletConnect QR status button
 
 This means users on normal mobile Safari or Chrome should open the page through a wallet browser link first. Once the page is inside a wallet browser, the Add INFI Testnet button can use that wallet's injected provider.
 
@@ -65,7 +67,7 @@ https://infi-testnet-rpc.onrender.com/health
 
 The testnet page also includes a Check RPC button so users can wake and verify the RPC before the wallet import request.
 
-WalletConnect QR is not active on the static setup page yet. Add it when INFI Scan or another dapp has a Reown/WalletConnect project ID and a real wallet session flow.
+WalletConnect QR is not active on the static setup page yet. The page shows a WalletConnect QR button so users know this route exists, but real QR sessions require a Reown/WalletConnect project ID and a dapp session flow.
 
 ## Required User Flows
 

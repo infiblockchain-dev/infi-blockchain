@@ -17,13 +17,32 @@ Current implemented prototype methods:
 - `web3_clientVersion`
 - `eth_chainId`
 - `net_version`
+- `eth_syncing`
+- `eth_accounts`
 - `eth_blockNumber`
+- `eth_gasPrice`
+- `eth_maxPriorityFeePerGas`
+- `eth_feeHistory`
+- `eth_estimateGas`
 - `eth_getBalance`
+- `eth_getBlockByNumber`
+- `eth_getBlockByHash`
+- `eth_getBlockTransactionCountByNumber`
+- `eth_getBlockTransactionCountByHash`
 - `eth_getTransactionCount`
+- `eth_getTransactionByHash`
+- `eth_getTransactionByBlockNumberAndIndex`
+- `eth_getTransactionByBlockHashAndIndex`
 - `eth_getTransactionReceipt`
+- `eth_getCode`
+- `eth_getStorageAt`
+- `eth_call`
+- `eth_getLogs`
 - `GET /health`
 - `GET /faucet/status?address=0x...`
 - `POST /faucet/claim`
+
+The wallet-compatibility methods above are prototype responses so wallets such as MetaMask can recognize and inspect INFI Testnet. They are not a replacement for full production EVM execution, signed Ethereum transaction decoding, contract storage, event indexing, or finalized fee-market logic.
 
 Prototype dev transaction format:
 

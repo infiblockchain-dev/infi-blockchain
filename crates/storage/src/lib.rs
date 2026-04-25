@@ -149,6 +149,16 @@ impl MemoryStorage {
         self.transactions.get(transaction_hash)
     }
 
+    pub fn block_by_number(&self, number: u64) -> Option<&Block> {
+        self.blocks
+            .iter()
+            .find(|block| block.header.number == number)
+    }
+
+    pub fn blocks(&self) -> impl Iterator<Item = &Block> {
+        self.blocks.iter()
+    }
+
     fn load_accounts(&mut self, data_dir: &Path) -> io::Result<()> {
         let path = data_dir.join("accounts.tsv");
         let Ok(contents) = fs::read_to_string(&path) else {

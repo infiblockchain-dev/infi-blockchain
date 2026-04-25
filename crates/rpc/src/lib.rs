@@ -156,6 +156,16 @@ impl RpcServer {
             "web3_clientVersion" => json_result_string(&id, &self.info.client_version),
             "eth_chainId" => json_result_string(&id, &self.info.chain_id_hex),
             "net_version" => json_result_string(&id, &self.config.chain_id.to_string()),
+            "eth_syncing" => json_result_raw(&id, "false"),
+            "eth_accounts" => json_result_raw(&id, "[]"),
+            "eth_gasPrice" => json_result_string(&id, "0x1"),
+            "eth_maxPriorityFeePerGas" => json_result_string(&id, "0x1"),
+            "eth_estimateGas" => json_result_string(&id, "0x5208"),
+            "eth_call" => json_result_string(&id, "0x"),
+            "eth_getCode" => json_result_string(&id, "0x"),
+            "eth_getStorageAt" => json_result_string(&id, &format!("0x{}", "0".repeat(64))),
+            "eth_getLogs" => json_result_raw(&id, "[]"),
+            "eth_feeHistory" => self.handle_fee_history(&id, body),
             "eth_blockNumber" => {
                 let storage = match self.storage.lock() {
                     Ok(storage) => storage,
@@ -168,11 +178,64 @@ impl RpcServer {
                 json_result_string(&id, &format!("0x{block_number:x}"))
             }
             "eth_getBalance" => self.handle_get_balance(&id, body),
+            "eth_getBlockByNumber" => self.handle_get_block_by_number(&id, body),
+            "eth_getBlockByHash" => self.handle_get_block_by_hash(&id, body),
+            "eth_getBlockTransactionCountByNumber" => {
+                self.handle_get_block_transaction_count_by_number(&id, body)
+            }
+            "eth_getBlockTransactionCountByHash" => {
+                self.handle_get_block_transaction_count_by_hash(&id, body)
+            }
             "eth_getTransactionCount" => self.handle_get_transaction_count(&id, body),
+            "eth_getTransactionByHash" => self.handle_get_transaction_by_hash(&id, body),
+            "eth_getTransactionByBlockNumberAndIndex" => {
+                self.handle_get_transaction_by_block_number_and_index(&id, body)
+            }
+            "eth_getTransactionByBlockHashAndIndex" => {
+                self.handle_get_transaction_by_block_hash_and_index(&id, body)
+            }
             "eth_getTransactionReceipt" => self.handle_get_transaction_receipt(&id, body),
             "eth_sendRawTransaction" => self.handle_send_raw_transaction(&id, body),
             _ => json_error(&id, -32601, "Method not found"),
         }
+    }
+
+    fn handle_fee_history(&self, id: &str, body: &str) -> String {
+        let block_count = params_string_at(body, 0)
+            .as_deref()
+            .and_then(parse_quantity)
+            .unwrap_or(1)
+            .clamp(1, 16);
+        let oldest_block = {
+            let storage = match self.storage.lock() {
+                Ok(storage) => storage,
+                Err(_) => return json_error(id, -32000, "Storage unavailable"),
+            };
+            storage
+                .latest_block()
+                .map(|block| block.header.number.saturating_sub(block_count - 1))
+                .unwrap_or(0)
+        };
+
+        let base_fees = std::iter::repeat("\"0x1\"")
+            .take(block_count as usize + 1)
+            .collect::<Vec<_>>()
+            .join(",");
+        let gas_used_ratio = std::iter::repeat("0")
+            .take(block_count as usize)
+            .collect::<Vec<_>>()
+            .join(",");
+        let rewards = std::iter::repeat("[\"0x1\"]")
+            .take(block_count as usize)
+            .collect::<Vec<_>>()
+            .join(",");
+
+        json_result_raw(
+            id,
+            &format!(
+                "{{\"oldestBlock\":\"0x{oldest_block:x}\",\"baseFeePerGas\":[{base_fees}],\"gasUsedRatio\":[{gas_used_ratio}],\"reward\":[{rewards}]}}"
+            ),
+        )
     }
 
     fn handle_get_balance(&self, id: &str, body: &str) -> String {
@@ -221,6 +284,178 @@ impl RpcServer {
             .unwrap_or(0);
 
         json_result_string(id, &format!("0x{nonce:x}"))
+    }
+
+    fn handle_get_block_by_number(&self, id: &str, body: &str) -> String {
+        let Some(block_tag) = params_string_at(body, 0) else {
+            return json_error(id, -32602, "eth_getBlockByNumber requires a block parameter");
+        };
+        let full_transactions = params_bool_at(body, 1).unwrap_or(false);
+
+        let storage = match self.storage.lock() {
+            Ok(storage) => storage,
+            Err(_) => return json_error(id, -32000, "Storage unavailable"),
+        };
+        let Some(block) = block_by_tag(&storage, &block_tag) else {
+            return json_result_raw(id, "null");
+        };
+
+        json_result_raw(
+            id,
+            &block_json(block, &storage, &self.info.chain_id_hex, full_transactions),
+        )
+    }
+
+    fn handle_get_block_by_hash(&self, id: &str, body: &str) -> String {
+        let Some(hash_text) = params_string_at(body, 0) else {
+            return json_error(id, -32602, "eth_getBlockByHash requires a block hash parameter");
+        };
+        let Some(hash) = parse_hash(&hash_text) else {
+            return json_error(id, -32602, "Invalid block hash");
+        };
+        let full_transactions = params_bool_at(body, 1).unwrap_or(false);
+
+        let storage = match self.storage.lock() {
+            Ok(storage) => storage,
+            Err(_) => return json_error(id, -32000, "Storage unavailable"),
+        };
+        let Some(block) = storage.blocks().find(|block| block_hash(block) == hash) else {
+            return json_result_raw(id, "null");
+        };
+
+        json_result_raw(
+            id,
+            &block_json(block, &storage, &self.info.chain_id_hex, full_transactions),
+        )
+    }
+
+    fn handle_get_block_transaction_count_by_number(&self, id: &str, body: &str) -> String {
+        let Some(block_tag) = params_string_at(body, 0) else {
+            return json_error(
+                id,
+                -32602,
+                "eth_getBlockTransactionCountByNumber requires a block parameter",
+            );
+        };
+
+        let storage = match self.storage.lock() {
+            Ok(storage) => storage,
+            Err(_) => return json_error(id, -32000, "Storage unavailable"),
+        };
+        let Some(block) = block_by_tag(&storage, &block_tag) else {
+            return json_result_raw(id, "null");
+        };
+
+        json_result_string(id, &format!("0x{:x}", block.transactions.len()))
+    }
+
+    fn handle_get_block_transaction_count_by_hash(&self, id: &str, body: &str) -> String {
+        let Some(hash_text) = params_string_at(body, 0) else {
+            return json_error(
+                id,
+                -32602,
+                "eth_getBlockTransactionCountByHash requires a block hash parameter",
+            );
+        };
+        let Some(hash) = parse_hash(&hash_text) else {
+            return json_error(id, -32602, "Invalid block hash");
+        };
+
+        let storage = match self.storage.lock() {
+            Ok(storage) => storage,
+            Err(_) => return json_error(id, -32000, "Storage unavailable"),
+        };
+        let Some(block) = storage.blocks().find(|block| block_hash(block) == hash) else {
+            return json_result_raw(id, "null");
+        };
+
+        json_result_string(id, &format!("0x{:x}", block.transactions.len()))
+    }
+
+    fn handle_get_transaction_by_hash(&self, id: &str, body: &str) -> String {
+        let Some(hash_text) = first_params_string(body) else {
+            return json_error(
+                id,
+                -32602,
+                "eth_getTransactionByHash requires a transaction hash parameter",
+            );
+        };
+
+        let transaction_hash = match parse_hash(&hash_text) {
+            Some(hash) => hash,
+            None => return json_error(id, -32602, "Invalid transaction hash"),
+        };
+
+        let storage = match self.storage.lock() {
+            Ok(storage) => storage,
+            Err(_) => return json_error(id, -32000, "Storage unavailable"),
+        };
+        let Some(transaction) = storage.transaction(&transaction_hash) else {
+            return json_result_raw(id, "null");
+        };
+        let Some(receipt) = storage.receipt(&transaction_hash) else {
+            return json_result_raw(id, "null");
+        };
+
+        json_result_raw(
+            id,
+            &transaction_json(transaction, receipt, &self.info.chain_id_hex),
+        )
+    }
+
+    fn handle_get_transaction_by_block_number_and_index(&self, id: &str, body: &str) -> String {
+        let Some(block_tag) = params_string_at(body, 0) else {
+            return json_error(
+                id,
+                -32602,
+                "eth_getTransactionByBlockNumberAndIndex requires a block parameter",
+            );
+        };
+        let Some(index_text) = params_string_at(body, 1) else {
+            return json_error(id, -32602, "Missing transaction index");
+        };
+        let Some(index) = parse_quantity(&index_text) else {
+            return json_error(id, -32602, "Invalid transaction index");
+        };
+
+        let storage = match self.storage.lock() {
+            Ok(storage) => storage,
+            Err(_) => return json_error(id, -32000, "Storage unavailable"),
+        };
+        let Some(block) = block_by_tag(&storage, &block_tag) else {
+            return json_result_raw(id, "null");
+        };
+
+        transaction_by_block_index_json(id, &storage, block, index, &self.info.chain_id_hex)
+    }
+
+    fn handle_get_transaction_by_block_hash_and_index(&self, id: &str, body: &str) -> String {
+        let Some(hash_text) = params_string_at(body, 0) else {
+            return json_error(
+                id,
+                -32602,
+                "eth_getTransactionByBlockHashAndIndex requires a block hash parameter",
+            );
+        };
+        let Some(hash) = parse_hash(&hash_text) else {
+            return json_error(id, -32602, "Invalid block hash");
+        };
+        let Some(index_text) = params_string_at(body, 1) else {
+            return json_error(id, -32602, "Missing transaction index");
+        };
+        let Some(index) = parse_quantity(&index_text) else {
+            return json_error(id, -32602, "Invalid transaction index");
+        };
+
+        let storage = match self.storage.lock() {
+            Ok(storage) => storage,
+            Err(_) => return json_error(id, -32000, "Storage unavailable"),
+        };
+        let Some(block) = storage.blocks().find(|block| block_hash(block) == hash) else {
+            return json_result_raw(id, "null");
+        };
+
+        transaction_by_block_index_json(id, &storage, block, index, &self.info.chain_id_hex)
     }
 
     fn handle_get_transaction_receipt(&self, id: &str, body: &str) -> String {
@@ -596,12 +831,86 @@ fn json_string_field(body: &str, field: &str) -> Option<String> {
 }
 
 fn first_params_string(body: &str) -> Option<String> {
+    params_string_at(body, 0)
+}
+
+fn params_string_at(body: &str, index: usize) -> Option<String> {
+    let values = params_values(body)?;
+    let value = values.get(index)?.trim();
+    json_string_value(value)
+}
+
+fn params_bool_at(body: &str, index: usize) -> Option<bool> {
+    let values = params_values(body)?;
+    match values.get(index)?.trim() {
+        "true" => Some(true),
+        "false" => Some(false),
+        _ => None,
+    }
+}
+
+fn params_values(body: &str) -> Option<Vec<String>> {
     let marker = "\"params\"";
     let params_start = body.find(marker)?;
     let after_params = &body[params_start + marker.len()..];
     let open_bracket = after_params.find('[')?;
-    let after_bracket = after_params[open_bracket + 1..].trim_start();
-    json_string_value(after_bracket)
+    let mut values = Vec::new();
+    let mut current = String::new();
+    let mut array_depth = 0_i32;
+    let mut object_depth = 0_i32;
+    let mut in_string = false;
+    let mut escaped = false;
+
+    for character in after_params[open_bracket + 1..].chars() {
+        if in_string {
+            current.push(character);
+            if escaped {
+                escaped = false;
+            } else if character == '\\' {
+                escaped = true;
+            } else if character == '"' {
+                in_string = false;
+            }
+            continue;
+        }
+
+        match character {
+            '"' => {
+                in_string = true;
+                current.push(character);
+            }
+            '[' => {
+                array_depth += 1;
+                current.push(character);
+            }
+            ']' if array_depth > 0 => {
+                array_depth -= 1;
+                current.push(character);
+            }
+            ']' if object_depth == 0 => {
+                let value = current.trim();
+                if !value.is_empty() {
+                    values.push(value.to_string());
+                }
+                return Some(values);
+            }
+            '{' => {
+                object_depth += 1;
+                current.push(character);
+            }
+            '}' => {
+                object_depth -= 1;
+                current.push(character);
+            }
+            ',' if array_depth == 0 && object_depth == 0 => {
+                values.push(current.trim().to_string());
+                current.clear();
+            }
+            _ => current.push(character),
+        }
+    }
+
+    None
 }
 
 fn json_string_value(input: &str) -> Option<String> {
@@ -766,6 +1075,157 @@ fn parse_hash(value: &str) -> Option<Hash> {
     Some(Hash(bytes))
 }
 
+fn parse_quantity(value: &str) -> Option<u64> {
+    let value = value.trim();
+    if let Some(hex) = value.strip_prefix("0x") {
+        return u64::from_str_radix(hex, 16).ok();
+    }
+    value.parse::<u64>().ok()
+}
+
+fn block_by_tag<'a>(storage: &'a MemoryStorage, tag: &str) -> Option<&'a Block> {
+    match tag {
+        "latest" | "pending" | "safe" | "finalized" => storage.latest_block(),
+        "earliest" => storage.blocks().next(),
+        value => parse_quantity(value).and_then(|number| storage.block_by_number(number)),
+    }
+}
+
+fn block_hash(block: &Block) -> Hash {
+    Hash::from_bytes(format!("{:?}", block.header).as_bytes())
+}
+
+fn block_json(
+    block: &Block,
+    storage: &MemoryStorage,
+    chain_id_hex: &str,
+    full_transactions: bool,
+) -> String {
+    let hash = block_hash(block);
+    let gas_used: u64 = block
+        .transactions
+        .iter()
+        .map(|transaction| transaction.gas_limit)
+        .sum();
+    let transactions = if full_transactions {
+        block
+            .transactions
+            .iter()
+            .filter_map(|transaction| {
+                let hash = transaction.hash();
+                let receipt = storage.receipt(&hash)?;
+                Some(transaction_json(transaction, receipt, chain_id_hex))
+            })
+            .collect::<Vec<_>>()
+            .join(",")
+    } else {
+        block
+            .transactions
+            .iter()
+            .map(|transaction| format!("\"{}\"", transaction.hash()))
+            .collect::<Vec<_>>()
+            .join(",")
+    };
+
+    format!(
+        "{{\
+         \"number\":\"0x{:x}\",\
+         \"hash\":\"{}\",\
+         \"parentHash\":\"{}\",\
+         \"nonce\":null,\
+         \"sha3Uncles\":\"{}\",\
+         \"logsBloom\":\"0x{}\",\
+         \"transactionsRoot\":\"{}\",\
+         \"stateRoot\":\"{}\",\
+         \"receiptsRoot\":\"{}\",\
+         \"miner\":\"{}\",\
+         \"difficulty\":\"0x0\",\
+         \"totalDifficulty\":\"0x0\",\
+         \"extraData\":\"0x\",\
+         \"size\":\"0x0\",\
+         \"gasLimit\":\"0x1c9c380\",\
+         \"gasUsed\":\"0x{:x}\",\
+         \"timestamp\":\"0x{:x}\",\
+         \"transactions\":[{}],\
+         \"uncles\":[],\
+         \"baseFeePerGas\":\"0x1\"\
+         }}",
+        block.header.number,
+        hash,
+        block.header.parent_hash,
+        Hash::ZERO,
+        "0".repeat(512),
+        block.header.tx_root,
+        block.header.state_root,
+        Hash::ZERO,
+        block.header.proposer,
+        gas_used,
+        block.header.timestamp_ms / 1000,
+        transactions
+    )
+}
+
+fn transaction_by_block_index_json(
+    id: &str,
+    storage: &MemoryStorage,
+    block: &Block,
+    index: u64,
+    chain_id_hex: &str,
+) -> String {
+    let Some(transaction) = block.transactions.get(index as usize) else {
+        return json_result_raw(id, "null");
+    };
+    let transaction_hash = transaction.hash();
+    let Some(receipt) = storage.receipt(&transaction_hash) else {
+        return json_result_raw(id, "null");
+    };
+    json_result_raw(id, &transaction_json(transaction, receipt, chain_id_hex))
+}
+
+fn transaction_json(
+    transaction: &Transaction,
+    receipt: &TransactionReceipt,
+    chain_id_hex: &str,
+) -> String {
+    let to = transaction
+        .to
+        .map(|address| format!("\"{}\"", address))
+        .unwrap_or_else(|| "null".to_string());
+
+    format!(
+        "{{\
+         \"hash\":\"{}\",\
+         \"nonce\":\"0x{:x}\",\
+         \"blockHash\":\"{}\",\
+         \"blockNumber\":\"0x{:x}\",\
+         \"transactionIndex\":\"0x{:x}\",\
+         \"from\":\"{}\",\
+         \"to\":{},\
+         \"value\":\"0x{:x}\",\
+         \"gas\":\"0x{:x}\",\
+         \"gasPrice\":\"0x{:x}\",\
+         \"input\":\"0x{}\",\
+         \"type\":\"0x0\",\
+         \"chainId\":\"{}\",\
+         \"v\":\"0x0\",\
+         \"r\":\"0x0\",\
+         \"s\":\"0x0\"\
+         }}",
+        transaction.hash(),
+        transaction.nonce,
+        receipt.block_hash,
+        receipt.block_number,
+        receipt.transaction_index,
+        transaction.from,
+        to,
+        transaction.value.0,
+        transaction.gas_limit,
+        transaction.gas_price.0,
+        encode_hex(&transaction.input),
+        chain_id_hex
+    )
+}
+
 fn receipt_json(receipt: &TransactionReceipt) -> String {
     let to = receipt
         .to
@@ -837,6 +1297,14 @@ fn decode_hex(value: &str) -> Option<Vec<u8>> {
     }
 
     Some(output)
+}
+
+fn encode_hex(bytes: &[u8]) -> String {
+    let mut output = String::with_capacity(bytes.len() * 2);
+    for byte in bytes {
+        output.push_str(&format!("{byte:02x}"));
+    }
+    output
 }
 
 fn now_ms() -> u64 {

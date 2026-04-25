@@ -99,6 +99,7 @@
             <button class="button primary" type="button" id="add-network">Add INFI Testnet</button>
             <button class="button secondary" type="button" id="switch-network">Switch Network</button>
             <button class="button secondary" type="button" id="check-rpc">Check RPC</button>
+            <button class="button secondary" type="button" id="walletconnect-qr">WalletConnect QR</button>
             <button class="button ghost" type="button" id="copy-network-json">Copy Config</button>
           </div>
           <p class="status" id="wallet-status" role="status">Wallet action status will appear here.</p>
@@ -265,6 +266,7 @@
       const RPC_URL = "https://infi-testnet-rpc.onrender.com";
       const RPC_HEALTH_URL = RPC_URL + "/health";
       const PAGE_URL = "https://infi-blockchain.pages.dev/testnet";
+      const METAMASK_DEEP_LINK = "https://metamask.app.link/dapp/infi-blockchain.pages.dev/testnet";
       const NETWORK_SETUP_TEXT = [
         "INFI Testnet",
         "Chain ID: 98402",
@@ -288,6 +290,15 @@
           return window.ethereum.providers.find((provider) => provider.isMetaMask) || window.ethereum.providers[0];
         }
         return window.ethereum;
+      }
+
+      function isTouchDevice() {
+        return window.matchMedia("(pointer: coarse)").matches;
+      }
+
+      function openMobileWallet() {
+        setStatus("Opening this page inside MetaMask mobile. After it opens, tap Add INFI Testnet again.");
+        window.location.href = METAMASK_DEEP_LINK;
       }
 
       async function fetchWithTimeout(url, options = {}, timeoutMs = 15000) {
@@ -377,10 +388,9 @@
       }
 
       function describeWalletFallback() {
-        const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
         if (!walletProvider()) {
-          setStatus(isTouchDevice
-            ? "Open this page inside your mobile wallet browser, or use a mobile wallet button below."
+          setStatus(isTouchDevice()
+            ? "No mobile wallet provider detected here. Opening inside MetaMask is required for one-tap import."
             : "No browser wallet detected. Install an EVM wallet extension or copy the manual setup.");
         }
       }
@@ -388,6 +398,10 @@
       async function addNetwork() {
         const provider = walletProvider();
         if (!provider) {
+          if (isTouchDevice()) {
+            openMobileWallet();
+            return;
+          }
           describeWalletFallback();
           return;
         }
@@ -411,6 +425,10 @@
       async function switchNetwork() {
         const provider = walletProvider();
         if (!provider) {
+          if (isTouchDevice()) {
+            openMobileWallet();
+            return;
+          }
           describeWalletFallback();
           return;
         }
@@ -435,9 +453,14 @@
         }
       }
 
+      function showWalletConnectStatus() {
+        setStatus("WalletConnect QR needs a Reown project ID before it can be activated. Use MetaMask mobile, Coinbase, Trust, or an injected browser wallet for now.");
+      }
+
       document.getElementById("add-network").addEventListener("click", addNetwork);
       document.getElementById("switch-network").addEventListener("click", switchNetwork);
       document.getElementById("check-rpc").addEventListener("click", () => checkRpc());
+      document.getElementById("walletconnect-qr").addEventListener("click", showWalletConnectStatus);
       document.getElementById("copy-network-json").addEventListener("click", () => {
         copyText(JSON.stringify(INFI_TESTNET, null, 2), "Wallet config");
       });

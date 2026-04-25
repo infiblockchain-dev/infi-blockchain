@@ -65,7 +65,9 @@ It includes:
 - Check RPC button for Render cold starts and wallet connectivity warnings
 - desktop and laptop injected wallet support
 - mobile and tablet wallet browser support
+- automatic MetaMask mobile opening when no mobile provider is injected
 - mobile links for MetaMask, Coinbase Wallet, and Trust Wallet
+- WalletConnect QR status button
 - copyable full setup and manual fields
 - chain JSON fallback at `assets/chains/infi-testnet.json`
 - test InvertX logo

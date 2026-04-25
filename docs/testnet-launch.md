@@ -255,10 +255,12 @@ Current implemented setup support:
 - one-click add network
 - one-click switch network
 - Check RPC button to wake and verify the public endpoint
+- mobile no-provider fallback that opens MetaMask's wallet browser
 - mobile deep links for MetaMask, Coinbase Wallet, and Trust Wallet
 - copyable full network setup
 - copyable manual setup fields
 - chain metadata JSON fallback
+- WalletConnect QR status button
 
 WalletConnect QR remains a required next milestone for INFI Scan and full dapps. It is not the same as adding a network to an injected wallet.
 
