@@ -42,8 +42,10 @@ fn main() {
         match EvmExecutor::execute_transaction(&mut storage, transaction) {
             Ok(receipt) => {
                 println!(
-                    "Executed tx from {} gas_used={}",
-                    transaction.from, receipt.gas_used
+                    "Executed tx {} from {} gas_used={}",
+                    transaction.hash(),
+                    transaction.from,
+                    receipt.gas_used
                 );
             }
             Err(error) => {
