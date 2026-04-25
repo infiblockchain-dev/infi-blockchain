@@ -4773,3 +4773,485 @@ nav a,
   border-color: var(--blue);
   background: rgba(13, 125, 163, 0.06);
 }
+
+/* ============================================================
+   FIX-004: Solid blockchain light mode
+   ============================================================
+   Replaces the soft "watercolor" light mode with a technical
+   blueprint aesthetic — visible grid, readable data flows,
+   stronger card edges, ledger-line atmosphere.
+
+   1. InvertX showcase — Option A: deliberate dark render frame
+   2. Background gets visible blueprint structure
+   3. Animated elements become legible (hex grid, mesh, binary)
+   4. Cards get sharper edges and proper engineering shadows
+   5. Status chips read as schematic labels
+   ============================================================ */
+
+/* ---------- 1. InvertX showcase — Option A (deliberate dark render frame) ---------- */
+
+[data-theme="light"] .token-showcase {
+  background:
+    radial-gradient(circle at 50% 22%, rgba(233, 180, 76, 0.18), transparent 55%),
+    linear-gradient(155deg, #0a1620 0%, #06121a 60%, #050d14 100%);
+  border: 1px solid rgba(233, 180, 76, 0.35);
+  border-radius: 16px;
+  box-shadow:
+    0 24px 56px -20px rgba(6, 32, 40, 0.40),
+    0 8px 22px -10px rgba(138, 100, 32, 0.25),
+    0 0 0 1px rgba(233, 180, 76, 0.12) inset,
+    0 1px 0 rgba(255, 255, 255, 0.08) inset;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle gold edge highlight on the frame */
+[data-theme="light"] .token-showcase::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(233, 180, 76, 0.45), transparent 35%, transparent 65%, rgba(233, 180, 76, 0.30));
+  -webkit-mask: linear-gradient(#000, #000) content-box, linear-gradient(#000, #000);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* The image keeps its native render — screen blend on the dark frame works */
+[data-theme="light"] .token-showcase img {
+  mix-blend-mode: screen;
+  filter: drop-shadow(0 0 22px rgba(233, 180, 76, 0.32));
+}
+
+/* Caption labels stay light against the dark frame */
+[data-theme="light"] .token-showcase strong {
+  color: #f4ead2;
+  text-shadow: 0 0 16px rgba(233, 180, 76, 0.28);
+}
+[data-theme="light"] .token-showcase span {
+  color: rgba(244, 234, 210, 0.7);
+}
+
+/* ---------- 2. Background — engineering blueprint atmosphere ---------- */
+
+/* Stronger body background with technical grid */
+[data-theme="light"] body {
+  background:
+    /* Subtle ledger horizontal hairlines every 48px */
+    repeating-linear-gradient(0deg,
+      transparent 0,
+      transparent 47px,
+      rgba(6, 32, 40, 0.025) 47px,
+      rgba(6, 32, 40, 0.025) 48px),
+    /* Fine engineering grid 24px */
+    repeating-linear-gradient(0deg,
+      transparent 0,
+      transparent 23px,
+      rgba(13, 125, 163, 0.035) 23px,
+      rgba(13, 125, 163, 0.035) 24px),
+    repeating-linear-gradient(90deg,
+      transparent 0,
+      transparent 23px,
+      rgba(13, 125, 163, 0.035) 23px,
+      rgba(13, 125, 163, 0.035) 24px),
+    radial-gradient(ellipse at 18% 0%, rgba(13, 125, 163, 0.08), transparent 55%),
+    radial-gradient(ellipse at 82% 100%, rgba(10, 138, 77, 0.07), transparent 55%),
+    var(--bg);
+}
+
+[data-theme="light"] .node-background {
+  background: var(--bg) !important;
+}
+
+/* Depth glows — slightly stronger so they read as ambient ink, not soap bubbles */
+[data-theme="light"] .depth-glow {
+  opacity: 0.32;
+  mix-blend-mode: multiply;
+  filter: blur(70px);
+}
+[data-theme="light"] .depth-top {
+  background: radial-gradient(circle at 30% 40%, rgba(10, 138, 77, 0.45), transparent 60%);
+}
+[data-theme="light"] .depth-center {
+  background: radial-gradient(circle at 60% 50%, rgba(13, 125, 163, 0.42), transparent 60%);
+}
+[data-theme="light"] .depth-bottom {
+  background: radial-gradient(circle at 50% 50%, rgba(10, 138, 77, 0.36), transparent 65%);
+}
+
+/* ---------- 3. Hex grid — readable circuit board ---------- */
+
+[data-theme="light"] .hex-grid {
+  opacity: 0.85;
+}
+[data-theme="light"] .hex-grid path {
+  stroke: rgba(13, 125, 163, 0.16) !important;
+  stroke-width: 1 !important;
+}
+
+/* ---------- 4. Network topology lines — visible data flow ---------- */
+
+[data-theme="light"] .network-topology {
+  opacity: 0.75;
+}
+[data-theme="light"] .network-topology .topology-lines path {
+  stroke: rgba(13, 125, 163, 0.22) !important;
+}
+[data-theme="light"] .network-topology .topology-lines path:nth-child(2n) {
+  stroke: rgba(10, 138, 77, 0.22) !important;
+}
+
+/* ---------- 5. Mesh lines / chain spine / band ---------- */
+
+[data-theme="light"] .mesh-line {
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(13, 125, 163, 0.55) 25%,
+    rgba(10, 138, 77, 0.55) 50%,
+    rgba(13, 125, 163, 0.55) 75%,
+    transparent 100%);
+  opacity: 0.7;
+  height: 1.5px;
+}
+
+[data-theme="light"] .mesh-line::after {
+  background: rgba(10, 138, 77, 0.85);
+  box-shadow: 0 0 8px rgba(10, 138, 77, 0.55);
+}
+
+[data-theme="light"] .chain-spine {
+  background: linear-gradient(90deg, transparent 0%, rgba(10, 138, 77, 0.55) 50%, transparent 100%);
+  opacity: 0.65;
+  height: 1.5px;
+}
+
+[data-theme="light"] .architecture-band {
+  opacity: 0.55;
+}
+
+/* ---------- 6. Node dots and packets — schematic markers ---------- */
+
+[data-theme="light"] .node-dot {
+  background: radial-gradient(circle, rgba(10, 138, 77, 0.85) 0%, rgba(10, 138, 77, 0.4) 60%, transparent 100%);
+  box-shadow: 0 0 10px rgba(10, 138, 77, 0.4);
+  opacity: 0.85;
+}
+
+[data-theme="light"] .node-packet {
+  background: rgba(13, 125, 163, 0.95);
+  box-shadow: 0 0 8px rgba(13, 125, 163, 0.55);
+  opacity: 0.85;
+}
+
+/* ---------- 7. Binary streams — readable hex/bin overlay ---------- */
+
+[data-theme="light"] .binary-stream,
+[data-theme="light"] .binary-ribbon {
+  color: rgba(6, 32, 40, 0.42);
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+  opacity: 0.85;
+  font-weight: 600;
+}
+
+/* ---------- 8. Status chips (BLOCK, TX, PAY, RWA, SYNC, VERIFY) ---------- */
+/* Make them read as schematic labels — sharp white pills with deep blue ink */
+
+[data-theme="light"] .architecture-chip,
+[data-theme="light"] .transfer-pulse {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(13, 125, 163, 0.45);
+  color: var(--blue);
+  box-shadow:
+    0 1px 3px rgba(6, 32, 40, 0.10),
+    0 0 0 1px rgba(13, 125, 163, 0.06) inset;
+  text-shadow: none;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+/* ---------- 9. Cards / surfaces — sharper engineering edges ---------- */
+
+[data-theme="light"] article,
+[data-theme="light"] .invertx-focus,
+[data-theme="light"] .metric-row div,
+[data-theme="light"] .manual-grid div,
+[data-theme="light"] .device-grid article,
+[data-theme="light"] .split,
+[data-theme="light"] .faucet-form,
+[data-theme="light"] .faucet-history-card,
+[data-theme="light"] .scan-summary,
+[data-theme="light"] .scan-form,
+[data-theme="light"] .scan-panel {
+  background:
+    linear-gradient(155deg, rgba(13, 125, 163, 0.025), transparent 35%, rgba(10, 138, 77, 0.02)),
+    var(--panel);
+  border: 1px solid rgba(13, 125, 163, 0.18);
+  border-radius: 10px;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 1px 2px rgba(6, 32, 40, 0.04),
+    0 8px 24px -16px rgba(6, 32, 40, 0.18);
+}
+
+[data-theme="light"] article:hover,
+[data-theme="light"] .invertx-focus:hover,
+[data-theme="light"] .metric-row div:hover,
+[data-theme="light"] .manual-grid div:hover,
+[data-theme="light"] .device-grid article:hover,
+[data-theme="light"] .split:hover,
+[data-theme="light"] .faucet-form:hover {
+  border-color: rgba(10, 138, 77, 0.5);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.7) inset,
+    0 2px 4px rgba(6, 32, 40, 0.06),
+    0 12px 32px -16px rgba(10, 138, 77, 0.28);
+}
+
+/* Top accent strip on cards — slimmer, sharper */
+[data-theme="light"] article::before,
+[data-theme="light"] .invertx-focus::before,
+[data-theme="light"] .metric-row div::before,
+[data-theme="light"] .manual-grid div::before,
+[data-theme="light"] .device-grid article::before,
+[data-theme="light"] .split::before,
+[data-theme="light"] .faucet-form::before {
+  background: linear-gradient(90deg, var(--green) 0%, var(--blue) 50%, transparent 100%);
+  height: 2px;
+  opacity: 0.85;
+}
+
+/* ---------- 10. Architecture blueprint — solid technical card ---------- */
+
+[data-theme="light"] .architecture-blueprint {
+  background:
+    linear-gradient(155deg, rgba(13, 125, 163, 0.05) 0%, transparent 40%, rgba(10, 138, 77, 0.04) 100%),
+    repeating-linear-gradient(0deg, transparent 0 23px, rgba(13, 125, 163, 0.045) 23px 24px),
+    repeating-linear-gradient(90deg, transparent 0 23px, rgba(13, 125, 163, 0.045) 23px 24px),
+    var(--panel);
+  border: 1px solid rgba(13, 125, 163, 0.32);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.7) inset,
+    0 24px 56px -24px rgba(13, 125, 163, 0.20),
+    0 12px 32px -16px rgba(6, 32, 40, 0.14);
+}
+
+[data-theme="light"] .architecture-blueprint::before {
+  background:
+    repeating-linear-gradient(0deg, transparent 0 22px, rgba(10, 138, 77, 0.05) 22px 23px),
+    repeating-linear-gradient(90deg, transparent 0 22px, rgba(13, 125, 163, 0.05) 22px 23px);
+  opacity: 0.7;
+}
+
+/* Layer rows — schematic look */
+[data-theme="light"] .layer {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(13, 125, 163, 0.18);
+  border-radius: 6px;
+}
+[data-theme="light"] .layer:hover {
+  background: rgba(255, 255, 255, 1);
+  border-color: rgba(10, 138, 77, 0.5);
+}
+
+/* ---------- 11. Eyebrow pills — deeper, more emphatic ---------- */
+
+[data-theme="light"] .eyebrow {
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--blue);
+  border: 1px solid rgba(13, 125, 163, 0.42);
+  box-shadow:
+    0 1px 3px rgba(6, 32, 40, 0.08),
+    0 0 0 1px rgba(13, 125, 163, 0.04) inset;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  text-shadow: none;
+}
+
+/* ---------- 12. Build-status header pill ---------- */
+
+[data-theme="light"] .build-status {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(10, 138, 77, 0.42);
+  box-shadow:
+    0 1px 3px rgba(6, 32, 40, 0.08),
+    0 0 0 1px rgba(10, 138, 77, 0.04) inset;
+}
+
+[data-theme="light"] .build-status strong {
+  filter: none;
+}
+
+/* ---------- 13. Site header — cleaner glass with deeper border ---------- */
+
+[data-theme="light"] .site-header {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(247, 250, 249, 0.78) 100%);
+  backdrop-filter: saturate(180%) blur(16px);
+  -webkit-backdrop-filter: saturate(180%) blur(16px);
+  border-bottom: 1px solid rgba(13, 125, 163, 0.22);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.7) inset,
+    0 4px 22px -10px rgba(6, 32, 40, 0.12);
+}
+
+[data-theme="light"] .site-header::after {
+  background: linear-gradient(90deg, transparent 0%, rgba(10, 138, 77, 0.55) 30%, rgba(13, 125, 163, 0.55) 70%, transparent 100%);
+  opacity: 0.55;
+}
+
+/* ---------- 14. Buttons — deeper engineering feel ---------- */
+
+[data-theme="light"] .button.primary {
+  background:
+    linear-gradient(135deg, rgba(10, 138, 77, 0.16), rgba(13, 125, 163, 0.10)),
+    rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(10, 138, 77, 0.55);
+  color: var(--ink);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.7) inset,
+    0 2px 6px rgba(10, 138, 77, 0.18),
+    0 0 0 1px rgba(10, 138, 77, 0.08) inset;
+  text-shadow: none;
+  font-weight: 850;
+}
+
+[data-theme="light"] .button.secondary {
+  background:
+    linear-gradient(135deg, rgba(13, 125, 163, 0.12), rgba(10, 138, 77, 0.06)),
+    rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(13, 125, 163, 0.5);
+  color: var(--ink);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.7) inset,
+    0 2px 6px rgba(13, 125, 163, 0.16),
+    0 0 0 1px rgba(13, 125, 163, 0.08) inset;
+  text-shadow: none;
+  font-weight: 820;
+}
+
+[data-theme="light"] .button.ghost {
+  background: transparent;
+  color: var(--blue);
+  border: 1px solid rgba(13, 125, 163, 0.32);
+  font-weight: 800;
+}
+
+[data-theme="light"] .button:hover,
+[data-theme="light"] .nav-action:hover {
+  border-color: rgba(10, 138, 77, 0.7);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.8) inset,
+    0 4px 14px rgba(10, 138, 77, 0.24),
+    0 0 0 1px rgba(10, 138, 77, 0.12) inset;
+  transform: translateY(-1px);
+}
+
+/* ---------- 15. Section dividers ---------- */
+
+[data-theme="light"] .section {
+  border-top: 1px solid rgba(13, 125, 163, 0.14);
+}
+
+[data-theme="light"] .section-dark {
+  background:
+    linear-gradient(180deg, rgba(10, 138, 77, 0.05), transparent 30%, rgba(13, 125, 163, 0.05)),
+    var(--panel-strong);
+  border-top: 1px solid rgba(13, 125, 163, 0.20);
+  border-bottom: 1px solid rgba(13, 125, 163, 0.20);
+}
+
+/* ---------- 16. Footer — solid base ---------- */
+
+[data-theme="light"] .site-footer {
+  background:
+    linear-gradient(180deg, rgba(13, 125, 163, 0.04), rgba(10, 138, 77, 0.03)),
+    var(--bg-soft);
+  border-top: 1px solid rgba(13, 125, 163, 0.20);
+}
+
+/* ---------- 17. Stronger headline weight in light mode ---------- */
+
+[data-theme="light"] h1 {
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.6));
+}
+
+/* ---------- 18. Body text solidity ---------- */
+
+/* Primary paragraph copy — ink-strength for crisp reading */
+[data-theme="light"] body,
+[data-theme="light"] .hero-text,
+[data-theme="light"] .section p,
+[data-theme="light"] article p,
+[data-theme="light"] .feature-grid p,
+[data-theme="light"] .pillar p,
+[data-theme="light"] .arch-layer p,
+[data-theme="light"] .layer-text strong,
+[data-theme="light"] .blueprint-rail em {
+  color: var(--ink);
+}
+
+/* Hero copy lead */
+[data-theme="light"] .hero-text {
+  color: var(--ink);
+  text-shadow: none;
+  font-weight: 500;
+}
+
+/* Strip neon-glow text-shadows that don't belong on cream */
+[data-theme="light"] h1,
+[data-theme="light"] h2,
+[data-theme="light"] h3,
+[data-theme="light"] .section-heading p:not(.eyebrow),
+[data-theme="light"] .arch-layer strong,
+[data-theme="light"] .arch-metrics strong,
+[data-theme="light"] .blueprint-rail em,
+[data-theme="light"] .scan-summary strong,
+[data-theme="light"] .feature-grid h3,
+[data-theme="light"] .pillar h3,
+[data-theme="light"] article h3,
+[data-theme="light"] .invertx-focus h3,
+[data-theme="light"] .scan-panel h3 {
+  text-shadow: none;
+}
+
+/* Card titles */
+[data-theme="light"] article h3,
+[data-theme="light"] .feature-grid h3,
+[data-theme="light"] .pillar h3,
+[data-theme="light"] .invertx-focus h3,
+[data-theme="light"] .scan-panel h3 {
+  color: var(--ink-strong);
+  font-weight: 850;
+}
+
+[data-theme="light"] h2 {
+  color: var(--ink-strong);
+}
+
+/* Form labels */
+[data-theme="light"] .faucet-form label,
+[data-theme="light"] .scan-form label,
+[data-theme="light"] .history-filter label {
+  color: var(--ink);
+  font-weight: 850;
+}
+
+/* Status messages */
+[data-theme="light"] .status,
+[data-theme="light"] #wallet-status,
+[data-theme="light"] #faucet-status,
+[data-theme="light"] #history-status {
+  color: var(--muted-strong);
+  font-weight: 600;
+}
+
+/* Secondary captions stay softer */
+[data-theme="light"] .footer-status small,
+[data-theme="light"] .build-status small,
+[data-theme="light"] .blueprint-status small,
+[data-theme="light"] .scan-list strong,
+[data-theme="light"] .scan-row strong {
+  color: var(--muted-strong);
+}
