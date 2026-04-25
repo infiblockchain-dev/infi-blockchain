@@ -62,6 +62,11 @@ It includes:
 
 - one-click `wallet_addEthereumChain`
 - one-click `wallet_switchEthereumChain`
+- desktop and laptop injected wallet support
+- mobile and tablet wallet browser support
+- mobile links for MetaMask, Coinbase Wallet, and Trust Wallet
+- copyable full setup and manual fields
+- chain JSON fallback at `assets/chains/infi-testnet.json`
 - test InvertX logo
 - InvertX reference value display for testnet
 - no-real-world-value warning

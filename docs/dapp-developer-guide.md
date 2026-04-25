@@ -29,6 +29,20 @@ RPC URL: http://127.0.0.1:8545
 Explorer URL: http://127.0.0.1:3000
 ```
 
+Current public testnet:
+
+```text
+Chain name: INFI Testnet
+Chain ID: 98402
+Chain ID hex: 0x18062
+Native currency: test InvertX
+Currency symbol: tINVX
+Decimals: 18
+RPC URL: https://infi-testnet-rpc.onrender.com
+Explorer URL: https://scan.infi.infi
+Setup page: https://infi-blockchain.pages.dev/testnet
+```
+
 Mainnet metadata is not final yet.
 
 ## Connecting Wallets
@@ -52,15 +66,15 @@ await window.ethereum.request({
   method: "wallet_addEthereumChain",
   params: [
     {
-      chainId: "0x18061",
-      chainName: "INFI Devnet",
+      chainId: "0x18062",
+      chainName: "INFI Testnet",
       nativeCurrency: {
-        name: "Invertx",
-        symbol: "TBD",
+        name: "test InvertX",
+        symbol: "tINVX",
         decimals: 18
       },
-      rpcUrls: ["http://127.0.0.1:8545"],
-      blockExplorerUrls: ["http://127.0.0.1:3000"]
+      rpcUrls: ["https://infi-testnet-rpc.onrender.com"],
+      blockExplorerUrls: ["https://scan.infi.infi"]
     }
   ]
 });
@@ -73,9 +87,11 @@ Use `wallet_switchEthereumChain`.
 ```js
 await window.ethereum.request({
   method: "wallet_switchEthereumChain",
-  params: [{ chainId: "0x18061" }]
+  params: [{ chainId: "0x18062" }]
 });
 ```
+
+For mobile and tablet, open the setup page inside the wallet browser or use a mobile wallet deep link. If the wallet does not inject an EVM provider, show manual setup and copy buttons instead of blocking the user.
 
 ## Transaction UX
 

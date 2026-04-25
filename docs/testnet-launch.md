@@ -242,6 +242,25 @@ Testnet dapps should support:
 - mobile deep links
 - manual setup fallback
 
+Current hosted setup page:
+
+```text
+https://infi-blockchain.pages.dev/testnet
+```
+
+Current implemented setup support:
+
+- injected desktop and laptop EVM wallets
+- injected mobile and tablet wallet browsers
+- one-click add network
+- one-click switch network
+- mobile deep links for MetaMask, Coinbase Wallet, and Trust Wallet
+- copyable full network setup
+- copyable manual setup fields
+- chain metadata JSON fallback
+
+WalletConnect QR remains a required next milestone for INFI Scan and full dapps. It is not the same as adding a network to an injected wallet.
+
 Wallet metadata:
 
 ```text

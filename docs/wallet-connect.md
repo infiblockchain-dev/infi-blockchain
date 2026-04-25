@@ -33,6 +33,31 @@ For EVM wallet import, use:
 
 See [wallet import plan](wallet-import.md).
 
+## Current Public Testnet Page
+
+The current hosted testnet setup page is:
+
+```text
+https://infi-blockchain.pages.dev/testnet
+```
+
+It currently supports:
+
+- desktop and laptop browser extension wallets through injected EVM providers
+- mobile and tablet wallet browsers that inject an EVM provider
+- one-click add network
+- one-click switch network
+- MetaMask mobile deep link
+- Coinbase Wallet mobile deep link
+- Trust Wallet mobile deep link
+- copyable full network setup
+- copyable manual setup fields
+- chain metadata JSON fallback
+
+This means users on normal mobile Safari or Chrome should open the page through a wallet browser link first. Once the page is inside a wallet browser, the Add INFI Testnet button can use that wallet's injected provider.
+
+WalletConnect QR is not active on the static setup page yet. Add it when INFI Scan or another dapp has a Reown/WalletConnect project ID and a real wallet session flow.
+
 ## Required User Flows
 
 ### Desktop Browser Extension
@@ -66,13 +91,14 @@ See [wallet import plan](wallet-import.md).
 Wallet integrations need:
 
 ```text
-Chain name: INFI
-Chain ID: 98401 for devnet
-Native currency name: Invertx
-Native currency symbol: TBD
+Chain name: INFI Testnet
+Chain ID: 98402
+Chain ID hex: 0x18062
+Native currency name: test InvertX
+Native currency symbol: tINVX
 Native currency decimals: 18
-RPC URL: TBD
-Explorer URL: INFI Scan URL, TBD
+RPC URL: https://infi-testnet-rpc.onrender.com
+Explorer URL: https://scan.infi.infi
 ```
 
 ## Non-EVM Support

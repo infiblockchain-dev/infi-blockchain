@@ -88,8 +88,36 @@ as the InvertX reference value for testnet UI only.
 Testnet setup page:
 
 ```text
+https://infi-blockchain.pages.dev/testnet
+```
+
+Planned official setup page:
+
+```text
 https://infi.infi/testnet.html
 ```
+
+## Current Cross-Device Testnet Flow
+
+The current public testnet page supports:
+
+- desktop and laptop injected EVM wallets through `wallet_addEthereumChain`
+- desktop and laptop injected EVM wallets through `wallet_switchEthereumChain`
+- mobile and tablet wallet browsers that inject `window.ethereum`
+- mobile deep links for common wallets that open the setup page inside the wallet browser
+- copyable full setup text for wallets that do not support automatic import
+- copyable individual manual fields
+- downloadable chain metadata at `/assets/chains/infi-testnet.json`
+
+The current mobile links are:
+
+```text
+MetaMask: https://metamask.app.link/dapp/infi-blockchain.pages.dev/testnet
+Coinbase Wallet: https://go.cb-w.com/dapp?cb_url=https%3A%2F%2Finfi-blockchain.pages.dev%2Ftestnet
+Trust Wallet: https://link.trustwallet.com/open_url?coin_id=60&url=https%3A%2F%2Finfi-blockchain.pages.dev%2Ftestnet
+```
+
+Important: WalletConnect QR support is still a planned dapp session flow. It should be added through WalletConnect/Reown AppKit after the project has a production WalletConnect project ID and the final INFI Scan dapp flow.
 
 ## Mainnet Metadata
 

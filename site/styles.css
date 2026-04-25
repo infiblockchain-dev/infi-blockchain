@@ -1154,6 +1154,7 @@ article,
 .invertx-focus,
 .metric-row div,
 .manual-grid div,
+.device-grid article,
 .split,
 .faucet-form {
   position: relative;
@@ -1172,6 +1173,7 @@ article::before,
 .invertx-focus::before,
 .metric-row div::before,
 .manual-grid div::before,
+.device-grid article::before,
 .split::before,
 .faucet-form::before {
   content: "";
@@ -1188,6 +1190,7 @@ article::after,
 .invertx-focus::after,
 .metric-row div::after,
 .manual-grid div::after,
+.device-grid article::after,
 .split::after,
 .faucet-form::after {
   content: "";
@@ -1207,6 +1210,7 @@ article:hover,
 .invertx-focus:hover,
 .metric-row div:hover,
 .manual-grid div:hover,
+.device-grid article:hover,
 .split:hover,
 .faucet-form:hover {
   transform: translateY(-4px);
@@ -1218,6 +1222,7 @@ article:hover::after,
 .invertx-focus:hover::after,
 .metric-row div:hover::after,
 .manual-grid div:hover::after,
+.device-grid article:hover::after,
 .split:hover::after,
 .faucet-form:hover::after {
   opacity: 1;
@@ -1238,6 +1243,28 @@ article:nth-child(3n),
   --card-delay: 2.8s;
   --card-x: 44%;
   --card-y: 82%;
+}
+
+.device-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.device-grid article {
+  min-height: 260px;
+}
+
+.device-grid .button,
+.wallet-link-row .button {
+  width: fit-content;
+}
+
+.wallet-link-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
 }
 
 article {
@@ -1431,6 +1458,28 @@ pre {
 
 .manual-grid span {
   font-weight: 830;
+  overflow-wrap: anywhere;
+}
+
+.copy-chip {
+  position: relative;
+  z-index: 1;
+  width: fit-content;
+  min-height: 34px;
+  padding: 7px 10px;
+  border: 1px solid rgba(32, 217, 255, 0.3);
+  border-radius: 8px;
+  background: rgba(32, 217, 255, 0.08);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.copy-chip:hover {
+  border-color: rgba(34, 255, 154, 0.5);
+  box-shadow: 0 0 18px rgba(34, 255, 154, 0.14);
 }
 
 .faucet-form {
@@ -1960,6 +2009,7 @@ pre {
   .section-heading.wide,
   .builders-band,
   .architecture-grid,
+  .device-grid,
   .ecosystem-layout,
   .ecosystem-grid,
   .feature-grid,

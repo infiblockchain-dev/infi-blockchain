@@ -80,6 +80,7 @@
         <a href="/">Home</a>
         <a href="#wallet">Wallet</a>
         <a href="#faucet">Faucet</a>
+        <a href="#device-setup">Devices</a>
         <a href="#manual">Manual</a>
       </nav>
       <a class="nav-action" href="/faucet.html">Open Faucet</a>
@@ -97,6 +98,7 @@
           <div class="hero-actions" id="wallet">
             <button class="button primary" type="button" id="add-network">Add INFI Testnet</button>
             <button class="button secondary" type="button" id="switch-network">Switch Network</button>
+            <button class="button ghost" type="button" id="copy-network-json">Copy Config</button>
           </div>
           <p class="status" id="wallet-status" role="status">Wallet action status will appear here.</p>
         </div>
@@ -144,18 +146,79 @@
         </div>
       </section>
 
+      <section class="section" id="device-setup">
+        <div class="section-heading">
+          <p class="eyebrow">All Devices</p>
+          <h2>Wallet setup for mobile, tablet, laptop, and desktop.</h2>
+        </div>
+        <div class="device-grid">
+          <article>
+            <h3>Browser Wallets</h3>
+            <p>
+              Use Add INFI Testnet or Switch Network from MetaMask, Rabby, Coinbase Wallet,
+              Brave Wallet, or another injected EVM wallet on desktop and laptop browsers.
+            </p>
+            <button class="button secondary" type="button" id="copy-setup">Copy Full Setup</button>
+          </article>
+          <article>
+            <h3>Mobile and Tablet</h3>
+            <p>
+              Open this same page inside your mobile wallet browser, then tap Add INFI Testnet.
+              These links help launch common mobile wallets.
+            </p>
+            <div class="wallet-link-row">
+              <a class="button secondary" id="metamask-mobile" href="https://metamask.app.link/dapp/infi-blockchain.pages.dev/testnet" rel="noopener">MetaMask</a>
+              <a class="button secondary" id="coinbase-mobile" href="https://go.cb-w.com/dapp?cb_url=https%3A%2F%2Finfi-blockchain.pages.dev%2Ftestnet" rel="noopener">Coinbase</a>
+              <a class="button secondary" id="trust-mobile" href="https://link.trustwallet.com/open_url?coin_id=60&url=https%3A%2F%2Finfi-blockchain.pages.dev%2Ftestnet" rel="noopener">Trust</a>
+            </div>
+          </article>
+          <article>
+            <h3>Manual Fallback</h3>
+            <p>
+              Every wallet can still add INFI Testnet manually using the fields below.
+              Use the copy buttons if automatic import is not supported on your device.
+            </p>
+            <a class="button secondary" href="/assets/chains/infi-testnet.json">Open Chain JSON</a>
+          </article>
+        </div>
+      </section>
+
       <section class="section" id="manual">
         <div class="section-heading">
           <p class="eyebrow">Manual Setup</p>
           <h2>Wallet Details</h2>
         </div>
         <div class="manual-grid">
-          <div><strong>Network name</strong><span>INFI Testnet</span></div>
-          <div><strong>Chain ID</strong><span>98402</span></div>
-          <div><strong>Chain ID hex</strong><span>0x18062</span></div>
-          <div><strong>RPC URL</strong><span>https://infi-testnet-rpc.onrender.com</span></div>
-          <div><strong>Explorer target</strong><span>https://scan.infi.infi</span></div>
-          <div><strong>Currency</strong><span>test InvertX (tINVX)</span></div>
+          <div>
+            <strong>Network name</strong>
+            <span>INFI Testnet</span>
+            <button class="copy-chip" type="button" data-copy="INFI Testnet">Copy</button>
+          </div>
+          <div>
+            <strong>Chain ID</strong>
+            <span>98402</span>
+            <button class="copy-chip" type="button" data-copy="98402">Copy</button>
+          </div>
+          <div>
+            <strong>Chain ID hex</strong>
+            <span>0x18062</span>
+            <button class="copy-chip" type="button" data-copy="0x18062">Copy</button>
+          </div>
+          <div>
+            <strong>RPC URL</strong>
+            <span>https://infi-testnet-rpc.onrender.com</span>
+            <button class="copy-chip" type="button" data-copy="https://infi-testnet-rpc.onrender.com">Copy</button>
+          </div>
+          <div>
+            <strong>Explorer target</strong>
+            <span>https://scan.infi.infi</span>
+            <button class="copy-chip" type="button" data-copy="https://scan.infi.infi">Copy</button>
+          </div>
+          <div>
+            <strong>Currency</strong>
+            <span>test InvertX (tINVX)</span>
+            <button class="copy-chip" type="button" data-copy="tINVX">Copy</button>
+          </div>
         </div>
       </section>
     </main>
@@ -197,19 +260,88 @@
       };
 
       const status = document.getElementById("wallet-status");
+      const PAGE_URL = "https://infi-blockchain.pages.dev/testnet";
+      const NETWORK_SETUP_TEXT = [
+        "INFI Testnet",
+        "Chain ID: 98402",
+        "Chain ID hex: 0x18062",
+        "RPC URL: https://infi-testnet-rpc.onrender.com",
+        "Explorer target: https://scan.infi.infi",
+        "Currency: test InvertX (tINVX)",
+        "Decimals: 18",
+        "Setup page: " + PAGE_URL
+      ].join("\n");
 
       function setStatus(message) {
         status.textContent = message;
       }
 
-      async function addNetwork() {
+      function walletProvider() {
         if (!window.ethereum) {
-          setStatus("No injected EVM wallet found. Use WalletConnect or manual setup.");
+          return null;
+        }
+        if (Array.isArray(window.ethereum.providers)) {
+          return window.ethereum.providers.find((provider) => provider.isMetaMask) || window.ethereum.providers[0];
+        }
+        return window.ethereum;
+      }
+
+      function fallbackCopy(text) {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.setAttribute("readonly", "");
+        textArea.style.position = "fixed";
+        textArea.style.opacity = "0";
+        document.body.appendChild(textArea);
+        textArea.select();
+        const copied = document.execCommand("copy");
+        textArea.remove();
+        if (!copied) {
+          throw new Error("Fallback copy failed");
+        }
+      }
+
+      async function copyText(text, label) {
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await Promise.race([
+              navigator.clipboard.writeText(text),
+              new Promise((_, reject) => {
+                window.setTimeout(() => reject(new Error("Clipboard timeout")), 650);
+              })
+            ]);
+          } else {
+            fallbackCopy(text);
+          }
+          setStatus(`${label} copied.`);
+        } catch (error) {
+          try {
+            fallbackCopy(text);
+            setStatus(`${label} copied.`);
+          } catch (fallbackError) {
+            setStatus("Copy failed. Select the manual field and copy it from the page.");
+          }
+        }
+      }
+
+      function describeWalletFallback() {
+        const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
+        if (!walletProvider()) {
+          setStatus(isTouchDevice
+            ? "Open this page inside your mobile wallet browser, or use a mobile wallet button below."
+            : "No browser wallet detected. Install an EVM wallet extension or copy the manual setup.");
+        }
+      }
+
+      async function addNetwork() {
+        const provider = walletProvider();
+        if (!provider) {
+          describeWalletFallback();
           return;
         }
 
         try {
-          await window.ethereum.request({
+          await provider.request({
             method: "wallet_addEthereumChain",
             params: [INFI_TESTNET]
           });
@@ -220,13 +352,14 @@
       }
 
       async function switchNetwork() {
-        if (!window.ethereum) {
-          setStatus("No injected EVM wallet found. Use WalletConnect or manual setup.");
+        const provider = walletProvider();
+        if (!provider) {
+          describeWalletFallback();
           return;
         }
 
         try {
-          await window.ethereum.request({
+          await provider.request({
             method: "wallet_switchEthereumChain",
             params: [{ chainId: INFI_TESTNET.chainId }]
           });
@@ -242,6 +375,16 @@
 
       document.getElementById("add-network").addEventListener("click", addNetwork);
       document.getElementById("switch-network").addEventListener("click", switchNetwork);
+      document.getElementById("copy-network-json").addEventListener("click", () => {
+        copyText(JSON.stringify(INFI_TESTNET, null, 2), "Wallet config");
+      });
+      document.getElementById("copy-setup").addEventListener("click", () => {
+        copyText(NETWORK_SETUP_TEXT, "INFI Testnet setup");
+      });
+      document.querySelectorAll("[data-copy]").forEach((button) => {
+        button.addEventListener("click", () => copyText(button.dataset.copy, "Value"));
+      });
+      describeWalletFallback();
     </script>
     <script src="/background.js" defer></script>
   </body>
