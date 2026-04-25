@@ -4604,20 +4604,178 @@ nav a,
 }
 
 /* ============================================================
-   FIX-003: Complete light-mode coverage
+   FIX-005: Calm, editorial light mode
    ============================================================
-   Adds light-mode overrides for:
-   - .split, .faucet-form, .scan-form, .scan-panel, .scan-summary
-   - all form inputs/selects on light surfaces
-   - .faucet-history-card (article variant)
-   - .scan-row separators
-   - .invertx-focus, .metric-row, .manual-grid (already in old block,
-     but the wide article+split rule at line 1090 wins; we need
-     stronger selectors to take over in light mode)
+   Replaces the busy "engineering grid" experiment with a calm,
+   high-contrast light mode inspired by avax.network. The page
+   should read like a serious tech publication: clean, confident,
+   no visual noise competing for attention.
+
+   Design rules for light mode:
+   - Pure cream background, no grid patterns
+   - Animated background elements barely visible (8-12% opacity)
+     so they don't disturb visitors/investors
+   - Sharp text contrast, generous whitespace
+   - Cards and surfaces flat-clean with subtle shadows
+   - InvertX keeps its dark render frame (Option A)
+   - Dark mode untouched — neon engineering aesthetic preserved
    ============================================================ */
 
-/* Universal panel surfaces — wins over the multi-selector rule at line 1090
-   by using [data-theme="light"] (higher specificity than the bare selector). */
+/* ---------- 1. Background — calm cream, no grid noise ---------- */
+
+[data-theme="light"] body {
+  background:
+    radial-gradient(ellipse at 20% -5%, rgba(13, 125, 163, 0.06), transparent 45%),
+    radial-gradient(ellipse at 85% 105%, rgba(10, 138, 77, 0.05), transparent 45%),
+    var(--bg);
+}
+
+[data-theme="light"] .node-background {
+  background: var(--bg) !important;
+}
+
+/* ---------- 2. Animated atmospheric elements — DAMPENED ---------- */
+/* In light mode these stay present but recede so they don't fight
+   for attention. Visitors see clean content; the animations exist
+   only as gentle ambient texture. */
+
+[data-theme="light"] .depth-glow {
+  opacity: 0.08;
+  mix-blend-mode: multiply;
+  filter: blur(90px);
+}
+[data-theme="light"] .depth-top {
+  background: radial-gradient(circle at 30% 40%, rgba(10, 138, 77, 0.20), transparent 65%);
+}
+[data-theme="light"] .depth-center {
+  background: radial-gradient(circle at 60% 50%, rgba(13, 125, 163, 0.18), transparent 65%);
+}
+[data-theme="light"] .depth-bottom {
+  background: radial-gradient(circle at 50% 50%, rgba(10, 138, 77, 0.15), transparent 70%);
+}
+
+/* Hex grid — barely there */
+[data-theme="light"] .hex-grid {
+  opacity: 0.18;
+}
+[data-theme="light"] .hex-grid path {
+  stroke: rgba(13, 125, 163, 0.10) !important;
+  stroke-width: 1 !important;
+}
+
+/* Network topology — almost invisible */
+[data-theme="light"] .network-topology {
+  opacity: 0.18;
+}
+[data-theme="light"] .network-topology .topology-lines path {
+  stroke: rgba(13, 125, 163, 0.10) !important;
+}
+[data-theme="light"] .network-topology .topology-lines path:nth-child(2n) {
+  stroke: rgba(10, 138, 77, 0.10) !important;
+}
+
+/* Mesh lines — gentle, calm */
+[data-theme="light"] .mesh-line {
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(13, 125, 163, 0.18) 35%,
+    rgba(10, 138, 77, 0.18) 65%,
+    transparent 100%);
+  opacity: 0.30;
+  height: 1px;
+}
+[data-theme="light"] .mesh-line::after {
+  background: rgba(10, 138, 77, 0.45);
+  box-shadow: 0 0 4px rgba(10, 138, 77, 0.20);
+}
+
+/* Chain spine, architecture band */
+[data-theme="light"] .chain-spine {
+  background: linear-gradient(90deg, transparent, rgba(10, 138, 77, 0.20), transparent);
+  opacity: 0.25;
+  height: 1px;
+}
+[data-theme="light"] .architecture-band {
+  opacity: 0.18;
+}
+
+/* Node dots, packets — quiet markers */
+[data-theme="light"] .node-dot {
+  background: radial-gradient(circle, rgba(10, 138, 77, 0.45) 0%, rgba(10, 138, 77, 0.18) 60%, transparent 100%);
+  box-shadow: 0 0 4px rgba(10, 138, 77, 0.18);
+  opacity: 0.4;
+}
+[data-theme="light"] .node-packet {
+  background: rgba(13, 125, 163, 0.55);
+  box-shadow: 0 0 4px rgba(13, 125, 163, 0.25);
+  opacity: 0.45;
+}
+
+/* Binary streams — softened, editorial-margin texture */
+[data-theme="light"] .binary-stream,
+[data-theme="light"] .binary-ribbon {
+  color: rgba(13, 125, 163, 0.15);
+  text-shadow: none;
+  opacity: 0.5;
+  font-weight: 500;
+}
+
+/* Status chips (BLOCK, TX, PAY, RWA, SYNC, VERIFY) — quiet labels */
+[data-theme="light"] .architecture-chip,
+[data-theme="light"] .transfer-pulse {
+  background: rgba(255, 255, 255, 0.70);
+  border: 1px solid rgba(13, 125, 163, 0.20);
+  color: rgba(13, 125, 163, 0.60);
+  box-shadow: none;
+  text-shadow: none;
+  font-weight: 700;
+}
+
+/* ---------- 3. InvertX showcase — Option A (dark render frame) ---------- */
+
+[data-theme="light"] .token-showcase {
+  background:
+    radial-gradient(circle at 50% 22%, rgba(233, 180, 76, 0.18), transparent 55%),
+    linear-gradient(155deg, #0a1620 0%, #06121a 60%, #050d14 100%);
+  border: 1px solid rgba(233, 180, 76, 0.32);
+  border-radius: 16px;
+  box-shadow:
+    0 24px 56px -20px rgba(6, 32, 40, 0.30),
+    0 8px 22px -10px rgba(138, 100, 32, 0.22),
+    0 0 0 1px rgba(233, 180, 76, 0.10) inset,
+    0 1px 0 rgba(255, 255, 255, 0.06) inset;
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="light"] .token-showcase::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(233, 180, 76, 0.40), transparent 35%, transparent 65%, rgba(233, 180, 76, 0.26));
+  -webkit-mask: linear-gradient(#000, #000) content-box, linear-gradient(#000, #000);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events: none;
+}
+
+[data-theme="light"] .token-showcase img {
+  mix-blend-mode: screen;
+  filter: drop-shadow(0 0 22px rgba(233, 180, 76, 0.30));
+}
+
+[data-theme="light"] .token-showcase strong {
+  color: #f4ead2;
+  text-shadow: 0 0 14px rgba(233, 180, 76, 0.24);
+}
+[data-theme="light"] .token-showcase span {
+  color: rgba(244, 234, 210, 0.68);
+}
+
+/* ---------- 4. Cards — clean editorial surfaces ---------- */
+
 [data-theme="light"] article,
 [data-theme="light"] .invertx-focus,
 [data-theme="light"] .metric-row div,
@@ -4629,11 +4787,13 @@ nav a,
 [data-theme="light"] .scan-summary,
 [data-theme="light"] .scan-form,
 [data-theme="light"] .scan-panel {
-  background:
-    linear-gradient(145deg, rgba(13, 125, 163, 0.04), transparent 42%, rgba(10, 138, 77, 0.03)),
-    var(--panel);
-  border-color: var(--line);
-  box-shadow: var(--shadow-card);
+  background: var(--panel);
+  border: 1px solid rgba(13, 125, 163, 0.14);
+  border-radius: 12px;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.7) inset,
+    0 1px 2px rgba(6, 32, 40, 0.04),
+    0 12px 28px -18px rgba(6, 32, 40, 0.16);
 }
 
 [data-theme="light"] article:hover,
@@ -4644,10 +4804,13 @@ nav a,
 [data-theme="light"] .split:hover,
 [data-theme="light"] .faucet-form:hover {
   border-color: rgba(10, 138, 77, 0.42);
-  box-shadow: 0 8px 28px -12px rgba(10, 138, 77, 0.24), 0 1px 0 rgba(255, 255, 255, 0.6) inset;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.8) inset,
+    0 16px 36px -18px rgba(10, 138, 77, 0.22);
+  transform: translateY(-2px);
 }
 
-/* Top accent strip on cards — softer in light */
+/* Top accent strip — subtle */
 [data-theme="light"] article::before,
 [data-theme="light"] .invertx-focus::before,
 [data-theme="light"] .metric-row div::before,
@@ -4655,531 +4818,179 @@ nav a,
 [data-theme="light"] .device-grid article::before,
 [data-theme="light"] .split::before,
 [data-theme="light"] .faucet-form::before {
-  background: linear-gradient(90deg, rgba(10, 138, 77, 0.65), rgba(13, 125, 163, 0.5), transparent);
-  opacity: 0.55;
-}
-
-[data-theme="light"] article::after,
-[data-theme="light"] .invertx-focus::after,
-[data-theme="light"] .metric-row div::after,
-[data-theme="light"] .manual-grid div::after,
-[data-theme="light"] .device-grid article::after,
-[data-theme="light"] .split::after,
-[data-theme="light"] .faucet-form::after {
-  background:
-    linear-gradient(115deg, transparent 0 36%, rgba(10, 138, 77, 0.06) 43%, rgba(13, 125, 163, 0.07) 50%, transparent 58%),
-    radial-gradient(circle at var(--card-x, 18%) var(--card-y, 20%), rgba(10, 138, 77, 0.07), transparent 34%);
-}
-
-/* Form inputs — clean white with subtle border, dark ink */
-[data-theme="light"] .faucet-form input,
-[data-theme="light"] .faucet-form select,
-[data-theme="light"] .scan-form input,
-[data-theme="light"] .history-filter input {
-  background: var(--panel-strong);
-  border-color: var(--line-strong);
-  color: var(--ink);
-  box-shadow: 0 1px 2px rgba(6, 32, 40, 0.04) inset;
-}
-
-[data-theme="light"] .faucet-form input:focus,
-[data-theme="light"] .faucet-form select:focus,
-[data-theme="light"] .scan-form input:focus,
-[data-theme="light"] .history-filter input:focus {
-  outline: 2px solid var(--green);
-  outline-offset: 1px;
-  border-color: var(--green);
-}
-
-[data-theme="light"] .faucet-form input::placeholder,
-[data-theme="light"] .scan-form input::placeholder,
-[data-theme="light"] .history-filter input::placeholder {
-  color: rgba(77, 103, 114, 0.7);
-}
-
-/* Form labels */
-[data-theme="light"] .faucet-form label,
-[data-theme="light"] .scan-form label,
-[data-theme="light"] .history-filter label {
-  color: var(--muted-strong);
-}
-
-/* Status text under forms */
-[data-theme="light"] .status,
-[data-theme="light"] .faucet-form .status,
-[data-theme="light"] .history-filter .status {
-  color: var(--muted-strong);
-}
-
-/* Faucet history card — internal text */
-[data-theme="light"] .faucet-history-card span {
-  color: var(--blue);
-}
-[data-theme="light"] .faucet-history-card strong {
-  color: var(--ink);
-}
-
-/* Scan summary inner divs (Chain ID / Latest Block / RPC / Gas Token panel) */
-[data-theme="light"] .scan-summary div {
-  background: var(--panel-strong);
-  border-color: var(--line);
-  box-shadow: 0 1px 3px rgba(6, 32, 40, 0.06);
-}
-[data-theme="light"] .scan-summary span {
-  color: var(--blue);
-}
-[data-theme="light"] .scan-summary strong {
-  color: var(--ink);
-  text-shadow: none;
-}
-
-/* Scan rows (transaction/block detail tables) */
-[data-theme="light"] .scan-row {
-  border-bottom-color: var(--line);
-}
-[data-theme="light"] .scan-row strong {
-  color: var(--muted);
-}
-[data-theme="light"] .scan-row span,
-[data-theme="light"] .scan-list li {
-  color: var(--ink);
-}
-[data-theme="light"] .scan-list strong {
-  color: var(--muted);
-}
-
-/* Section heading on light pages — make sure subtle text shadow doesn't muddy */
-[data-theme="light"] .section-heading p:not(.eyebrow) {
-  color: var(--muted-strong);
-  text-shadow: none;
-}
-
-/* Token showcase wrapper on faucet/testnet hero — keep the dark gold InvertX rendering
-   but make the text label readable in light mode */
-[data-theme="light"] .token-showcase strong {
-  color: var(--ink);
-}
-[data-theme="light"] .token-showcase span {
-  color: var(--muted);
-}
-
-/* Copy chip */
-[data-theme="light"] .copy-chip {
-  background: var(--panel-strong);
-  border-color: var(--line);
-  color: var(--blue);
-}
-[data-theme="light"] .copy-chip:hover {
-  border-color: var(--blue);
-  background: rgba(13, 125, 163, 0.06);
-}
-
-/* ============================================================
-   FIX-004: Solid blockchain light mode
-   ============================================================
-   Replaces the soft "watercolor" light mode with a technical
-   blueprint aesthetic — visible grid, readable data flows,
-   stronger card edges, ledger-line atmosphere.
-
-   1. InvertX showcase — Option A: deliberate dark render frame
-   2. Background gets visible blueprint structure
-   3. Animated elements become legible (hex grid, mesh, binary)
-   4. Cards get sharper edges and proper engineering shadows
-   5. Status chips read as schematic labels
-   ============================================================ */
-
-/* ---------- 1. InvertX showcase — Option A (deliberate dark render frame) ---------- */
-
-[data-theme="light"] .token-showcase {
-  background:
-    radial-gradient(circle at 50% 22%, rgba(233, 180, 76, 0.18), transparent 55%),
-    linear-gradient(155deg, #0a1620 0%, #06121a 60%, #050d14 100%);
-  border: 1px solid rgba(233, 180, 76, 0.35);
-  border-radius: 16px;
-  box-shadow:
-    0 24px 56px -20px rgba(6, 32, 40, 0.40),
-    0 8px 22px -10px rgba(138, 100, 32, 0.25),
-    0 0 0 1px rgba(233, 180, 76, 0.12) inset,
-    0 1px 0 rgba(255, 255, 255, 0.08) inset;
-  position: relative;
-  overflow: hidden;
-}
-
-/* Subtle gold edge highlight on the frame */
-[data-theme="light"] .token-showcase::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(135deg, rgba(233, 180, 76, 0.45), transparent 35%, transparent 65%, rgba(233, 180, 76, 0.30));
-  -webkit-mask: linear-gradient(#000, #000) content-box, linear-gradient(#000, #000);
-  -webkit-mask-composite: xor;
-          mask-composite: exclude;
-  pointer-events: none;
-}
-
-/* The image keeps its native render — screen blend on the dark frame works */
-[data-theme="light"] .token-showcase img {
-  mix-blend-mode: screen;
-  filter: drop-shadow(0 0 22px rgba(233, 180, 76, 0.32));
-}
-
-/* Caption labels stay light against the dark frame */
-[data-theme="light"] .token-showcase strong {
-  color: #f4ead2;
-  text-shadow: 0 0 16px rgba(233, 180, 76, 0.28);
-}
-[data-theme="light"] .token-showcase span {
-  color: rgba(244, 234, 210, 0.7);
-}
-
-/* ---------- 2. Background — engineering blueprint atmosphere ---------- */
-
-/* Stronger body background with technical grid */
-[data-theme="light"] body {
-  background:
-    /* Subtle ledger horizontal hairlines every 48px */
-    repeating-linear-gradient(0deg,
-      transparent 0,
-      transparent 47px,
-      rgba(6, 32, 40, 0.025) 47px,
-      rgba(6, 32, 40, 0.025) 48px),
-    /* Fine engineering grid 24px */
-    repeating-linear-gradient(0deg,
-      transparent 0,
-      transparent 23px,
-      rgba(13, 125, 163, 0.035) 23px,
-      rgba(13, 125, 163, 0.035) 24px),
-    repeating-linear-gradient(90deg,
-      transparent 0,
-      transparent 23px,
-      rgba(13, 125, 163, 0.035) 23px,
-      rgba(13, 125, 163, 0.035) 24px),
-    radial-gradient(ellipse at 18% 0%, rgba(13, 125, 163, 0.08), transparent 55%),
-    radial-gradient(ellipse at 82% 100%, rgba(10, 138, 77, 0.07), transparent 55%),
-    var(--bg);
-}
-
-[data-theme="light"] .node-background {
-  background: var(--bg) !important;
-}
-
-/* Depth glows — slightly stronger so they read as ambient ink, not soap bubbles */
-[data-theme="light"] .depth-glow {
-  opacity: 0.32;
-  mix-blend-mode: multiply;
-  filter: blur(70px);
-}
-[data-theme="light"] .depth-top {
-  background: radial-gradient(circle at 30% 40%, rgba(10, 138, 77, 0.45), transparent 60%);
-}
-[data-theme="light"] .depth-center {
-  background: radial-gradient(circle at 60% 50%, rgba(13, 125, 163, 0.42), transparent 60%);
-}
-[data-theme="light"] .depth-bottom {
-  background: radial-gradient(circle at 50% 50%, rgba(10, 138, 77, 0.36), transparent 65%);
-}
-
-/* ---------- 3. Hex grid — readable circuit board ---------- */
-
-[data-theme="light"] .hex-grid {
-  opacity: 0.85;
-}
-[data-theme="light"] .hex-grid path {
-  stroke: rgba(13, 125, 163, 0.16) !important;
-  stroke-width: 1 !important;
-}
-
-/* ---------- 4. Network topology lines — visible data flow ---------- */
-
-[data-theme="light"] .network-topology {
-  opacity: 0.75;
-}
-[data-theme="light"] .network-topology .topology-lines path {
-  stroke: rgba(13, 125, 163, 0.22) !important;
-}
-[data-theme="light"] .network-topology .topology-lines path:nth-child(2n) {
-  stroke: rgba(10, 138, 77, 0.22) !important;
-}
-
-/* ---------- 5. Mesh lines / chain spine / band ---------- */
-
-[data-theme="light"] .mesh-line {
-  background: linear-gradient(90deg,
-    transparent 0%,
-    rgba(13, 125, 163, 0.55) 25%,
-    rgba(10, 138, 77, 0.55) 50%,
-    rgba(13, 125, 163, 0.55) 75%,
-    transparent 100%);
-  opacity: 0.7;
-  height: 1.5px;
-}
-
-[data-theme="light"] .mesh-line::after {
-  background: rgba(10, 138, 77, 0.85);
-  box-shadow: 0 0 8px rgba(10, 138, 77, 0.55);
-}
-
-[data-theme="light"] .chain-spine {
-  background: linear-gradient(90deg, transparent 0%, rgba(10, 138, 77, 0.55) 50%, transparent 100%);
-  opacity: 0.65;
-  height: 1.5px;
-}
-
-[data-theme="light"] .architecture-band {
-  opacity: 0.55;
-}
-
-/* ---------- 6. Node dots and packets — schematic markers ---------- */
-
-[data-theme="light"] .node-dot {
-  background: radial-gradient(circle, rgba(10, 138, 77, 0.85) 0%, rgba(10, 138, 77, 0.4) 60%, transparent 100%);
-  box-shadow: 0 0 10px rgba(10, 138, 77, 0.4);
-  opacity: 0.85;
-}
-
-[data-theme="light"] .node-packet {
-  background: rgba(13, 125, 163, 0.95);
-  box-shadow: 0 0 8px rgba(13, 125, 163, 0.55);
-  opacity: 0.85;
-}
-
-/* ---------- 7. Binary streams — readable hex/bin overlay ---------- */
-
-[data-theme="light"] .binary-stream,
-[data-theme="light"] .binary-ribbon {
-  color: rgba(6, 32, 40, 0.42);
-  text-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
-  opacity: 0.85;
-  font-weight: 600;
-}
-
-/* ---------- 8. Status chips (BLOCK, TX, PAY, RWA, SYNC, VERIFY) ---------- */
-/* Make them read as schematic labels — sharp white pills with deep blue ink */
-
-[data-theme="light"] .architecture-chip,
-[data-theme="light"] .transfer-pulse {
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid rgba(13, 125, 163, 0.45);
-  color: var(--blue);
-  box-shadow:
-    0 1px 3px rgba(6, 32, 40, 0.10),
-    0 0 0 1px rgba(13, 125, 163, 0.06) inset;
-  text-shadow: none;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-}
-
-/* ---------- 9. Cards / surfaces — sharper engineering edges ---------- */
-
-[data-theme="light"] article,
-[data-theme="light"] .invertx-focus,
-[data-theme="light"] .metric-row div,
-[data-theme="light"] .manual-grid div,
-[data-theme="light"] .device-grid article,
-[data-theme="light"] .split,
-[data-theme="light"] .faucet-form,
-[data-theme="light"] .faucet-history-card,
-[data-theme="light"] .scan-summary,
-[data-theme="light"] .scan-form,
-[data-theme="light"] .scan-panel {
-  background:
-    linear-gradient(155deg, rgba(13, 125, 163, 0.025), transparent 35%, rgba(10, 138, 77, 0.02)),
-    var(--panel);
-  border: 1px solid rgba(13, 125, 163, 0.18);
-  border-radius: 10px;
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.6) inset,
-    0 1px 2px rgba(6, 32, 40, 0.04),
-    0 8px 24px -16px rgba(6, 32, 40, 0.18);
-}
-
-[data-theme="light"] article:hover,
-[data-theme="light"] .invertx-focus:hover,
-[data-theme="light"] .metric-row div:hover,
-[data-theme="light"] .manual-grid div:hover,
-[data-theme="light"] .device-grid article:hover,
-[data-theme="light"] .split:hover,
-[data-theme="light"] .faucet-form:hover {
-  border-color: rgba(10, 138, 77, 0.5);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.7) inset,
-    0 2px 4px rgba(6, 32, 40, 0.06),
-    0 12px 32px -16px rgba(10, 138, 77, 0.28);
-}
-
-/* Top accent strip on cards — slimmer, sharper */
-[data-theme="light"] article::before,
-[data-theme="light"] .invertx-focus::before,
-[data-theme="light"] .metric-row div::before,
-[data-theme="light"] .manual-grid div::before,
-[data-theme="light"] .device-grid article::before,
-[data-theme="light"] .split::before,
-[data-theme="light"] .faucet-form::before {
-  background: linear-gradient(90deg, var(--green) 0%, var(--blue) 50%, transparent 100%);
+  background: linear-gradient(90deg, var(--green) 0%, var(--blue) 60%, transparent 100%);
   height: 2px;
-  opacity: 0.85;
+  opacity: 0.7;
 }
 
-/* ---------- 10. Architecture blueprint — solid technical card ---------- */
+/* ---------- 5. Architecture blueprint — calm white card ---------- */
 
 [data-theme="light"] .architecture-blueprint {
   background:
-    linear-gradient(155deg, rgba(13, 125, 163, 0.05) 0%, transparent 40%, rgba(10, 138, 77, 0.04) 100%),
-    repeating-linear-gradient(0deg, transparent 0 23px, rgba(13, 125, 163, 0.045) 23px 24px),
-    repeating-linear-gradient(90deg, transparent 0 23px, rgba(13, 125, 163, 0.045) 23px 24px),
+    linear-gradient(155deg, rgba(13, 125, 163, 0.04) 0%, transparent 50%, rgba(10, 138, 77, 0.03) 100%),
     var(--panel);
-  border: 1px solid rgba(13, 125, 163, 0.32);
+  border: 1px solid rgba(13, 125, 163, 0.20);
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.7) inset,
-    0 24px 56px -24px rgba(13, 125, 163, 0.20),
-    0 12px 32px -16px rgba(6, 32, 40, 0.14);
+    0 24px 56px -28px rgba(13, 125, 163, 0.18),
+    0 12px 32px -20px rgba(6, 32, 40, 0.10);
 }
 
 [data-theme="light"] .architecture-blueprint::before {
-  background:
-    repeating-linear-gradient(0deg, transparent 0 22px, rgba(10, 138, 77, 0.05) 22px 23px),
-    repeating-linear-gradient(90deg, transparent 0 22px, rgba(13, 125, 163, 0.05) 22px 23px);
-  opacity: 0.7;
+  background: none;
+  opacity: 0;
 }
 
-/* Layer rows — schematic look */
+/* Layer rows — clean */
 [data-theme="light"] .layer {
   background: rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(13, 125, 163, 0.18);
-  border-radius: 6px;
+  border: 1px solid rgba(13, 125, 163, 0.14);
+  border-radius: 8px;
 }
 [data-theme="light"] .layer:hover {
   background: rgba(255, 255, 255, 1);
-  border-color: rgba(10, 138, 77, 0.5);
+  border-color: rgba(10, 138, 77, 0.42);
 }
 
-/* ---------- 11. Eyebrow pills — deeper, more emphatic ---------- */
+/* ---------- 6. Eyebrow pills — clean editorial ---------- */
 
 [data-theme="light"] .eyebrow {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.92);
   color: var(--blue);
-  border: 1px solid rgba(13, 125, 163, 0.42);
-  box-shadow:
-    0 1px 3px rgba(6, 32, 40, 0.08),
-    0 0 0 1px rgba(13, 125, 163, 0.04) inset;
-  font-weight: 850;
-  letter-spacing: 0.12em;
+  border: 1px solid rgba(13, 125, 163, 0.30);
+  box-shadow: 0 1px 2px rgba(6, 32, 40, 0.04);
+  font-weight: 800;
+  letter-spacing: 0.10em;
   text-shadow: none;
 }
 
-/* ---------- 12. Build-status header pill ---------- */
+/* ---------- 7. Build status header pill ---------- */
 
 [data-theme="light"] .build-status {
   background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(10, 138, 77, 0.42);
-  box-shadow:
-    0 1px 3px rgba(6, 32, 40, 0.08),
-    0 0 0 1px rgba(10, 138, 77, 0.04) inset;
+  border: 1px solid rgba(10, 138, 77, 0.32);
+  box-shadow: 0 1px 2px rgba(6, 32, 40, 0.04);
 }
 
 [data-theme="light"] .build-status strong {
   filter: none;
 }
 
-/* ---------- 13. Site header — cleaner glass with deeper border ---------- */
+/* ---------- 8. Site header ---------- */
 
 [data-theme="light"] .site-header {
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(247, 250, 249, 0.78) 100%);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.86) 0%, rgba(247, 250, 249, 0.78) 100%);
   backdrop-filter: saturate(180%) blur(16px);
   -webkit-backdrop-filter: saturate(180%) blur(16px);
-  border-bottom: 1px solid rgba(13, 125, 163, 0.22);
+  border-bottom: 1px solid rgba(13, 125, 163, 0.16);
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.7) inset,
-    0 4px 22px -10px rgba(6, 32, 40, 0.12);
+    0 4px 18px -10px rgba(6, 32, 40, 0.08);
 }
 
 [data-theme="light"] .site-header::after {
-  background: linear-gradient(90deg, transparent 0%, rgba(10, 138, 77, 0.55) 30%, rgba(13, 125, 163, 0.55) 70%, transparent 100%);
-  opacity: 0.55;
+  background: linear-gradient(90deg, transparent 0%, rgba(10, 138, 77, 0.35) 30%, rgba(13, 125, 163, 0.35) 70%, transparent 100%);
+  opacity: 0.45;
 }
 
-/* ---------- 14. Buttons — deeper engineering feel ---------- */
+/* ---------- 9. Buttons — clean, confident ---------- */
 
 [data-theme="light"] .button.primary {
-  background:
-    linear-gradient(135deg, rgba(10, 138, 77, 0.16), rgba(13, 125, 163, 0.10)),
-    rgba(255, 255, 255, 0.96);
-  border: 1px solid rgba(10, 138, 77, 0.55);
-  color: var(--ink);
+  background: linear-gradient(135deg, var(--green) 0%, var(--blue) 100%);
+  border: 1px solid transparent;
+  color: #ffffff;
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.7) inset,
-    0 2px 6px rgba(10, 138, 77, 0.18),
-    0 0 0 1px rgba(10, 138, 77, 0.08) inset;
+    0 4px 14px -4px rgba(10, 138, 77, 0.42),
+    0 0 0 1px rgba(255, 255, 255, 0.16) inset;
   text-shadow: none;
-  font-weight: 850;
+  font-weight: 800;
+}
+
+[data-theme="light"] .button.primary:hover {
+  filter: brightness(1.06);
+  box-shadow:
+    0 6px 20px -6px rgba(10, 138, 77, 0.52),
+    0 0 0 1px rgba(255, 255, 255, 0.22) inset;
+  transform: translateY(-1px);
 }
 
 [data-theme="light"] .button.secondary {
-  background:
-    linear-gradient(135deg, rgba(13, 125, 163, 0.12), rgba(10, 138, 77, 0.06)),
-    rgba(255, 255, 255, 0.96);
-  border: 1px solid rgba(13, 125, 163, 0.5);
-  color: var(--ink);
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(13, 125, 163, 0.42);
+  color: var(--blue);
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.7) inset,
-    0 2px 6px rgba(13, 125, 163, 0.16),
-    0 0 0 1px rgba(13, 125, 163, 0.08) inset;
+    0 2px 6px rgba(13, 125, 163, 0.10);
   text-shadow: none;
-  font-weight: 820;
+  font-weight: 750;
+}
+
+[data-theme="light"] .button.secondary:hover {
+  border-color: var(--blue);
+  background: rgba(255, 255, 255, 1);
+  color: var(--blue-strong);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.8) inset,
+    0 4px 12px rgba(13, 125, 163, 0.18);
+  transform: translateY(-1px);
 }
 
 [data-theme="light"] .button.ghost {
   background: transparent;
+  color: var(--muted-strong);
+  border: 1px solid rgba(13, 125, 163, 0.20);
+  font-weight: 700;
+}
+
+[data-theme="light"] .button.ghost:hover {
   color: var(--blue);
-  border: 1px solid rgba(13, 125, 163, 0.32);
+  border-color: rgba(13, 125, 163, 0.45);
+  background: rgba(13, 125, 163, 0.04);
+}
+
+[data-theme="light"] .nav-action {
+  background: linear-gradient(135deg, rgba(10, 138, 77, 0.10), rgba(13, 125, 163, 0.06)), #ffffff;
+  border: 1px solid rgba(10, 138, 77, 0.42);
+  color: var(--ink);
+  box-shadow: 0 1px 4px rgba(6, 32, 40, 0.06);
+  text-shadow: none;
   font-weight: 800;
 }
 
-[data-theme="light"] .button:hover,
 [data-theme="light"] .nav-action:hover {
-  border-color: rgba(10, 138, 77, 0.7);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.8) inset,
-    0 4px 14px rgba(10, 138, 77, 0.24),
-    0 0 0 1px rgba(10, 138, 77, 0.12) inset;
+  border-color: var(--green-strong);
+  background: linear-gradient(135deg, rgba(10, 138, 77, 0.16), rgba(13, 125, 163, 0.10)), #ffffff;
+  box-shadow: 0 6px 18px -6px rgba(10, 138, 77, 0.32);
   transform: translateY(-1px);
 }
 
-/* ---------- 15. Section dividers ---------- */
+/* ---------- 10. Section dividers ---------- */
 
 [data-theme="light"] .section {
-  border-top: 1px solid rgba(13, 125, 163, 0.14);
+  border-top: 1px solid rgba(13, 125, 163, 0.10);
 }
 
 [data-theme="light"] .section-dark {
   background:
-    linear-gradient(180deg, rgba(10, 138, 77, 0.05), transparent 30%, rgba(13, 125, 163, 0.05)),
+    linear-gradient(180deg, rgba(10, 138, 77, 0.04), transparent 30%, rgba(13, 125, 163, 0.04)),
     var(--panel-strong);
-  border-top: 1px solid rgba(13, 125, 163, 0.20);
-  border-bottom: 1px solid rgba(13, 125, 163, 0.20);
+  border-top: 1px solid rgba(13, 125, 163, 0.16);
+  border-bottom: 1px solid rgba(13, 125, 163, 0.16);
 }
 
-/* ---------- 16. Footer — solid base ---------- */
+/* ---------- 11. Footer ---------- */
 
 [data-theme="light"] .site-footer {
   background:
-    linear-gradient(180deg, rgba(13, 125, 163, 0.04), rgba(10, 138, 77, 0.03)),
+    linear-gradient(180deg, rgba(13, 125, 163, 0.03), rgba(10, 138, 77, 0.025)),
     var(--bg-soft);
-  border-top: 1px solid rgba(13, 125, 163, 0.20);
+  border-top: 1px solid rgba(13, 125, 163, 0.16);
 }
 
-/* ---------- 17. Stronger headline weight in light mode ---------- */
+/* ---------- 12. Typography — avax-inspired clarity ---------- */
 
-[data-theme="light"] h1 {
-  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.6));
-}
-
-/* ---------- 18. Body text solidity ---------- */
-
-/* Primary paragraph copy — ink-strength for crisp reading */
+/* Body paragraph copy: ink-strength for crisp reading */
 [data-theme="light"] body,
 [data-theme="light"] .hero-text,
 [data-theme="light"] .section p,
@@ -5192,14 +5003,14 @@ nav a,
   color: var(--ink);
 }
 
-/* Hero copy lead */
 [data-theme="light"] .hero-text {
   color: var(--ink);
   text-shadow: none;
   font-weight: 500;
+  line-height: 1.55;
 }
 
-/* Strip neon-glow text-shadows that don't belong on cream */
+/* Strip neon glows from headings */
 [data-theme="light"] h1,
 [data-theme="light"] h2,
 [data-theme="light"] h3,
@@ -5216,7 +5027,18 @@ nav a,
   text-shadow: none;
 }
 
-/* Card titles */
+/* Headlines */
+[data-theme="light"] h1 {
+  color: var(--ink-strong);
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.5));
+  letter-spacing: -0.02em;
+}
+
+[data-theme="light"] h2 {
+  color: var(--ink-strong);
+  letter-spacing: -0.015em;
+}
+
 [data-theme="light"] article h3,
 [data-theme="light"] .feature-grid h3,
 [data-theme="light"] .pillar h3,
@@ -5224,10 +5046,7 @@ nav a,
 [data-theme="light"] .scan-panel h3 {
   color: var(--ink-strong);
   font-weight: 850;
-}
-
-[data-theme="light"] h2 {
-  color: var(--ink-strong);
+  letter-spacing: -0.01em;
 }
 
 /* Form labels */
@@ -5235,7 +5054,7 @@ nav a,
 [data-theme="light"] .scan-form label,
 [data-theme="light"] .history-filter label {
   color: var(--ink);
-  font-weight: 850;
+  font-weight: 800;
 }
 
 /* Status messages */
@@ -5247,11 +5066,25 @@ nav a,
   font-weight: 600;
 }
 
-/* Secondary captions stay softer */
+/* Tertiary captions */
 [data-theme="light"] .footer-status small,
 [data-theme="light"] .build-status small,
 [data-theme="light"] .blueprint-status small,
 [data-theme="light"] .scan-list strong,
 [data-theme="light"] .scan-row strong {
   color: var(--muted-strong);
+}
+
+/* ---------- Fix scan-summary inner divs in light mode ---------- */
+[data-theme="light"] .scan-summary div {
+  background: var(--panel);
+  border: 1px solid rgba(13, 125, 163, 0.18);
+  box-shadow: 0 1px 3px rgba(6, 32, 40, 0.05);
+}
+[data-theme="light"] .scan-summary span {
+  color: var(--blue);
+}
+[data-theme="light"] .scan-summary strong {
+  color: var(--ink-strong);
+  text-shadow: none;
 }
