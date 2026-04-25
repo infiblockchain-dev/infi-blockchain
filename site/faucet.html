@@ -171,6 +171,16 @@
         </form>
       </section>
 
+      <section class="section" id="history">
+        <div class="section-heading">
+          <p class="eyebrow">History</p>
+          <h2>Current and Previous Claims</h2>
+        </div>
+        <div class="faucet-history" id="faucet-history" aria-live="polite">
+          <p class="status">No faucet claims saved in this browser yet.</p>
+        </div>
+      </section>
+
       <section class="section" id="policy">
         <div class="section-heading">
           <p class="eyebrow">Policy</p>
@@ -215,7 +225,9 @@
 
     <script>
       const status = document.getElementById("faucet-status");
+      const historyPanel = document.getElementById("faucet-history");
       const UNIT = 1000000000000000000n;
+      const HISTORY_KEY = "infi-faucet-history-v1";
 
       function setStatus(message) {
         status.textContent = message;
@@ -229,6 +241,29 @@
         return url.replace(/\/+$/, "");
       }
 
+      function shortHash(value) {
+        if (!value || value.length < 18) {
+          return value || "Pending";
+        }
+        return `${value.slice(0, 10)}...${value.slice(-8)}`;
+      }
+
+      function quantityToNumber(value) {
+        if (!value || value === "0x") {
+          return 0;
+        }
+        return Number(BigInt(value));
+      }
+
+      function escapeHtml(value) {
+        return String(value || "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
       function formatTokenAmount(weiText) {
         const wei = BigInt(weiText);
         const whole = wei / UNIT;
@@ -238,6 +273,163 @@
         }
         const fractionText = fraction.toString().padStart(18, "0").replace(/0+$/, "");
         return `${whole.toLocaleString()}.${fractionText}`;
+      }
+
+      function readHistory() {
+        try {
+          const history = JSON.parse(window.localStorage.getItem(HISTORY_KEY) || "[]");
+          return Array.isArray(history) ? history : [];
+        } catch (error) {
+          return [];
+        }
+      }
+
+      function saveHistory(history) {
+        window.localStorage.setItem(HISTORY_KEY, JSON.stringify(history.slice(0, 25)));
+      }
+
+      async function rpc(url, method, params = []) {
+        const response = await fetch(normalizeRpcUrl(url), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ jsonrpc: "2.0", id: Date.now(), method, params })
+        });
+        const json = await response.json();
+        if (json.error) {
+          throw new Error(json.error.message || `${method} failed`);
+        }
+        return json.result;
+      }
+
+      async function enrichClaim(url, claim, fallbackWallet) {
+        const entry = {
+          transactionHash: claim.transactionHash,
+          walletAddress: claim.address || fallbackWallet,
+          amount: claim.amount,
+          blockNumber: claim.blockNumberDecimal !== undefined && claim.blockNumberDecimal !== null
+            ? String(claim.blockNumberDecimal)
+            : "Pending",
+          mintedAt: claim.timestampMs ? new Date(Number(claim.timestampMs)).toISOString() : new Date().toISOString()
+        };
+
+        if (entry.blockNumber !== "Pending") {
+          return entry;
+        }
+
+        try {
+          const receipt = await rpc(url, "eth_getTransactionReceipt", [claim.transactionHash]);
+          if (receipt && receipt.blockNumber) {
+            entry.blockNumber = String(quantityToNumber(receipt.blockNumber));
+            const block = await rpc(url, "eth_getBlockByNumber", [receipt.blockNumber, false]);
+            if (block && block.timestamp) {
+              entry.mintedAt = new Date(quantityToNumber(block.timestamp) * 1000).toISOString();
+            }
+          }
+        } catch (error) {
+          entry.note = "Block metadata still syncing.";
+        }
+
+        return entry;
+      }
+
+      async function faucetHistory(url) {
+        const response = await fetch(`${normalizeRpcUrl(url)}/faucet/history?limit=100`);
+        const json = await response.json();
+        if (json.status !== "ok") {
+          throw new Error(json.message || "Faucet history failed.");
+        }
+        return json;
+      }
+
+      function normalizeHistoryEntry(entry) {
+        const blockNumber = entry.blockNumberDecimal !== undefined && entry.blockNumberDecimal !== null
+          ? String(entry.blockNumberDecimal)
+          : entry.blockNumber && String(entry.blockNumber).startsWith("0x")
+            ? String(quantityToNumber(entry.blockNumber))
+            : String(entry.blockNumber || "Pending");
+        return {
+          transactionHash: entry.transactionHash || "",
+          walletAddress: entry.walletAddress || entry.address || "",
+          amount: entry.amount || "0",
+          blockNumber,
+          mintedAt: entry.mintedAt || (entry.timestampMs ? new Date(Number(entry.timestampMs)).toISOString() : new Date().toISOString())
+        };
+      }
+
+      function copyValue(value, label) {
+        const done = () => setStatus(`${label} copied.`);
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(value).then(done).catch(() => {
+            fallbackCopy(value);
+            done();
+          });
+          return;
+        }
+        fallbackCopy(value);
+        done();
+      }
+
+      function fallbackCopy(value) {
+        const textArea = document.createElement("textarea");
+        textArea.value = value;
+        textArea.setAttribute("readonly", "");
+        textArea.style.position = "fixed";
+        textArea.style.opacity = "0";
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        textArea.remove();
+      }
+
+      function renderHistory(history = readHistory()) {
+        if (!history.length) {
+          historyPanel.innerHTML = '<p class="status">No faucet claims found yet. New testnet faucet mints will appear here after claiming.</p>';
+          return;
+        }
+
+        historyPanel.innerHTML = history.map(normalizeHistoryEntry).map((entry) => `
+          <article class="faucet-history-card">
+            <div>
+              <span>Transaction hash</span>
+              <strong>${escapeHtml(shortHash(entry.transactionHash))}</strong>
+              <button class="copy-chip" type="button" data-copy="${escapeHtml(entry.transactionHash)}" data-copy-label="Transaction hash">Copy</button>
+            </div>
+            <div>
+              <span>Wallet address</span>
+              <strong>${escapeHtml(shortHash(entry.walletAddress))}</strong>
+              <button class="copy-chip" type="button" data-copy="${escapeHtml(entry.walletAddress)}" data-copy-label="Wallet address">Copy</button>
+            </div>
+            <div>
+              <span>Minting time and date</span>
+              <strong>${escapeHtml(new Date(entry.mintedAt).toLocaleString())}</strong>
+            </div>
+            <div>
+              <span>Block number</span>
+              <strong>${escapeHtml(entry.blockNumber)}</strong>
+              <button class="copy-chip" type="button" data-copy="${escapeHtml(entry.blockNumber)}" data-copy-label="Block number">Copy</button>
+            </div>
+          </article>
+        `).join("");
+      }
+
+      function addHistoryEntry(entry) {
+        const history = readHistory().filter((item) => item.transactionHash !== entry.transactionHash);
+        saveHistory([entry, ...history]);
+        renderHistory();
+      }
+
+      async function loadFaucetHistory(url) {
+        try {
+          const history = await faucetHistory(url);
+          const transactions = Array.isArray(history.transactions) ? history.transactions : [];
+          if (transactions.length) {
+            renderHistory(transactions);
+            return;
+          }
+        } catch (error) {
+          // Keep the faucet useful while a public RPC redeploy is still warming up.
+        }
+        renderHistory(readHistory());
       }
 
       async function faucetStatus(url, address) {
@@ -284,6 +476,9 @@
 
           setStatus("Submitting faucet claim...");
           const claim = await faucetClaim(`${normalizeRpcUrl(rpcUrl)}/faucet/claim`, wallet, amount);
+          const historyEntry = await enrichClaim(rpcUrl, claim, wallet);
+          addHistoryEntry(historyEntry);
+          loadFaucetHistory(rpcUrl);
           setStatus(
             `Claim submitted: ${formatTokenAmount(claim.amount)} tINVX. ` +
             `Remaining this month: ${formatTokenAmount(claim.remainingThisMonth)} tINVX. ` +
@@ -293,6 +488,16 @@
           setStatus(error && error.message ? error.message : "Faucet claim failed.");
         }
       });
+
+      historyPanel.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-copy]");
+        if (!button) {
+          return;
+        }
+        copyValue(button.dataset.copy, button.dataset.copyLabel || "Value");
+      });
+
+      loadFaucetHistory(document.getElementById("rpc-url").value.trim());
     </script>
     <script src="/background.js" defer></script>
   </body>

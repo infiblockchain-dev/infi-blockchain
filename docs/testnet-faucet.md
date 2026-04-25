@@ -94,6 +94,7 @@ The current public prototype has server-side faucet endpoints on the INFI Testne
 
 ```text
 GET  /faucet/status?address=0x...
+GET  /faucet/history?limit=100
 POST /faucet/claim
 ```
 
@@ -116,7 +117,16 @@ Claim request body:
 }
 ```
 
-Claim response includes the transaction hash, claimed amount, monthly usage, remaining allowance, and warning.
+Claim response includes the transaction hash, block number, block hash, mint timestamp, claimed amount, monthly usage, remaining allowance, and warning.
+
+History response lists current and previous faucet mint transactions with:
+
+- transaction hash
+- wallet address
+- amount
+- mint timestamp
+- block number
+- block hash
 
 The prototype uses:
 

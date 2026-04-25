@@ -1446,6 +1446,38 @@ pre {
   font-weight: 720;
 }
 
+.faucet-history {
+  display: grid;
+  gap: 14px;
+}
+
+.faucet-history-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1.35fr) minmax(180px, 0.9fr) minmax(150px, 0.7fr);
+  gap: 14px;
+  padding: 18px;
+}
+
+.faucet-history-card div {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  min-width: 0;
+}
+
+.faucet-history-card span {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.faucet-history-card strong {
+  overflow-wrap: anywhere;
+  color: var(--ink);
+  font-size: 0.94rem;
+}
+
 .scan-hero {
   grid-template-columns: minmax(0, 1fr) minmax(320px, 460px);
 }
@@ -2068,6 +2100,7 @@ pre {
   .architecture-grid,
   .scan-form,
   .scan-grid,
+  .faucet-history-card,
   .device-grid,
   .ecosystem-layout,
   .ecosystem-grid,

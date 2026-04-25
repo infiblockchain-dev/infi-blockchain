@@ -40,6 +40,7 @@ Current implemented prototype methods:
 - `eth_getLogs`
 - `GET /health`
 - `GET /faucet/status?address=0x...`
+- `GET /faucet/history?limit=100`
 - `POST /faucet/claim`
 
 The wallet-compatibility methods above are prototype responses so wallets such as MetaMask can recognize and inspect INFI Testnet. They are not a replacement for full production EVM execution, signed Ethereum transaction decoding, contract storage, event indexing, or finalized fee-market logic.
@@ -157,6 +158,12 @@ Check faucet allowance:
 curl -s "http://127.0.0.1:8545/faucet/status?address=0x3333333333333333333333333333333333333333"
 ```
 
+List current and previous faucet mint transactions:
+
+```bash
+curl -s "http://127.0.0.1:8545/faucet/history?limit=100"
+```
+
 Claim 1,000 test InvertX from the faucet:
 
 ```bash
@@ -165,7 +172,7 @@ curl -s -X POST http://127.0.0.1:8545/faucet/claim \
   -d '{"address":"0x3333333333333333333333333333333333333333","amount":"1000000000000000000000"}'
 ```
 
-The faucet endpoint enforces a `10,000 test InvertX` maximum per claim and a `100,000 test InvertX` monthly cap per wallet in the running RPC process.
+The faucet endpoint enforces a `10,000 test InvertX` maximum per claim and a `100,000 test InvertX` monthly cap per wallet in the running RPC process. Faucet claim and history responses expose transaction hash, wallet address, minting time, and block number for public transparency.
 
 ## MetaMask Requirements
 

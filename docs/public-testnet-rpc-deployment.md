@@ -12,6 +12,7 @@ The goal is to make the RPC reachable over HTTPS so wallets and the website can 
 - `eth_getTransactionReceipt`
 - temporary dev-only `eth_sendRawTransaction`
 - `GET /faucet/status?address=0x...`
+- `GET /faucet/history?limit=100`
 - `POST /faucet/claim`
 
 Important: this is still a prototype public RPC, not a decentralized production testnet. Real Ethereum signed transaction decoding, production database storage, validator networking, rate limiting, and INFI Scan indexing still need to be completed before a community testnet announcement.
@@ -70,6 +71,12 @@ Check faucet status:
 
 ```bash
 curl -s "http://127.0.0.1:8545/faucet/status?address=0x3333333333333333333333333333333333333333"
+```
+
+Check public faucet mint history:
+
+```bash
+curl -s "http://127.0.0.1:8545/faucet/history?limit=100"
 ```
 
 Claim 1,000 test InvertX:

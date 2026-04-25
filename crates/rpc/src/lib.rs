@@ -101,6 +101,10 @@ impl RpcServer {
             target.filter(|(_, path)| path.starts_with("/faucet/status"))
         {
             self.handle_faucet_status(path)
+        } else if let Some(("GET", path)) =
+            target.filter(|(_, path)| path.starts_with("/faucet/history"))
+        {
+            self.handle_faucet_history(path)
         } else if matches!(target, Some(("POST", "/faucet/claim"))) {
             match http_body(&request) {
                 Some(body) => self.handle_faucet_claim(body),
@@ -288,7 +292,11 @@ impl RpcServer {
 
     fn handle_get_block_by_number(&self, id: &str, body: &str) -> String {
         let Some(block_tag) = params_string_at(body, 0) else {
-            return json_error(id, -32602, "eth_getBlockByNumber requires a block parameter");
+            return json_error(
+                id,
+                -32602,
+                "eth_getBlockByNumber requires a block parameter",
+            );
         };
         let full_transactions = params_bool_at(body, 1).unwrap_or(false);
 
@@ -308,7 +316,11 @@ impl RpcServer {
 
     fn handle_get_block_by_hash(&self, id: &str, body: &str) -> String {
         let Some(hash_text) = params_string_at(body, 0) else {
-            return json_error(id, -32602, "eth_getBlockByHash requires a block hash parameter");
+            return json_error(
+                id,
+                -32602,
+                "eth_getBlockByHash requires a block hash parameter",
+            );
         };
         let Some(hash) = parse_hash(&hash_text) else {
             return json_error(id, -32602, "Invalid block hash");
@@ -540,6 +552,18 @@ impl RpcServer {
         faucet_status_json(address, &month_key, claimed)
     }
 
+    fn handle_faucet_history(&self, path: &str) -> String {
+        let limit = query_value(path, "limit")
+            .and_then(|value| value.parse::<usize>().ok())
+            .unwrap_or(100)
+            .clamp(1, 500);
+        let storage = match self.storage.lock() {
+            Ok(storage) => storage,
+            Err(_) => return faucet_error("Storage unavailable"),
+        };
+        faucet_history_json(&storage, limit)
+    }
+
     fn handle_faucet_claim(&self, body: &str) -> String {
         let Some(address_text) = json_string_field(body, "address") else {
             return faucet_error("faucet_claim requires an address");
@@ -594,6 +618,18 @@ impl RpcServer {
         }
 
         let transaction_hash = mine_transaction(&mut storage, transaction);
+        let (block_number, block_hash, timestamp_ms) = storage
+            .receipt(&transaction_hash)
+            .and_then(|receipt| {
+                storage.block_by_number(receipt.block_number).map(|block| {
+                    (
+                        receipt.block_number,
+                        receipt.block_hash,
+                        block.header.timestamp_ms,
+                    )
+                })
+            })
+            .unwrap_or((0, Hash::ZERO, now_ms()));
         let claimed_after = faucet.record_claim(recipient, &month_key, amount.0);
         if let Err(error) = self.persist_chain_storage(&storage) {
             return faucet_error(&error);
@@ -607,6 +643,9 @@ impl RpcServer {
             amount.0,
             &month_key,
             claimed_after,
+            block_number,
+            block_hash,
+            timestamp_ms,
         )
     }
 
@@ -997,12 +1036,85 @@ fn faucet_status_json(address: Address, month_key: &str, claimed: u128) -> Strin
     )
 }
 
+fn faucet_history_json(storage: &MemoryStorage, limit: usize) -> String {
+    let faucet_address = Address::repeat(0x22);
+    let mut entries = Vec::new();
+
+    for block in storage.blocks() {
+        let block_hash_value = block_hash(block);
+        for transaction in &block.transactions {
+            if transaction.from != faucet_address {
+                continue;
+            }
+            let Some(wallet_address) = transaction.to else {
+                continue;
+            };
+            entries.push(faucet_history_entry_json(
+                &transaction.hash(),
+                wallet_address,
+                transaction.value.0,
+                block.header.number,
+                &block_hash_value,
+                block.header.timestamp_ms,
+            ));
+        }
+    }
+
+    entries.reverse();
+    entries.truncate(limit);
+
+    format!(
+        "{{\
+         \"status\":\"ok\",\
+         \"transactions\":[{}],\
+         \"count\":{},\
+         \"symbol\":\"tINVX\",\
+         \"warning\":\"{}\"\
+         }}",
+        entries.join(","),
+        entries.len(),
+        escape_json(FAUCET_WARNING)
+    )
+}
+
+fn faucet_history_entry_json(
+    transaction_hash: &Hash,
+    wallet_address: Address,
+    amount: u128,
+    block_number: u64,
+    block_hash: &Hash,
+    timestamp_ms: u64,
+) -> String {
+    format!(
+        "{{\
+         \"transactionHash\":\"{}\",\
+         \"walletAddress\":\"{}\",\
+         \"amount\":\"{}\",\
+         \"blockNumber\":\"0x{:x}\",\
+         \"blockNumberDecimal\":{},\
+         \"blockHash\":\"{}\",\
+         \"timestampMs\":{},\
+         \"symbol\":\"tINVX\"\
+         }}",
+        transaction_hash,
+        wallet_address,
+        amount,
+        block_number,
+        block_number,
+        block_hash,
+        timestamp_ms
+    )
+}
+
 fn faucet_claim_json(
     address: Address,
     transaction_hash: &Hash,
     amount: u128,
     month_key: &str,
     claimed: u128,
+    block_number: u64,
+    block_hash: Hash,
+    timestamp_ms: u64,
 ) -> String {
     let remaining = FAUCET_MONTHLY_LIMIT.saturating_sub(claimed);
     format!(
@@ -1011,6 +1123,10 @@ fn faucet_claim_json(
          \"address\":\"{}\",\
          \"transactionHash\":\"{}\",\
          \"amount\":\"{}\",\
+         \"blockNumber\":\"0x{:x}\",\
+         \"blockNumberDecimal\":{},\
+         \"blockHash\":\"{}\",\
+         \"timestampMs\":{},\
          \"month\":\"{}\",\
          \"monthlyLimit\":\"{}\",\
          \"claimedThisMonth\":\"{}\",\
@@ -1021,6 +1137,10 @@ fn faucet_claim_json(
         address,
         transaction_hash,
         amount,
+        block_number,
+        block_number,
+        block_hash,
+        timestamp_ms,
         escape_json(month_key),
         FAUCET_MONTHLY_LIMIT,
         claimed,
