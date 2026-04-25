@@ -93,7 +93,9 @@ Current prototype progress:
 - `eth_getBalance`: implemented
 - `eth_getTransactionCount`: implemented
 - `eth_getTransactionReceipt`: implemented for indexed prototype transactions
-- `eth_sendRawTransaction`: placeholder error until signed transaction decoding is implemented
+- `eth_sendRawTransaction`: implemented for temporary dev-only transfer payloads
+
+Important: real Ethereum signed transaction decoding is still pending. The dev-only payload format must be replaced before public testnet wallet support.
 
 Exit criteria:
 
@@ -101,6 +103,7 @@ Exit criteria:
 - wallet or script can query balance
 - transaction hash can be returned
 - receipt can be queried
+- dev-only transfer transaction can be submitted locally
 
 ## Phase 3: Add Persistent Storage
 

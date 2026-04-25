@@ -22,9 +22,11 @@ Current implemented prototype methods:
 - `eth_getTransactionCount`
 - `eth_getTransactionReceipt`
 
-Prototype placeholder:
+Prototype dev transaction format:
 
-- `eth_sendRawTransaction` returns a clear not-implemented error until signed Ethereum transaction decoding is added.
+- `eth_sendRawTransaction` accepts a temporary dev-only hex payload.
+- Real Ethereum signed transaction decoding is still pending.
+- Do not use the dev payload format on public testnet or mainnet.
 
 Current local RPC URL:
 
@@ -80,19 +82,41 @@ curl -s -X POST http://127.0.0.1:8545 \
   -d '{"jsonrpc":"2.0","id":1,"method":"eth_getTransactionCount","params":["0x1111111111111111111111111111111111111111","latest"]}'
 ```
 
-Check raw transaction placeholder:
+Submit a dev transfer transaction:
+
+The temporary raw payload format is:
+
+```text
+infi:transfer:<from>:<to>:<value_wei>:<nonce>
+```
+
+Example payload:
+
+```text
+infi:transfer:0x2222222222222222222222222222222222222222:0x1111111111111111111111111111111111111111:1000000000000000000:0
+```
+
+Convert it to hex:
+
+```bash
+RAW_TX=$(printf 'infi:transfer:0x2222222222222222222222222222222222222222:0x1111111111111111111111111111111111111111:1000000000000000000:0' | xxd -p -c 256)
+```
+
+Submit it:
 
 ```bash
 curl -s -X POST http://127.0.0.1:8545 \
   -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"eth_sendRawTransaction","params":["0x00"]}'
+  -d "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"eth_sendRawTransaction\",\"params\":[\"0x$RAW_TX\"]}"
 ```
 
-Expected placeholder error:
+Expected result:
 
 ```json
-{"jsonrpc":"2.0","id":1,"error":{"code":-32000,"message":"Raw Ethereum transaction decoding is not implemented yet"}}
+{"jsonrpc":"2.0","id":1,"result":"0xTRANSACTION_HASH"}
 ```
+
+Then query the receipt with that hash using `eth_getTransactionReceipt`.
 
 ## MetaMask Requirements
 

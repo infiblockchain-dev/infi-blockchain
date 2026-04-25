@@ -57,6 +57,18 @@ curl -s -X POST http://127.0.0.1:8545 \
   -d '{"jsonrpc":"2.0","id":1,"method":"eth_getTransactionCount","params":["0x1111111111111111111111111111111111111111","latest"]}'
 ```
 
+Submit a temporary dev transfer from Bob to Alice:
+
+```bash
+RAW_TX=$(printf 'infi:transfer:0x2222222222222222222222222222222222222222:0x1111111111111111111111111111111111111111:1000000000000000000:0' | xxd -p -c 256)
+
+curl -s -X POST http://127.0.0.1:8545 \
+  -H "Content-Type: application/json" \
+  -d "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"eth_sendRawTransaction\",\"params\":[\"0x$RAW_TX\"]}"
+```
+
+This is not a real Ethereum signed transaction yet. It is a local development bridge so the RPC/faucet/explorer flow can progress.
+
 ## 5. Learn the Crates
 
 ```text
@@ -73,8 +85,8 @@ crates/node        node binary
 
 The first implementation priorities are:
 
-1. signed transaction decoding
-2. `eth_sendRawTransaction`
+1. real Ethereum signed transaction decoding
+2. production-safe `eth_sendRawTransaction`
 3. persistent state
 4. real EVM execution
 5. INFI Scan indexer

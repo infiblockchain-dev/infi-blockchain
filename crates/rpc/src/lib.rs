@@ -2,8 +2,9 @@ use std::io::{Read, Write};
 use std::net::{TcpListener, TcpStream};
 use std::str::FromStr;
 use std::sync::{Arc, Mutex};
+use std::time::{SystemTime, UNIX_EPOCH};
 
-use infi_primitives::{Address, ChainConfig, Hash};
+use infi_primitives::{Address, Amount, Block, BlockHeader, ChainConfig, Hash, Transaction};
 use infi_storage::{ChainStorage, MemoryStorage, TransactionReceipt};
 
 pub struct RpcInfo {
@@ -118,11 +119,7 @@ impl RpcServer {
             "eth_getBalance" => self.handle_get_balance(&id, body),
             "eth_getTransactionCount" => self.handle_get_transaction_count(&id, body),
             "eth_getTransactionReceipt" => self.handle_get_transaction_receipt(&id, body),
-            "eth_sendRawTransaction" => json_error(
-                &id,
-                -32000,
-                "Raw Ethereum transaction decoding is not implemented yet",
-            ),
+            "eth_sendRawTransaction" => self.handle_send_raw_transaction(&id, body),
             _ => json_error(&id, -32601, "Method not found"),
         }
     }
@@ -193,6 +190,52 @@ impl RpcServer {
         };
 
         json_result_raw(id, &receipt_json(receipt))
+    }
+
+    fn handle_send_raw_transaction(&self, id: &str, body: &str) -> String {
+        let Some(raw_transaction) = first_params_string(body) else {
+            return json_error(
+                id,
+                -32602,
+                "eth_sendRawTransaction requires a raw transaction parameter",
+            );
+        };
+
+        let transaction = match decode_dev_transfer_transaction(&raw_transaction) {
+            Ok(transaction) => transaction,
+            Err(message) => return json_error(id, -32602, message),
+        };
+
+        let transaction_hash = transaction.hash();
+        let mut storage = self.storage.lock().expect("RPC storage mutex poisoned");
+        if let Err(error) = storage.transfer(
+            transaction.from,
+            transaction.to.expect("dev transfer requires recipient"),
+            transaction.value,
+            transaction.fee(),
+            transaction.nonce,
+        ) {
+            return json_error(id, -32000, &format!("Transaction rejected: {error:?}"));
+        }
+
+        let next_block_number = storage
+            .latest_block()
+            .map(|block| block.header.number + 1)
+            .unwrap_or(1);
+        let block = Block {
+            header: BlockHeader {
+                parent_hash: Hash::ZERO,
+                number: next_block_number,
+                state_root: Hash::ZERO,
+                tx_root: transaction_hash,
+                proposer: Address::repeat(0xaa),
+                timestamp_ms: now_ms(),
+            },
+            transactions: vec![transaction],
+        };
+        storage.push_block(block);
+
+        json_result_string(id, &transaction_hash.to_string())
     }
 }
 
@@ -325,4 +368,49 @@ fn receipt_json(receipt: &TransactionReceipt) -> String {
         "0".repeat(512),
         status
     )
+}
+
+fn decode_dev_transfer_transaction(raw_transaction: &str) -> Result<Transaction, &'static str> {
+    let bytes = decode_hex(raw_transaction).ok_or("Raw transaction must be valid hex")?;
+    let payload = String::from_utf8(bytes).map_err(|_| "Raw transaction must be UTF-8")?;
+    let parts: Vec<&str> = payload.split(':').collect();
+
+    if parts.len() != 6 || parts[0] != "infi" || parts[1] != "transfer" {
+        return Err("Unsupported dev raw transaction format");
+    }
+
+    let from = Address::from_str(parts[2]).map_err(|_| "Invalid sender address")?;
+    let to = Address::from_str(parts[3]).map_err(|_| "Invalid recipient address")?;
+    let value = parts[4]
+        .parse::<u128>()
+        .map_err(|_| "Invalid transfer value")?;
+    let nonce = parts[5].parse::<u64>().map_err(|_| "Invalid nonce")?;
+
+    Ok(Transaction::simple_transfer(
+        from,
+        to,
+        Amount::from_invertx_units(value),
+        nonce,
+    ))
+}
+
+fn decode_hex(value: &str) -> Option<Vec<u8>> {
+    let hex = value.strip_prefix("0x").unwrap_or(value);
+    if hex.len() % 2 != 0 {
+        return None;
+    }
+
+    let mut output = Vec::with_capacity(hex.len() / 2);
+    for index in (0..hex.len()).step_by(2) {
+        output.push(u8::from_str_radix(&hex[index..index + 2], 16).ok()?);
+    }
+
+    Some(output)
+}
+
+fn now_ms() -> u64 {
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .expect("system clock before Unix epoch")
+        .as_millis() as u64
 }
