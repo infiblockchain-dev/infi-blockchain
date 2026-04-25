@@ -3657,3 +3657,899 @@ nav a:hover {
   background: radial-gradient(ellipse at 50% 47%, rgba(34, 255, 154, 0.045), transparent 65%);
   border-radius: 10px;
 }
+
+
+/* ============================================================
+   INFI THEME SYSTEM — light/dark with persistent toggle
+   ============================================================
+   APPLY: This file should be appended to the END of site/styles.css
+   AFTER all your existing rules.
+
+   The token block at the top redefines :root variables for both
+   themes. Because it appears AFTER your existing :root block, the
+   cascade rules ensure these values win.
+
+   Light mode is keyed off [data-theme="light"] on <html>. The toggle
+   button + boot script in the HTML manage that attribute.
+   ============================================================ */
+
+/* ============================================================
+   THEME TOKENS — dark (default) and light
+   Every color in the site references these. Switching themes is
+   a single attribute flip on <html data-theme="...">.
+   ============================================================ */
+
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Surface */
+  --bg: #02070c;
+  --bg-soft: #050d14;
+  --panel: #07131a;
+  --panel-strong: #0a1a22;
+  --panel-muted: rgba(7, 19, 26, 0.6);
+
+  /* Text */
+  --ink: #effff9;
+  --ink-strong: #ffffff;
+  --muted: #9db8b7;
+  --muted-strong: #c9e7df;
+
+  /* Brand accents */
+  --green: #22ff9a;
+  --green-strong: #22ff9a;
+  --green-soft: rgba(34, 255, 154, 0.15);
+  --blue: #20d9ff;
+  --blue-strong: #20d9ff;
+  --blue-soft: rgba(32, 217, 255, 0.15);
+  --teal: #30f2d2;
+  --red: #ff3d6e;
+  --gold: #e9b44c;
+
+  /* Borders / dividers */
+  --line: rgba(32, 217, 255, 0.2);
+  --line-strong: rgba(32, 217, 255, 0.42);
+  --line-green: rgba(34, 255, 154, 0.24);
+  --line-green-strong: rgba(34, 255, 154, 0.5);
+  --line-soft: rgba(239, 255, 249, 0.06);
+
+  /* Shadows / glows */
+  --shadow-blue: 0 0 30px rgba(32, 217, 255, 0.18);
+  --shadow-green: 0 0 32px rgba(34, 255, 154, 0.18);
+  --shadow-card: 0 0 32px rgba(32, 217, 255, 0.10);
+  --shadow-elevated: 0 0 38px rgba(34, 255, 154, 0.14), 0 0 32px rgba(32, 217, 255, 0.16);
+  --glow-strength: 1;
+
+  /* RGBA primitives (used inline by SVG/gradients/shadows) */
+  --rgb-green: 34, 255, 154;
+  --rgb-blue: 32, 217, 255;
+  --rgb-ink: 239, 255, 249;
+  --rgb-bg: 2, 7, 12;
+  --rgb-panel: 7, 19, 26;
+
+  /* Semantic — for the architecture mesh, blueprint, etc. */
+  --mesh-edge-from: rgba(34, 255, 154, 0);
+  --mesh-edge-to: rgba(34, 255, 154, 0.55);
+  --mesh-bg-fade: rgba(34, 255, 154, 0.045);
+  --hex-grid-line: rgba(34, 255, 154, 0.06);
+  --topology-line: rgba(32, 217, 255, 0.06);
+  --binary-text: rgba(34, 255, 154, 0.18);
+
+  /* Layout */
+  --header-height: 82px;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+
+  /* Surface — warm off-white, not pure white */
+  --bg: #f3f7f5;
+  --bg-soft: #ebf0ee;
+  --panel: #ffffff;
+  --panel-strong: #f7faf9;
+  --panel-muted: rgba(255, 255, 255, 0.85);
+
+  /* Text — deep teal-black for warmth without harshness */
+  --ink: #062028;
+  --ink-strong: #02101a;
+  --muted: #4d6772;
+  --muted-strong: #2a4651;
+
+  /* Brand accents — desaturated, "earned" colors that read as ink.
+     The base --green / --blue values are AA-compliant against --bg
+     (≥4.5:1) so they're safe to use as text. The -strong variants
+     are AAA-grade for emphasis/headings. */
+  --green: #066b3a;            /* was #0a8a4d (4.09:1, FAIL) — now 6.13:1, AA */
+  --green-strong: #054a28;     /* deeper still, ~9:1 */
+  --green-soft: rgba(10, 138, 77, 0.10);
+  --blue: #095d7d;             /* was #0d7da3 (4.34:1, FAIL) — now 6.76:1, AA */
+  --blue-strong: #064457;      /* deeper still, ~9:1 */
+  --blue-soft: rgba(13, 125, 163, 0.10);
+  --teal: #0a635c;
+  --red: #a01a3c;
+  --gold: #8a6420;
+
+  /* Borders — softer in light mode */
+  --line: rgba(13, 125, 163, 0.22);
+  --line-strong: rgba(13, 125, 163, 0.44);
+  --line-green: rgba(10, 138, 77, 0.24);
+  --line-green-strong: rgba(10, 138, 77, 0.48);
+  --line-soft: rgba(6, 32, 40, 0.08);
+
+  /* Shadows — replace neon glows with proper drop shadows */
+  --shadow-blue: 0 6px 24px -8px rgba(13, 125, 163, 0.28);
+  --shadow-green: 0 6px 24px -8px rgba(10, 138, 77, 0.28);
+  --shadow-card: 0 4px 18px -8px rgba(6, 32, 40, 0.18), 0 1px 2px rgba(6, 32, 40, 0.06);
+  --shadow-elevated: 0 12px 40px -16px rgba(10, 138, 77, 0.22), 0 6px 24px -10px rgba(13, 125, 163, 0.22), 0 1px 0 rgba(255, 255, 255, 0.7) inset;
+  --glow-strength: 0.4;
+
+  /* RGBA primitives — match the new ink colors */
+  --rgb-green: 10, 138, 77;
+  --rgb-blue: 13, 125, 163;
+  --rgb-ink: 6, 32, 40;
+  --rgb-bg: 243, 247, 245;
+  --rgb-panel: 255, 255, 255;
+
+  /* Semantic — light-mode safe values */
+  --mesh-edge-from: rgba(10, 138, 77, 0);
+  --mesh-edge-to: rgba(10, 138, 77, 0.55);
+  --mesh-bg-fade: rgba(10, 138, 77, 0.04);
+  --hex-grid-line: rgba(10, 138, 77, 0.10);
+  --topology-line: rgba(13, 125, 163, 0.10);
+  --binary-text: rgba(13, 125, 163, 0.16);
+}
+
+/* Auto-pick on first visit if no explicit choice is stored */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    color-scheme: light;
+    --bg: #f3f7f5;
+    --bg-soft: #ebf0ee;
+    --panel: #ffffff;
+    --panel-strong: #f7faf9;
+    --panel-muted: rgba(255, 255, 255, 0.85);
+    --ink: #062028;
+    --ink-strong: #02101a;
+    --muted: #4d6772;
+    --muted-strong: #2a4651;
+    --green: #066b3a;
+    --green-strong: #054a28;
+    --green-soft: rgba(10, 138, 77, 0.10);
+    --blue: #095d7d;
+    --blue-strong: #064457;
+    --blue-soft: rgba(13, 125, 163, 0.10);
+    --teal: #0a635c;
+    --red: #a01a3c;
+    --gold: #8a6420;
+    --line: rgba(13, 125, 163, 0.22);
+    --line-strong: rgba(13, 125, 163, 0.44);
+    --line-green: rgba(10, 138, 77, 0.24);
+    --line-green-strong: rgba(10, 138, 77, 0.48);
+    --line-soft: rgba(6, 32, 40, 0.08);
+    --shadow-blue: 0 6px 24px -8px rgba(13, 125, 163, 0.28);
+    --shadow-green: 0 6px 24px -8px rgba(10, 138, 77, 0.28);
+    --shadow-card: 0 4px 18px -8px rgba(6, 32, 40, 0.18), 0 1px 2px rgba(6, 32, 40, 0.06);
+    --shadow-elevated: 0 12px 40px -16px rgba(10, 138, 77, 0.22), 0 6px 24px -10px rgba(13, 125, 163, 0.22), 0 1px 0 rgba(255, 255, 255, 0.7) inset;
+    --glow-strength: 0.4;
+    --rgb-green: 10, 138, 77;
+    --rgb-blue: 13, 125, 163;
+    --rgb-ink: 6, 32, 40;
+    --rgb-bg: 243, 247, 245;
+    --rgb-panel: 255, 255, 255;
+    --mesh-edge-from: rgba(10, 138, 77, 0);
+    --mesh-edge-to: rgba(10, 138, 77, 0.55);
+    --mesh-bg-fade: rgba(10, 138, 77, 0.04);
+    --hex-grid-line: rgba(10, 138, 77, 0.10);
+    --topology-line: rgba(13, 125, 163, 0.10);
+    --binary-text: rgba(13, 125, 163, 0.16);
+  }
+}
+
+/* Smooth theme transitions on color/border/shadow only — never on transform/animation */
+html,
+body,
+.site-header,
+.section,
+article,
+.architecture-blueprint,
+.arch-topology,
+.arch-layers,
+.arch-metrics div,
+.feature-grid > article,
+.pillar,
+.layer,
+.arch-layer,
+.chain-block,
+.invertx-focus,
+nav a,
+.nav-action,
+.eyebrow,
+.build-status,
+.brand-mark,
+.blueprint-mark,
+.layer-icon,
+.arch-layer-tag,
+.pillar-icon,
+.theme-toggle {
+  transition:
+    background-color 320ms ease,
+    background 320ms ease,
+    color 320ms ease,
+    border-color 320ms ease,
+    box-shadow 320ms ease,
+    fill 320ms ease,
+    stroke 320ms ease;
+}
+
+
+/* ============================================================
+   LIGHT MODE OVERRIDES
+   ============================================================
+   Tokens above already swap automatically. This block handles the
+   places where we used hardcoded rgba() values inline (mostly for
+   glows, gradients, and decorative backgrounds) that need a
+   different treatment in light mode — not just a different value.
+   Light mode trades neon glow for proper shadows + deeper brand ink.
+   ============================================================ */
+
+[data-theme="light"] body {
+  background:
+    radial-gradient(ellipse at 18% 0%, rgba(13, 125, 163, 0.045), transparent 55%),
+    radial-gradient(ellipse at 82% 100%, rgba(10, 138, 77, 0.045), transparent 55%),
+    var(--bg);
+}
+
+/* ---------- Background atmospherics ---------- */
+
+[data-theme="light"] .depth-glow { opacity: 0.18; mix-blend-mode: multiply; filter: blur(80px); }
+[data-theme="light"] .depth-top { background: radial-gradient(circle at 30% 40%, rgba(10, 138, 77, 0.35), transparent 60%); }
+[data-theme="light"] .depth-center { background: radial-gradient(circle at 60% 50%, rgba(13, 125, 163, 0.32), transparent 60%); }
+[data-theme="light"] .depth-bottom { background: radial-gradient(circle at 50% 50%, rgba(10, 138, 77, 0.28), transparent 65%); }
+
+[data-theme="light"] .hex-grid { opacity: 0.5; }
+[data-theme="light"] .hex-grid path { stroke: rgba(13, 125, 163, 0.10) !important; }
+
+[data-theme="light"] .network-topology { opacity: 0.4; }
+
+[data-theme="light"] .mesh-line {
+  background: linear-gradient(90deg, transparent 0%, rgba(13, 125, 163, 0.32) 35%, rgba(10, 138, 77, 0.32) 65%, transparent 100%);
+  opacity: 0.42;
+}
+
+[data-theme="light"] .chain-spine {
+  background: linear-gradient(90deg, transparent 0%, rgba(10, 138, 77, 0.42) 50%, transparent 100%);
+  opacity: 0.4;
+}
+
+[data-theme="light"] .architecture-band {
+  opacity: 0.32;
+}
+
+[data-theme="light"] .node-dot {
+  background: radial-gradient(circle, rgba(10, 138, 77, 0.6) 0%, rgba(10, 138, 77, 0.25) 60%, transparent 100%);
+  box-shadow: 0 0 8px rgba(10, 138, 77, 0.28);
+  opacity: 0.55;
+}
+
+[data-theme="light"] .node-packet {
+  background: rgba(13, 125, 163, 0.7);
+  box-shadow: 0 0 6px rgba(13, 125, 163, 0.5);
+  opacity: 0.6;
+}
+
+[data-theme="light"] .binary-stream,
+[data-theme="light"] .binary-ribbon {
+  color: rgba(13, 125, 163, 0.24);
+  text-shadow: none;
+  opacity: 0.6;
+}
+
+[data-theme="light"] .architecture-chip,
+[data-theme="light"] .transfer-pulse {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(13, 125, 163, 0.32);
+  color: rgba(13, 125, 163, 0.7);
+  box-shadow: 0 1px 4px rgba(6, 32, 40, 0.08);
+  text-shadow: none;
+}
+
+/* ---------- Header ---------- */
+
+[data-theme="light"] .site-header {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  border-bottom: 1px solid rgba(13, 125, 163, 0.14);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset, 0 4px 18px -10px rgba(6, 32, 40, 0.10);
+}
+
+[data-theme="light"] .site-header::after {
+  background: linear-gradient(90deg, transparent, rgba(10, 138, 77, 0.5), rgba(13, 125, 163, 0.5), transparent);
+  opacity: 0.5;
+}
+
+/* Brand mark — shadow instead of glow */
+[data-theme="light"] .brand-mark::before {
+  background: conic-gradient(from 0deg,
+    transparent 0deg,
+    rgba(10, 138, 77, 0.85) 60deg,
+    rgba(13, 125, 163, 0.85) 140deg,
+    rgba(10, 138, 77, 0.55) 200deg,
+    transparent 260deg, transparent 360deg);
+  opacity: 0.7;
+}
+[data-theme="light"] .brand-mark::after {
+  background: radial-gradient(circle, rgba(10, 138, 77, 0.18) 0%, rgba(13, 125, 163, 0.12) 50%, transparent 75%);
+  filter: blur(10px);
+  opacity: 0.55;
+}
+
+/* Brand wordmark */
+[data-theme="light"] .brand > span:last-child,
+[data-theme="light"] .footer-brand > span:last-child {
+  background-image: linear-gradient(90deg, #066b3a 0%, #062028 22%, #095d7d 50%, #062028 78%, #066b3a 100%);
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.6));
+}
+
+/* Build status pill */
+[data-theme="light"] .build-status {
+  background: rgba(255, 255, 255, 0.86);
+  border-color: rgba(10, 138, 77, 0.36);
+  box-shadow: var(--shadow-card);
+}
+[data-theme="light"] .build-status strong {
+  background-image: linear-gradient(90deg, #062028 0%, #066b3a 35%, #095d7d 65%, #062028 100%);
+  filter: drop-shadow(0 0 0 transparent);
+}
+[data-theme="light"] .build-status small {
+  color: var(--muted);
+}
+
+/* Status dots */
+[data-theme="light"] .status-dots span {
+  background: var(--green);
+  box-shadow: 0 0 6px rgba(10, 138, 77, 0.5);
+}
+
+/* Nav links */
+[data-theme="light"] nav a {
+  color: var(--ink);
+}
+[data-theme="light"] nav a:hover {
+  color: var(--green-strong);
+  text-shadow: none;
+}
+[data-theme="light"] nav a::after {
+  background: linear-gradient(90deg, var(--green) 0%, var(--blue) 100%);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Nav action button */
+[data-theme="light"] .nav-action {
+  background: linear-gradient(135deg, rgba(10, 138, 77, 0.10), rgba(13, 125, 163, 0.06)), #ffffff;
+  border-color: rgba(10, 138, 77, 0.45);
+  color: var(--ink);
+  box-shadow: var(--shadow-card);
+  text-shadow: none;
+}
+[data-theme="light"] .nav-action:hover {
+  border-color: rgba(10, 138, 77, 0.7);
+  background: linear-gradient(135deg, rgba(10, 138, 77, 0.16), rgba(13, 125, 163, 0.10)), #ffffff;
+  box-shadow: 0 8px 28px -12px rgba(10, 138, 77, 0.32);
+}
+
+/* ---------- Theme toggle button (defined later) ---------- */
+
+/* ---------- Headings ---------- */
+
+[data-theme="light"] h1 {
+  background-image: linear-gradient(120deg, #062028 0%, #062028 28%, #066b3a 44%, #095d7d 60%, #062028 78%, #062028 100%);
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.5));
+}
+[data-theme="light"] h1::after {
+  background: linear-gradient(90deg, var(--green), var(--blue));
+  box-shadow: 0 2px 8px -2px rgba(10, 138, 77, 0.32);
+  filter: none;
+}
+[data-theme="light"] h2 {
+  background-image: linear-gradient(120deg, #062028 0%, #062028 32%, #066b3a 48%, #095d7d 62%, #062028 80%, #062028 100%);
+  filter: none;
+}
+[data-theme="light"] h3 {
+  color: var(--ink);
+  text-shadow: none;
+}
+
+[data-theme="light"] .hero-text strong {
+  background-image: linear-gradient(90deg, #066b3a 0%, #095d7d 50%, #066b3a 100%);
+  filter: none;
+}
+
+[data-theme="light"] p,
+[data-theme="light"] .section p,
+[data-theme="light"] li {
+  color: var(--muted-strong);
+}
+[data-theme="light"] .hero-text {
+  color: var(--ink);
+}
+
+/* ---------- Eyebrow pills ---------- */
+
+[data-theme="light"] .eyebrow {
+  background: rgba(255, 255, 255, 0.86);
+  color: var(--blue-strong);
+  border-color: rgba(13, 125, 163, 0.36);
+  box-shadow: 0 1px 4px rgba(6, 32, 40, 0.08);
+  text-shadow: none;
+}
+
+[data-theme="light"] .eyebrow::after {
+  background: linear-gradient(90deg, transparent 0%, rgba(10, 138, 77, 0.18) 45%, rgba(13, 125, 163, 0.18) 55%, transparent 100%);
+}
+
+/* ---------- Sections / cards ---------- */
+
+[data-theme="light"] .section-dark {
+  background:
+    linear-gradient(180deg, rgba(10, 138, 77, 0.04), transparent 24%, rgba(13, 125, 163, 0.04)),
+    var(--panel-strong);
+  color: var(--ink);
+}
+[data-theme="light"] .section {
+  background: transparent;
+}
+
+[data-theme="light"] article,
+[data-theme="light"] .feature-grid > article {
+  background: var(--panel);
+  border-color: var(--line);
+  box-shadow: var(--shadow-card);
+}
+[data-theme="light"] article:hover {
+  border-color: var(--line-strong);
+  box-shadow: 0 8px 28px -12px rgba(13, 125, 163, 0.24);
+  transform: translateY(-2px);
+}
+
+[data-theme="light"] .feature-kicker {
+  color: var(--green-strong);
+  text-shadow: none;
+}
+
+/* ---------- Pillars ---------- */
+
+[data-theme="light"] .pillar-icon {
+  background: linear-gradient(135deg, rgba(10, 138, 77, 0.10), rgba(13, 125, 163, 0.06)), var(--panel);
+  border-color: rgba(10, 138, 77, 0.36);
+  box-shadow: 0 2px 8px -3px rgba(10, 138, 77, 0.22);
+  text-shadow: none;
+}
+[data-theme="light"] .pillar-decentralization .pillar-icon { color: var(--green); border-color: rgba(10, 138, 77, 0.5); box-shadow: 0 2px 10px -4px rgba(10, 138, 77, 0.32); }
+[data-theme="light"] .pillar-safety .pillar-icon { color: var(--blue); border-color: rgba(13, 125, 163, 0.5); box-shadow: 0 2px 10px -4px rgba(13, 125, 163, 0.32); }
+[data-theme="light"] .pillar-speed .pillar-icon { color: var(--gold); border-color: rgba(176, 132, 52, 0.5); box-shadow: 0 2px 10px -4px rgba(176, 132, 52, 0.32); }
+[data-theme="light"] .pillar-transparency .pillar-icon { color: var(--teal); border-color: rgba(13, 125, 117, 0.5); box-shadow: 0 2px 10px -4px rgba(13, 125, 117, 0.32); }
+[data-theme="light"] .pillar-decentralization .feature-kicker { color: var(--green-strong); }
+[data-theme="light"] .pillar-safety .feature-kicker { color: var(--blue-strong); }
+[data-theme="light"] .pillar-speed .feature-kicker { color: #8a6420; }
+[data-theme="light"] .pillar-transparency .feature-kicker { color: #0a635c; }
+
+/* ---------- Architecture blueprint (hero) ---------- */
+
+[data-theme="light"] .architecture-blueprint {
+  background:
+    linear-gradient(155deg, rgba(10, 138, 77, 0.05), transparent 38%, rgba(13, 125, 163, 0.05)),
+    var(--panel);
+  border-color: rgba(10, 138, 77, 0.28);
+  box-shadow: var(--shadow-elevated);
+}
+[data-theme="light"] .architecture-blueprint::before {
+  background:
+    repeating-linear-gradient(0deg, transparent 0 22px, rgba(10, 138, 77, 0.04) 22px 23px),
+    repeating-linear-gradient(90deg, transparent 0 22px, rgba(13, 125, 163, 0.04) 22px 23px);
+}
+[data-theme="light"] .architecture-blueprint::after {
+  background: linear-gradient(135deg, rgba(10, 138, 77, 0.45), transparent 40%, rgba(13, 125, 163, 0.4));
+  opacity: 0.4;
+}
+
+[data-theme="light"] .blueprint-mark {
+  background: linear-gradient(135deg, rgba(10, 138, 77, 0.10), rgba(13, 125, 163, 0.08)), var(--panel-strong);
+  border-color: rgba(10, 138, 77, 0.4);
+  box-shadow: 0 2px 8px -3px rgba(10, 138, 77, 0.24);
+}
+[data-theme="light"] .blueprint-mark::before {
+  background: conic-gradient(from 90deg,
+    transparent 0deg,
+    rgba(10, 138, 77, 0.85) 70deg,
+    rgba(13, 125, 163, 0.85) 150deg,
+    transparent 220deg, transparent 360deg);
+  opacity: 0.55;
+}
+[data-theme="light"] .blueprint-mark::after {
+  background: radial-gradient(circle, rgba(10, 138, 77, 0.16) 0%, rgba(13, 125, 163, 0.10) 50%, transparent 75%);
+  filter: blur(8px);
+  opacity: 0.4;
+}
+
+[data-theme="light"] .blueprint-brand strong {
+  background-image: linear-gradient(90deg, #062028 0%, #066b3a 35%, #095d7d 65%, #062028 100%);
+  filter: none;
+}
+[data-theme="light"] .blueprint-brand em { color: var(--green-strong); }
+
+[data-theme="light"] .blueprint-status {
+  background: var(--panel-strong);
+  border-color: rgba(10, 138, 77, 0.4);
+  box-shadow: 0 1px 4px rgba(6, 32, 40, 0.08);
+}
+[data-theme="light"] .live-block { color: var(--green-strong); }
+[data-theme="light"] .live-dot { box-shadow: 0 0 6px rgba(10, 138, 77, 0.7); }
+
+/* Block ribbon */
+[data-theme="light"] .block-ribbon {
+  background:
+    linear-gradient(90deg, var(--panel) 0%, var(--panel-strong) 50%, var(--panel) 100%);
+  border-color: var(--line);
+}
+[data-theme="light"] .block-ribbon::before {
+  background: linear-gradient(90deg, transparent 0%, rgba(10, 138, 77, 0.10) 50%, transparent 100%);
+}
+[data-theme="light"] .chain-block {
+  background: linear-gradient(135deg, rgba(13, 125, 163, 0.06), rgba(10, 138, 77, 0.04)), var(--panel-strong);
+  border-color: rgba(13, 125, 163, 0.36);
+  box-shadow: 0 1px 3px rgba(6, 32, 40, 0.06), inset 0 0 6px rgba(13, 125, 163, 0.04);
+}
+[data-theme="light"] .chain-block .block-num { color: var(--blue-strong); }
+[data-theme="light"] .chain-block .block-hash { color: var(--muted); }
+[data-theme="light"] .chain-block.is-current {
+  background: linear-gradient(135deg, rgba(10, 138, 77, 0.18), rgba(13, 125, 163, 0.06)), var(--panel);
+  border-color: rgba(10, 138, 77, 0.65);
+  box-shadow: 0 2px 10px -4px rgba(10, 138, 77, 0.4), inset 0 0 8px rgba(10, 138, 77, 0.08);
+}
+[data-theme="light"] .chain-block.is-current .block-num { color: var(--green-strong); }
+[data-theme="light"] .chain-block.is-pending { background: var(--panel-strong); border-color: rgba(6, 32, 40, 0.18); opacity: 0.7; }
+[data-theme="light"] .chain-link {
+  background: linear-gradient(90deg, rgba(13, 125, 163, 0.55), rgba(10, 138, 77, 0.55));
+  box-shadow: none;
+}
+[data-theme="light"] .chain-link::after {
+  background: var(--green-strong);
+  box-shadow: 0 0 6px rgba(10, 138, 77, 0.7);
+}
+[data-theme="light"] .chain-link.is-pending {
+  background: linear-gradient(90deg, rgba(6, 32, 40, 0.15), rgba(6, 32, 40, 0.08));
+}
+[data-theme="light"] .chain-link.is-pending::after {
+  background: rgba(6, 32, 40, 0.25);
+}
+
+/* Layer stack */
+[data-theme="light"] .layer {
+  background: linear-gradient(90deg, rgba(10, 138, 77, 0.04), rgba(13, 125, 163, 0.04)), var(--panel);
+  border-color: var(--line);
+}
+[data-theme="light"] .layer:hover {
+  background: linear-gradient(90deg, rgba(10, 138, 77, 0.10), rgba(13, 125, 163, 0.06)), var(--panel);
+  border-color: rgba(10, 138, 77, 0.5);
+}
+[data-theme="light"] .layer-icon {
+  background: linear-gradient(135deg, rgba(10, 138, 77, 0.18), rgba(13, 125, 163, 0.12)), var(--panel-strong);
+  border-color: rgba(10, 138, 77, 0.32);
+  text-shadow: none;
+}
+[data-theme="light"] .layer-evm .layer-icon,
+[data-theme="light"] .layer-network .layer-icon {
+  color: var(--blue);
+  border-color: rgba(13, 125, 163, 0.36);
+}
+[data-theme="light"] .layer-storage .layer-icon {
+  color: var(--gold);
+  border-color: rgba(176, 132, 52, 0.4);
+}
+[data-theme="light"] .layer-text strong { color: var(--ink); }
+[data-theme="light"] .layer-text span { color: var(--muted); }
+[data-theme="light"] .layer-tag {
+  background: var(--panel-strong);
+  border-color: rgba(13, 125, 163, 0.36);
+  color: var(--blue-strong);
+}
+
+[data-theme="light"] .blueprint-rail span {
+  background: var(--panel-strong);
+  border-color: var(--line);
+  color: var(--muted-strong);
+}
+[data-theme="light"] .blueprint-rail em { color: var(--green-strong); }
+
+/* ---------- Architecture section ---------- */
+
+[data-theme="light"] .arch-topology,
+[data-theme="light"] .arch-layers {
+  background:
+    linear-gradient(155deg, rgba(10, 138, 77, 0.04), transparent 40%, rgba(13, 125, 163, 0.04)),
+    var(--panel);
+  border-color: var(--line-green);
+  box-shadow: var(--shadow-card);
+}
+[data-theme="light"] .arch-topology::after,
+[data-theme="light"] .arch-layers::after {
+  background:
+    repeating-linear-gradient(0deg, transparent 0 28px, rgba(10, 138, 77, 0.025) 28px 29px),
+    repeating-linear-gradient(90deg, transparent 0 28px, rgba(13, 125, 163, 0.025) 28px 29px);
+}
+
+[data-theme="light"] .arch-topology-svg {
+  background: radial-gradient(ellipse at 50% 47%, rgba(10, 138, 77, 0.04), transparent 65%);
+}
+
+/* SVG strokes inside the validator mesh need explicit overrides — they were
+   set via attribute, not CSS variable */
+[data-theme="light"] .topology-grid line { stroke: rgba(13, 125, 163, 0.12) !important; }
+
+[data-theme="light"] #arch-line stop:first-child { stop-color: rgba(10, 138, 77, 0); }
+[data-theme="light"] #arch-line stop:nth-child(2) { stop-color: rgba(10, 138, 77, 0.55); }
+[data-theme="light"] #arch-line stop:last-child { stop-color: rgba(13, 125, 163, 0); }
+
+[data-theme="light"] .topology-edges path { stroke: url(#arch-line) !important; }
+[data-theme="light"] .topology-packets-in circle { fill: rgba(13, 125, 163, 1) !important; filter: drop-shadow(0 0 4px rgba(13, 125, 163, 0.7)); }
+[data-theme="light"] .topology-packets-out circle { fill: rgba(10, 138, 77, 1) !important; filter: drop-shadow(0 0 4px rgba(10, 138, 77, 0.7)); }
+[data-theme="light"] .topology-packets-cross circle { fill: rgba(6, 32, 40, 0.6) !important; }
+
+[data-theme="light"] .finalization-waves circle:nth-child(1) { stroke: rgba(10, 138, 77, 0.7) !important; }
+[data-theme="light"] .finalization-waves circle:nth-child(2) { stroke: rgba(13, 125, 163, 0.7) !important; }
+[data-theme="light"] .finalization-waves circle:nth-child(3) { stroke: rgba(10, 138, 77, 0.55) !important; }
+
+[data-theme="light"] .topology-nodes circle { stroke-width: 1.6; }
+[data-theme="light"] .topology-nodes text { fill: rgba(6, 32, 40, 0.85) !important; }
+
+/* Topology params */
+[data-theme="light"] .topology-params div {
+  background: linear-gradient(135deg, rgba(10, 138, 77, 0.04), rgba(13, 125, 163, 0.04)), var(--panel);
+  border-color: var(--line);
+  box-shadow: 0 1px 3px rgba(6, 32, 40, 0.06);
+}
+[data-theme="light"] .topo-param-label { color: var(--blue-strong); }
+[data-theme="light"] .topology-params strong { color: var(--ink); }
+[data-theme="light"] .topology-params em { color: var(--muted); }
+
+[data-theme="light"] .topology-legend span { color: var(--muted-strong); }
+[data-theme="light"] .legend-green { background: var(--green); box-shadow: 0 0 4px rgba(10, 138, 77, 0.5); }
+[data-theme="light"] .legend-blue { background: var(--blue); box-shadow: 0 0 4px rgba(13, 125, 163, 0.5); }
+[data-theme="light"] .legend-pulse { background: rgba(10, 138, 77, 0.25); border-color: rgba(10, 138, 77, 0.7); box-shadow: 0 0 4px rgba(10, 138, 77, 0.4); }
+
+/* Layer breakdown list */
+[data-theme="light"] .arch-layer {
+  background: linear-gradient(90deg, rgba(10, 138, 77, 0.04), rgba(13, 125, 163, 0.04)), var(--panel);
+  border-color: var(--line);
+  box-shadow: 0 1px 4px rgba(6, 32, 40, 0.06);
+}
+[data-theme="light"] .arch-layer:hover {
+  background: linear-gradient(90deg, rgba(10, 138, 77, 0.08), rgba(13, 125, 163, 0.06)), var(--panel);
+  border-color: rgba(10, 138, 77, 0.45);
+}
+[data-theme="light"] .arch-layer::before { background: linear-gradient(180deg, var(--green), var(--blue)); }
+[data-theme="light"] .arch-layer-tag {
+  background: linear-gradient(135deg, rgba(10, 138, 77, 0.15), rgba(13, 125, 163, 0.08)), var(--panel-strong);
+  border-color: rgba(10, 138, 77, 0.36);
+  color: var(--green-strong);
+}
+[data-theme="light"] .arch-layer strong { color: var(--ink); }
+[data-theme="light"] .arch-layer p { color: var(--muted); }
+[data-theme="light"] .arch-layer-icon { color: var(--blue); text-shadow: none; }
+
+/* Architecture metrics rail */
+[data-theme="light"] .arch-metrics div {
+  background: linear-gradient(135deg, rgba(10, 138, 77, 0.04), rgba(13, 125, 163, 0.04)), var(--panel);
+  border-color: var(--line);
+  box-shadow: 0 1px 4px rgba(6, 32, 40, 0.06);
+}
+[data-theme="light"] .arch-metric-label { color: var(--blue-strong); }
+[data-theme="light"] .arch-metrics strong { color: var(--ink); text-shadow: none; }
+[data-theme="light"] .arch-metrics em { color: var(--muted); }
+
+/* ---------- Decentralization grid ---------- */
+
+[data-theme="light"] .architecture-grid > article {
+  background: var(--panel);
+  border-color: var(--line);
+  box-shadow: var(--shadow-card);
+}
+
+/* ---------- Buttons ---------- */
+
+[data-theme="light"] .btn-primary,
+[data-theme="light"] button.btn-primary,
+[data-theme="light"] a.btn-primary {
+  background: linear-gradient(135deg, var(--green) 0%, var(--blue) 100%);
+  color: #ffffff;
+  border-color: transparent;
+  text-shadow: none;
+  box-shadow: 0 4px 14px -4px rgba(10, 138, 77, 0.42);
+}
+[data-theme="light"] .btn-primary:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 6px 20px -6px rgba(10, 138, 77, 0.5);
+}
+
+[data-theme="light"] .btn-ghost,
+[data-theme="light"] button.btn-ghost,
+[data-theme="light"] a.btn-ghost {
+  background: var(--panel);
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  box-shadow: var(--shadow-card);
+}
+[data-theme="light"] .btn-ghost:hover {
+  border-color: var(--blue-strong);
+  background: rgba(13, 125, 163, 0.05);
+}
+
+[data-theme="light"] .btn-link {
+  color: var(--blue-strong);
+}
+
+/* ---------- Footer ---------- */
+
+[data-theme="light"] .site-footer {
+  background: var(--bg-soft);
+  border-top: 1px solid var(--line);
+  color: var(--muted-strong);
+}
+[data-theme="light"] .footer-links a { color: var(--ink); }
+[data-theme="light"] .footer-links a:hover { color: var(--green-strong); }
+[data-theme="light"] .footer-status { background: var(--panel); border-color: var(--line); box-shadow: var(--shadow-card); }
+
+/* ---------- Reduce neon-glow filters across the board in light mode ---------- */
+
+[data-theme="light"] .text-shadow-glow,
+[data-theme="light"] [class*="-glow"] {
+  /* We don't kill it everywhere, but where text-shadow is large + neon, mute it */
+}
+
+/* ---------- Code/pre blocks ---------- */
+
+[data-theme="light"] pre,
+[data-theme="light"] code {
+  background: var(--panel-strong);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+/* ---------- Faucet / testnet specific ---------- */
+
+[data-theme="light"] .invertx-focus {
+  background: var(--panel);
+  border-color: var(--line);
+  box-shadow: var(--shadow-card);
+}
+[data-theme="light"] .invertx-focus h3 { color: var(--ink); }
+[data-theme="light"] .invertx-focus p { color: var(--muted); }
+[data-theme="light"] .metric-row div {
+  background: var(--panel);
+  border-color: var(--line);
+}
+[data-theme="light"] .manual-grid div {
+  background: var(--panel-strong);
+  border-color: var(--line);
+}
+
+/* ============================================================
+   THEME TOGGLE — header button (works in both modes)
+   ============================================================ */
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-left: 8px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: background 220ms ease, border-color 220ms ease, transform 220ms ease;
+}
+
+.theme-toggle:hover {
+  border-color: var(--green);
+  background: rgba(34, 255, 154, 0.08);
+  transform: translateY(-1px);
+}
+
+[data-theme="light"] .theme-toggle {
+  background: var(--panel);
+  border-color: var(--line);
+  box-shadow: 0 1px 4px rgba(6, 32, 40, 0.06);
+}
+[data-theme="light"] .theme-toggle:hover {
+  border-color: var(--green-strong);
+  background: rgba(10, 138, 77, 0.06);
+}
+
+.theme-toggle svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 360ms cubic-bezier(0.4, 0, 0.2, 1), opacity 220ms ease;
+  position: absolute;
+}
+
+/* Sun shows in dark mode (so user can switch to light); moon shows in light mode */
+.theme-toggle .icon-sun { opacity: 1; transform: rotate(0deg) scale(1); }
+.theme-toggle .icon-moon { opacity: 0; transform: rotate(-90deg) scale(0.6); }
+
+[data-theme="light"] .theme-toggle .icon-sun { opacity: 0; transform: rotate(90deg) scale(0.6); }
+[data-theme="light"] .theme-toggle .icon-moon { opacity: 1; transform: rotate(0deg) scale(1); }
+
+@media (max-width: 820px) {
+  .theme-toggle {
+    width: 36px;
+    height: 36px;
+    margin-left: 4px;
+  }
+  .theme-toggle svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* Reduce-motion: instant icon swap, no rotation */
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle svg { transition: opacity 120ms ease; }
+}
+
+/* ============================================================
+   PRINT STYLES (bonus — improves PDF/print rendering in either mode)
+   ============================================================ */
+
+@media print {
+  body { background: white; color: black; }
+  .node-background, .depth-glow, .hex-grid, .network-topology,
+  .mesh-line, .chain-spine, .architecture-band, .node-dot,
+  .node-packet, .binary-stream, .binary-ribbon,
+  .architecture-chip, .transfer-pulse,
+  .theme-toggle, .nav-action { display: none !important; }
+  h1, h2, h3 { color: black !important; -webkit-text-fill-color: black !important; background: none !important; }
+  article, .arch-layer, .layer, .pillar, .feature-grid > article {
+    border: 1px solid #ccc !important;
+    background: white !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+  }
+}
+
+/* SVG inner-circle fills (the ones set via attribute) — override in light mode */
+[data-theme="light"] .topology-nodes circle[fill*="rgba(2,7,12"],
+[data-theme="light"] .topology-nodes circle[fill*="rgba(7,19,26"] {
+  fill: rgba(255, 255, 255, 0.96) !important;
+}
+
+[data-theme="light"] .topology-nodes circle[stroke*="rgba(34,255,154"] {
+  stroke: var(--green) !important;
+}
+[data-theme="light"] .topology-nodes circle[stroke*="rgba(32,217,255"] {
+  stroke: var(--blue) !important;
+}
+
+[data-theme="light"] .t-leader text:first-of-type {
+  fill: var(--green-strong) !important;
+}
+
+/* "+ block" indicator pill */
+[data-theme="light"] .topology-nodes rect[fill*="rgba(2,7,12"] {
+  fill: rgba(255, 255, 255, 0.95) !important;
+  stroke: var(--green) !important;
+}
+[data-theme="light"] .topology-nodes rect[stroke*="rgba(34,255,154"] {
+  stroke: var(--green) !important;
+}
