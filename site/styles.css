@@ -4602,3 +4602,174 @@ nav a,
 [data-theme="light"] .section:not(.section-dark) {
   background: transparent;
 }
+
+/* ============================================================
+   FIX-003: Complete light-mode coverage
+   ============================================================
+   Adds light-mode overrides for:
+   - .split, .faucet-form, .scan-form, .scan-panel, .scan-summary
+   - all form inputs/selects on light surfaces
+   - .faucet-history-card (article variant)
+   - .scan-row separators
+   - .invertx-focus, .metric-row, .manual-grid (already in old block,
+     but the wide article+split rule at line 1090 wins; we need
+     stronger selectors to take over in light mode)
+   ============================================================ */
+
+/* Universal panel surfaces — wins over the multi-selector rule at line 1090
+   by using [data-theme="light"] (higher specificity than the bare selector). */
+[data-theme="light"] article,
+[data-theme="light"] .invertx-focus,
+[data-theme="light"] .metric-row div,
+[data-theme="light"] .manual-grid div,
+[data-theme="light"] .device-grid article,
+[data-theme="light"] .split,
+[data-theme="light"] .faucet-form,
+[data-theme="light"] .faucet-history-card,
+[data-theme="light"] .scan-summary,
+[data-theme="light"] .scan-form,
+[data-theme="light"] .scan-panel {
+  background:
+    linear-gradient(145deg, rgba(13, 125, 163, 0.04), transparent 42%, rgba(10, 138, 77, 0.03)),
+    var(--panel);
+  border-color: var(--line);
+  box-shadow: var(--shadow-card);
+}
+
+[data-theme="light"] article:hover,
+[data-theme="light"] .invertx-focus:hover,
+[data-theme="light"] .metric-row div:hover,
+[data-theme="light"] .manual-grid div:hover,
+[data-theme="light"] .device-grid article:hover,
+[data-theme="light"] .split:hover,
+[data-theme="light"] .faucet-form:hover {
+  border-color: rgba(10, 138, 77, 0.42);
+  box-shadow: 0 8px 28px -12px rgba(10, 138, 77, 0.24), 0 1px 0 rgba(255, 255, 255, 0.6) inset;
+}
+
+/* Top accent strip on cards — softer in light */
+[data-theme="light"] article::before,
+[data-theme="light"] .invertx-focus::before,
+[data-theme="light"] .metric-row div::before,
+[data-theme="light"] .manual-grid div::before,
+[data-theme="light"] .device-grid article::before,
+[data-theme="light"] .split::before,
+[data-theme="light"] .faucet-form::before {
+  background: linear-gradient(90deg, rgba(10, 138, 77, 0.65), rgba(13, 125, 163, 0.5), transparent);
+  opacity: 0.55;
+}
+
+[data-theme="light"] article::after,
+[data-theme="light"] .invertx-focus::after,
+[data-theme="light"] .metric-row div::after,
+[data-theme="light"] .manual-grid div::after,
+[data-theme="light"] .device-grid article::after,
+[data-theme="light"] .split::after,
+[data-theme="light"] .faucet-form::after {
+  background:
+    linear-gradient(115deg, transparent 0 36%, rgba(10, 138, 77, 0.06) 43%, rgba(13, 125, 163, 0.07) 50%, transparent 58%),
+    radial-gradient(circle at var(--card-x, 18%) var(--card-y, 20%), rgba(10, 138, 77, 0.07), transparent 34%);
+}
+
+/* Form inputs — clean white with subtle border, dark ink */
+[data-theme="light"] .faucet-form input,
+[data-theme="light"] .faucet-form select,
+[data-theme="light"] .scan-form input,
+[data-theme="light"] .history-filter input {
+  background: var(--panel-strong);
+  border-color: var(--line-strong);
+  color: var(--ink);
+  box-shadow: 0 1px 2px rgba(6, 32, 40, 0.04) inset;
+}
+
+[data-theme="light"] .faucet-form input:focus,
+[data-theme="light"] .faucet-form select:focus,
+[data-theme="light"] .scan-form input:focus,
+[data-theme="light"] .history-filter input:focus {
+  outline: 2px solid var(--green);
+  outline-offset: 1px;
+  border-color: var(--green);
+}
+
+[data-theme="light"] .faucet-form input::placeholder,
+[data-theme="light"] .scan-form input::placeholder,
+[data-theme="light"] .history-filter input::placeholder {
+  color: rgba(77, 103, 114, 0.7);
+}
+
+/* Form labels */
+[data-theme="light"] .faucet-form label,
+[data-theme="light"] .scan-form label,
+[data-theme="light"] .history-filter label {
+  color: var(--muted-strong);
+}
+
+/* Status text under forms */
+[data-theme="light"] .status,
+[data-theme="light"] .faucet-form .status,
+[data-theme="light"] .history-filter .status {
+  color: var(--muted-strong);
+}
+
+/* Faucet history card — internal text */
+[data-theme="light"] .faucet-history-card span {
+  color: var(--blue);
+}
+[data-theme="light"] .faucet-history-card strong {
+  color: var(--ink);
+}
+
+/* Scan summary inner divs (Chain ID / Latest Block / RPC / Gas Token panel) */
+[data-theme="light"] .scan-summary div {
+  background: var(--panel-strong);
+  border-color: var(--line);
+  box-shadow: 0 1px 3px rgba(6, 32, 40, 0.06);
+}
+[data-theme="light"] .scan-summary span {
+  color: var(--blue);
+}
+[data-theme="light"] .scan-summary strong {
+  color: var(--ink);
+  text-shadow: none;
+}
+
+/* Scan rows (transaction/block detail tables) */
+[data-theme="light"] .scan-row {
+  border-bottom-color: var(--line);
+}
+[data-theme="light"] .scan-row strong {
+  color: var(--muted);
+}
+[data-theme="light"] .scan-row span,
+[data-theme="light"] .scan-list li {
+  color: var(--ink);
+}
+[data-theme="light"] .scan-list strong {
+  color: var(--muted);
+}
+
+/* Section heading on light pages — make sure subtle text shadow doesn't muddy */
+[data-theme="light"] .section-heading p:not(.eyebrow) {
+  color: var(--muted-strong);
+  text-shadow: none;
+}
+
+/* Token showcase wrapper on faucet/testnet hero — keep the dark gold InvertX rendering
+   but make the text label readable in light mode */
+[data-theme="light"] .token-showcase strong {
+  color: var(--ink);
+}
+[data-theme="light"] .token-showcase span {
+  color: var(--muted);
+}
+
+/* Copy chip */
+[data-theme="light"] .copy-chip {
+  background: var(--panel-strong);
+  border-color: var(--line);
+  color: var(--blue);
+}
+[data-theme="light"] .copy-chip:hover {
+  border-color: var(--blue);
+  background: rgba(13, 125, 163, 0.06);
+}
