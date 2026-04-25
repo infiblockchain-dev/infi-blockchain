@@ -67,7 +67,7 @@ It includes:
 - mobile and tablet wallet browser support
 - automatic MetaMask mobile opening when no mobile provider is injected
 - mobile links for MetaMask, Coinbase Wallet, and Trust Wallet
-- WalletConnect QR status button
+- WalletConnect QR through Reown AppKit
 - copyable full setup and manual fields
 - chain JSON fallback at `assets/chains/infi-testnet.json`
 - test InvertX logo

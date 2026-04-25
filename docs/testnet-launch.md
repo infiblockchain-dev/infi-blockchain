@@ -260,9 +260,9 @@ Current implemented setup support:
 - copyable full network setup
 - copyable manual setup fields
 - chain metadata JSON fallback
-- WalletConnect QR status button
+- WalletConnect QR through Reown AppKit
 
-WalletConnect QR remains a required next milestone for INFI Scan and full dapps. It is not the same as adding a network to an injected wallet.
+WalletConnect QR is active on the testnet setup page through Reown AppKit. It is a dapp connection path; wallet support still depends on whether the wallet accepts custom EVM chain metadata for INFI Testnet.
 
 Wallet metadata:
 

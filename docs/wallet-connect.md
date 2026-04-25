@@ -55,7 +55,7 @@ It currently supports:
 - copyable full network setup
 - copyable manual setup fields
 - chain metadata JSON fallback
-- WalletConnect QR status button
+- WalletConnect QR through Reown AppKit
 
 This means users on normal mobile Safari or Chrome should open the page through a wallet browser link first. Once the page is inside a wallet browser, the Add INFI Testnet button can use that wallet's injected provider.
 
@@ -67,7 +67,7 @@ https://infi-testnet-rpc.onrender.com/health
 
 The testnet page also includes a Check RPC button so users can wake and verify the RPC before the wallet import request.
 
-WalletConnect QR is not active on the static setup page yet. The page shows a WalletConnect QR button so users know this route exists, but real QR sessions require a Reown/WalletConnect project ID and a dapp session flow.
+WalletConnect QR is active on the static setup page through Reown AppKit using the INFI Blockchain Reown project. Desktop, mobile, and tablet users can use the WalletConnect QR button when their wallet supports custom EVM chains. If a wallet does not support custom chain import over WalletConnect, users should use the wallet browser link or manual setup fallback.
 
 ## Required User Flows
 

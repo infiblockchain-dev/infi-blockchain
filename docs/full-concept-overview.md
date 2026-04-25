@@ -50,7 +50,7 @@ Important limitations:
 - no staking, delegation, or slashing yet
 - no production database or indexer yet
 - no public INFI Scan explorer backend yet
-- no production WalletConnect QR session until a Reown/WalletConnect project is configured
+- WalletConnect QR is configured on the testnet page, but production dapps still need full wallet QA
 - no mainnet readiness yet
 
 ## Chain Identity
@@ -149,9 +149,9 @@ Current wallet setup page supports:
 - manual setup fallback
 - copyable setup fields
 - chain metadata JSON fallback
-- WalletConnect QR status button
+- WalletConnect QR through Reown AppKit
 
-WalletConnect/Reown AppKit is still a required next milestone for real QR sessions. A production WalletConnect QR flow needs a Reown/WalletConnect project ID and a real dapp connection flow.
+WalletConnect/Reown AppKit is configured for the public setup page. INFI Scan and future dapps still need full session, network switching, and transaction-signing QA before a broad public launch.
 
 ## RPC Compatibility
 
@@ -344,7 +344,7 @@ Next important testnet work:
 - add real Ethereum signed transaction decoding
 - add real EVM execution
 - build INFI Scan indexer and explorer backend
-- add WalletConnect/Reown AppKit with QR sessions
+- complete WalletConnect QA across MetaMask, Coinbase Wallet, Trust Wallet, and tablet browsers
 - add validator networking
 - add observability/status page
 - run private multi-node testnet before public community testnet

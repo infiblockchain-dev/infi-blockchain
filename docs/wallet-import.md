@@ -110,7 +110,7 @@ The current public testnet page supports:
 - copyable full setup text for wallets that do not support automatic import
 - copyable individual manual fields
 - downloadable chain metadata at `/assets/chains/infi-testnet.json`
-- WalletConnect QR status button
+- WalletConnect QR through Reown AppKit
 
 The current mobile links are:
 
@@ -120,7 +120,7 @@ Coinbase Wallet: https://go.cb-w.com/dapp?cb_url=https%3A%2F%2Finfi-blockchain.p
 Trust Wallet: https://link.trustwallet.com/open_url?coin_id=60&url=https%3A%2F%2Finfi-blockchain.pages.dev%2Ftestnet
 ```
 
-Important: WalletConnect QR support is still a planned dapp session flow. The current page exposes a WalletConnect QR button, but it cannot create real QR sessions until the project has a production WalletConnect/Reown project ID and the final INFI Scan dapp flow.
+Important: WalletConnect QR is now available on the testnet setup page through Reown AppKit. Wallet support still depends on each wallet's custom EVM chain handling. If a wallet cannot add INFI Testnet from the QR session, use the mobile wallet browser link or manual network setup.
 
 If a wallet shows an RPC connectivity warning such as "Unable to connect to INFI Testnet", first verify:
 

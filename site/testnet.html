@@ -517,8 +517,33 @@
       }
 
       function showWalletConnectStatus() {
-        setStatus("WalletConnect QR needs a Reown project ID before it can be activated. Use MetaMask mobile, Coinbase, Trust, or an injected browser wallet for now.");
+        const walletConnect = window.INFI_WALLETCONNECT;
+
+        if (walletConnect && walletConnect.ready && walletConnect.open) {
+          setStatus("Opening WalletConnect QR. Scan it with a supported wallet, then approve INFI Testnet.");
+          walletConnect.open();
+          return;
+        }
+
+        if (walletConnect && walletConnect.error) {
+          setStatus("WalletConnect QR could not load here. Use a wallet browser link, injected wallet, or manual setup.");
+          return;
+        }
+
+        setStatus("WalletConnect QR is loading. Try again in a moment, or use a wallet browser link.");
       }
+
+      document.addEventListener("infi:walletconnect-ready", () => {
+        if (status.textContent.includes("WalletConnect")) {
+          setStatus("WalletConnect QR is ready. Tap WalletConnect QR to connect from desktop, mobile, or tablet.");
+        }
+      });
+
+      document.addEventListener("infi:walletconnect-error", () => {
+        if (status.textContent.includes("WalletConnect")) {
+          setStatus("WalletConnect QR could not load here. Use a wallet browser link, injected wallet, or manual setup.");
+        }
+      });
 
       document.getElementById("add-network").addEventListener("click", addNetwork);
       document.getElementById("switch-network").addEventListener("click", switchNetwork);
@@ -535,6 +560,7 @@
       });
       describeWalletFallback();
     </script>
+    <script type="module" src="/walletconnect.js"></script>
     <script src="/background.js" defer></script>
   </body>
 </html>
