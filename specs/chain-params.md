@@ -25,9 +25,10 @@
 - Testnet token decimals: 18
 - Testnet chain ID: `98402`
 - Testnet chain ID hex: `0x18062`
-- Testnet RPC URL: `https://rpc.infi.infi`
-- Testnet explorer URL: `https://scan.infi.infi`
-- Testnet token logo: `https://infi.infi/assets/tokens/invertx-icon-512.png`
+- Current testnet RPC URL: `https://infi-testnet-rpc.onrender.com`
+- Future custom testnet RPC URL: `https://rpc.infi.infi`
+- Testnet explorer target: `https://scan.infi.infi`
+- Current testnet token logo: `https://infi-blockchain.pages.dev/assets/tokens/invertx-icon-512.png`
 - Testnet token real value: none
 - Testnet token trading: disabled / not tradable
 - Wallet/explorer display reference: `1 test InvertX = 1.25 USDT`

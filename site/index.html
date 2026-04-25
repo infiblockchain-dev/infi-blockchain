@@ -341,9 +341,9 @@
             <span></span>
             <span></span>
           </div>
-          <pre><code>curl -X POST https://rpc.infi.infi \
+          <pre><code>curl -X POST https://infi-testnet-rpc.onrender.com \
   -H "Content-Type: application/json" \
-  -d '{"method":"eth_chainId","params":[]}'
+  -d '{"jsonrpc":"2.0","id":1,"method":"eth_chainId","params":[]}'
 
 { "result": "0x18062" }</code></pre>
         </div>

@@ -247,9 +247,9 @@ Chain ID hex: 0x18062
 Native currency: test InvertX
 Symbol: tInvertX
 Decimals: 18
-RPC URL: https://rpc.infi.infi
-Explorer URL: https://scan.infi.infi
-Token icon: https://infi.infi/assets/tokens/invertx-icon-512.png
+RPC URL: https://infi-testnet-rpc.onrender.com
+Explorer target: https://scan.infi.infi
+Token icon: https://infi-blockchain.pages.dev/assets/tokens/invertx-icon-512.png
 ```
 
 The chain ID is provisional until the public testnet genesis is finalized.

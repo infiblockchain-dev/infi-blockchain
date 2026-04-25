@@ -23,7 +23,8 @@ Chain ID hex: 0x18062
 Native currency: test InvertX
 Symbol: tInvertX
 Decimals: 18
-RPC URL target: https://rpc.infi.infi
+Current public RPC URL: https://infi-testnet-rpc.onrender.com
+Future custom RPC target: https://rpc.infi.infi
 Health endpoint: /health
 ```
 
@@ -105,7 +106,7 @@ Steps:
 5. Confirm the service named `infi-testnet-rpc`.
 6. Deploy.
 7. Wait until the service health check passes.
-8. Copy the Render HTTPS URL, for example:
+8. Copy the Render HTTPS URL:
 
 ```text
 https://infi-testnet-rpc.onrender.com
@@ -118,6 +119,21 @@ curl -s https://YOUR_RENDER_URL/health
 curl -s -X POST https://YOUR_RENDER_URL \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","id":1,"method":"eth_chainId","params":[]}'
+```
+
+Current verified public endpoint:
+
+```bash
+curl -s https://infi-testnet-rpc.onrender.com/health
+curl -s -X POST https://infi-testnet-rpc.onrender.com \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"eth_chainId","params":[]}'
+```
+
+Expected:
+
+```json
+{"jsonrpc":"2.0","id":1,"result":"0x18062"}
 ```
 
 ## Custom RPC Domain

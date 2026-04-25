@@ -52,11 +52,11 @@ Provisional testnet metadata:
     "symbol": "tInvertX",
     "decimals": 18
   },
-  "rpcUrls": ["https://rpc.infi.infi"],
+  "rpcUrls": ["https://infi-testnet-rpc.onrender.com"],
   "blockExplorerUrls": ["https://scan.infi.infi"],
   "iconUrls": [
-    "https://infi.infi/assets/tokens/invertx-icon-512.png",
-    "https://infi.infi/assets/tokens/invertx-icon-256.png"
+    "https://infi-blockchain.pages.dev/assets/tokens/invertx-icon-512.png",
+    "https://infi-blockchain.pages.dev/assets/tokens/invertx-icon-256.png"
   ]
 }
 ```
@@ -70,9 +70,9 @@ Network name: INFI Testnet
 Native currency name: test InvertX
 Native currency symbol: tInvertX
 Native currency decimals: 18
-RPC URL: https://rpc.infi.infi
-Explorer URL: https://scan.infi.infi
-Token icon: https://infi.infi/assets/tokens/invertx-icon-512.png
+RPC URL: https://infi-testnet-rpc.onrender.com
+Explorer target: https://scan.infi.infi
+Token icon: https://infi-blockchain.pages.dev/assets/tokens/invertx-icon-512.png
 ```
 
 Testnet wallet flows must show that `test InvertX` is non-tradable and has no redeemable real-world value.
