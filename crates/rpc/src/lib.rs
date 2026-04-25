@@ -65,13 +65,11 @@ impl RpcServer {
     }
 
     fn handle_connection(&self, mut stream: TcpStream) -> std::io::Result<()> {
-        let mut buffer = [0_u8; 16 * 1024];
-        let bytes_read = stream.read(&mut buffer)?;
-        if bytes_read == 0 {
+        let request = read_http_request(&mut stream)?;
+        if request.is_empty() {
             return Ok(());
         }
 
-        let request = String::from_utf8_lossy(&buffer[..bytes_read]);
         let target = request_target(&request);
         let response_body = if request.starts_with("OPTIONS ") {
             String::new()
@@ -387,6 +385,50 @@ impl FaucetState {
 
 fn http_body(request: &str) -> Option<&str> {
     request.split("\r\n\r\n").nth(1)
+}
+
+fn read_http_request(stream: &mut TcpStream) -> std::io::Result<String> {
+    let mut request = Vec::new();
+    let mut buffer = [0_u8; 8 * 1024];
+
+    loop {
+        let bytes_read = stream.read(&mut buffer)?;
+        if bytes_read == 0 {
+            break;
+        }
+        request.extend_from_slice(&buffer[..bytes_read]);
+
+        if request.len() > 1024 * 1024 {
+            break;
+        }
+
+        let Some(header_end) = find_header_end(&request) else {
+            continue;
+        };
+        let headers = String::from_utf8_lossy(&request[..header_end]);
+        let body_start = header_end + 4;
+        let content_length = content_length(&headers).unwrap_or(0);
+        if request.len() >= body_start + content_length {
+            break;
+        }
+    }
+
+    Ok(String::from_utf8_lossy(&request).to_string())
+}
+
+fn find_header_end(request: &[u8]) -> Option<usize> {
+    request.windows(4).position(|window| window == b"\r\n\r\n")
+}
+
+fn content_length(headers: &str) -> Option<usize> {
+    for line in headers.lines() {
+        if let Some((name, value)) = line.split_once(':') {
+            if name.eq_ignore_ascii_case("content-length") {
+                return value.trim().parse().ok();
+            }
+        }
+    }
+    None
 }
 
 fn request_target(request: &str) -> Option<(&str, &str)> {
