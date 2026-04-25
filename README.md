@@ -26,7 +26,7 @@ This repository starts with a local devnet skeleton:
 
 ## Current Stage
 
-This is the first implementation pass. It is not mainnet software and does not yet include real EVM execution, validator networking, cryptographic signatures, JSON-RPC, staking, slashing, or persistent state.
+This is an early public-testnet prototype. It is not mainnet software and does not yet include real EVM execution, validator networking, cryptographic signatures, staking, slashing, or production-grade database storage.
 
 INFI must become fully decentralized before any mainnet launch. That means independent validators, permissionless node operation, staking, slashing, open-source clients, public RPCs, public explorer infrastructure, governance, and reproducible builds.
 
@@ -83,6 +83,7 @@ Documentation:
 - [Genesis and configuration](docs/genesis-and-config.md)
 - [Website launch guide](docs/website-launch.md)
 - [Public testnet RPC deployment](docs/public-testnet-rpc-deployment.md)
+- [Persistent storage](docs/persistent-storage.md)
 - [Testnet launch guide](docs/testnet-launch.md)
 - [Testnet faucet](docs/testnet-faucet.md)
 - [Testing strategy](docs/testing.md)

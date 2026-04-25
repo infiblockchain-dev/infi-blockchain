@@ -14,7 +14,7 @@ The goal is to make the RPC reachable over HTTPS so wallets and the website can 
 - `GET /faucet/status?address=0x...`
 - `POST /faucet/claim`
 
-Important: this is still a prototype public RPC, not a decentralized production testnet. Real Ethereum signed transaction decoding, persistent storage, validator networking, rate limiting, persistent faucet cap storage, and INFI Scan indexing still need to be completed before a community testnet announcement.
+Important: this is still a prototype public RPC, not a decentralized production testnet. Real Ethereum signed transaction decoding, production database storage, validator networking, rate limiting, and INFI Scan indexing still need to be completed before a community testnet announcement.
 
 ## Network Metadata
 
@@ -69,13 +69,13 @@ Expected:
 Check faucet status:
 
 ```bash
-curl -s "https://infi-testnet-rpc.onrender.com/faucet/status?address=0x3333333333333333333333333333333333333333"
+curl -s "http://127.0.0.1:8545/faucet/status?address=0x3333333333333333333333333333333333333333"
 ```
 
 Claim 1,000 test InvertX:
 
 ```bash
-curl -s -X POST https://infi-testnet-rpc.onrender.com/faucet/claim \
+curl -s -X POST http://127.0.0.1:8545/faucet/claim \
   -H "Content-Type: application/json" \
   -d '{"address":"0x3333333333333333333333333333333333333333","amount":"1000000000000000000000"}'
 ```
@@ -116,8 +116,11 @@ The Blueprint uses:
 - health check path: `/health`
 - region: `frankfurt`
 - plan: `free`
+- data directory: `INFI_DATA_DIR=/home/infi/infi-data`
 
 Render documentation confirms Docker services can build from a repo Dockerfile, Blueprint services use `runtime: docker`, and `healthCheckPath` defines the web-service health endpoint.
+
+The node writes chain and faucet state to `INFI_DATA_DIR`. For state to survive host replacement or redeploys, the host must attach a real persistent disk to that path. A normal free ephemeral container can still lose data when the service is replaced.
 
 Steps:
 
@@ -178,10 +181,9 @@ Do not update the website wallet config to `https://rpc.infi.infi` as "live" unt
 
 Before inviting outside users:
 
-- replace in-memory storage with persistent storage
+- attach a persistent disk or move state to managed database storage
 - add real Ethereum signed transaction decoding
 - add request rate limiting/proxy protection
-- replace in-memory faucet accounting with persistent monthly cap storage
 - deploy INFI Scan testnet
 - run at least three independent nodes
 - publish a testnet status page

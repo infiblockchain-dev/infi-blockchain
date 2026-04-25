@@ -223,3 +223,30 @@ impl fmt::Display for Hash {
         Ok(())
     }
 }
+
+impl FromStr for Hash {
+    type Err = HashParseError;
+
+    fn from_str(value: &str) -> Result<Self, Self::Err> {
+        let hex = value.strip_prefix("0x").unwrap_or(value);
+        if hex.len() != 64 {
+            return Err(HashParseError::WrongLength(hex.len()));
+        }
+
+        let mut bytes = [0_u8; 32];
+        for index in 0..32 {
+            let start = index * 2;
+            let end = start + 2;
+            bytes[index] =
+                u8::from_str_radix(&hex[start..end], 16).map_err(|_| HashParseError::InvalidHex)?;
+        }
+
+        Ok(Self(bytes))
+    }
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum HashParseError {
+    WrongLength(usize),
+    InvalidHex,
+}

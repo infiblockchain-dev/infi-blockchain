@@ -72,7 +72,7 @@ The faucet page calls the public INFI Testnet RPC faucet endpoints:
 - `GET /faucet/status?address=0x...`
 - `POST /faucet/claim`
 
-The prototype enforces a `100,000 test InvertX` monthly wallet cap in the RPC process and limits each claim to `10,000 test InvertX`. Persistent faucet storage and stronger abuse controls are still required before a broader community testnet announcement.
+The prototype enforces a `100,000 test InvertX` monthly wallet cap in the RPC process and limits each claim to `10,000 test InvertX`. Faucet claim history persists through `INFI_DATA_DIR` when the host preserves that directory. Stronger abuse controls are still required before a broader community testnet announcement.
 
 ## Official Domains
 

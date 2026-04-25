@@ -1,4 +1,5 @@
 use std::env;
+use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 use std::time::{SystemTime, UNIX_EPOCH};
 
@@ -21,10 +22,65 @@ fn main() {
     println!("Chain ID: {} ({})", config.chain_id, rpc.chain_id_hex);
     println!("Client: {}", rpc.client_version);
 
+    let data_dir = data_dir();
+    println!("Data directory: {}", data_dir.display());
+
+    let mut storage = match MemoryStorage::load_from_dir(&data_dir) {
+        Ok(storage) => storage,
+        Err(error) => {
+            eprintln!(
+                "Failed to load INFI persistent storage from {}: {error}",
+                data_dir.display()
+            );
+            std::process::exit(1);
+        }
+    };
+
+    if storage.is_empty() {
+        println!("No persistent chain state found. Seeding INFI Testnet genesis prototype state.");
+        seed_prototype_state(&mut storage);
+        if let Err(error) = storage.save_to_dir(&data_dir) {
+            eprintln!(
+                "Failed to save INFI persistent storage to {}: {error}",
+                data_dir.display()
+            );
+            std::process::exit(1);
+        }
+    } else {
+        println!(
+            "Loaded persistent chain state: {} blocks, {} receipts",
+            storage.block_count(),
+            storage.receipt_count()
+        );
+    }
+
+    let latest_block_number = storage
+        .latest_block()
+        .map(|block| block.header.number)
+        .unwrap_or(0);
+    println!("Latest block #{}", latest_block_number);
+    println!("Accounts:");
+    for account in storage.accounts() {
+        println!(
+            "  {} balance={} nonce={}",
+            account.address, account.balance, account.nonce
+        );
+    }
+
+    let storage = Arc::new(Mutex::new(storage));
+    let rpc_server = RpcServer::with_data_dir(config, storage, Some(data_dir));
+    let bind_address = rpc_bind_address();
+    if let Err(error) = rpc_server.serve(&bind_address) {
+        eprintln!("Failed to start INFI JSON-RPC server on {bind_address}: {error}");
+        eprintln!("If the port is already in use locally, run: lsof -nP -i :8545");
+        std::process::exit(1);
+    }
+}
+
+fn seed_prototype_state(storage: &mut MemoryStorage) {
     let alice = Address::repeat(0x11);
     let bob = Address::repeat(0x22);
 
-    let mut storage = MemoryStorage::new();
     storage.credit(
         alice,
         Amount::from_invertx_units(1_000_000_000_000_000_000_000),
@@ -46,7 +102,7 @@ fn main() {
     let transactions = mempool.drain_for_block(consensus.max_transactions_per_block());
 
     for transaction in &transactions {
-        match EvmExecutor::execute_transaction(&mut storage, transaction) {
+        match EvmExecutor::execute_transaction(&mut *storage, transaction) {
             Ok(receipt) => {
                 println!(
                     "Executed tx {} from {} gas_used={}",
@@ -63,28 +119,6 @@ fn main() {
 
     let block = consensus.propose_block(Hash::ZERO, 1, now_ms(), transactions);
     storage.push_block(block);
-
-    let latest_block_number = storage
-        .latest_block()
-        .map(|block| block.header.number)
-        .unwrap_or(0);
-    println!("Finalized block #{}", latest_block_number);
-    println!("Accounts:");
-    for account in storage.accounts() {
-        println!(
-            "  {} balance={} nonce={}",
-            account.address, account.balance, account.nonce
-        );
-    }
-
-    let storage = Arc::new(Mutex::new(storage));
-    let rpc_server = RpcServer::new(config, storage);
-    let bind_address = rpc_bind_address();
-    if let Err(error) = rpc_server.serve(&bind_address) {
-        eprintln!("Failed to start INFI JSON-RPC server on {bind_address}: {error}");
-        eprintln!("If the port is already in use locally, run: lsof -nP -i :8545");
-        std::process::exit(1);
-    }
 }
 
 fn rpc_bind_address() -> String {
@@ -103,6 +137,17 @@ fn rpc_bind_address() -> String {
     }
 
     "127.0.0.1:8545".to_string()
+}
+
+fn data_dir() -> PathBuf {
+    if let Ok(data_dir) = env::var("INFI_DATA_DIR") {
+        let data_dir = data_dir.trim();
+        if !data_dir.is_empty() {
+            return PathBuf::from(data_dir);
+        }
+    }
+
+    PathBuf::from(".infi-data")
 }
 
 fn now_ms() -> u64 {

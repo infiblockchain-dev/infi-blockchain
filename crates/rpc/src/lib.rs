@@ -1,6 +1,8 @@
 use std::collections::BTreeMap;
+use std::fs;
 use std::io::{Read, Write};
 use std::net::{TcpListener, TcpStream};
+use std::path::{Path, PathBuf};
 use std::str::FromStr;
 use std::sync::{Arc, Mutex};
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -30,16 +32,36 @@ pub struct RpcServer {
     config: ChainConfig,
     storage: Arc<Mutex<MemoryStorage>>,
     faucet: Arc<Mutex<FaucetState>>,
+    data_dir: Option<PathBuf>,
     info: RpcInfo,
 }
 
 impl RpcServer {
     pub fn new(config: ChainConfig, storage: Arc<Mutex<MemoryStorage>>) -> Self {
+        Self::with_data_dir(config, storage, None)
+    }
+
+    pub fn with_data_dir(
+        config: ChainConfig,
+        storage: Arc<Mutex<MemoryStorage>>,
+        data_dir: Option<PathBuf>,
+    ) -> Self {
         let info = devnet_rpc_info(&config);
+        let faucet = data_dir
+            .as_ref()
+            .and_then(|data_dir| match FaucetState::load_from_dir(data_dir) {
+                Ok(faucet) => Some(faucet),
+                Err(error) => {
+                    println!("Failed to load faucet state: {error}");
+                    None
+                }
+            })
+            .unwrap_or_else(FaucetState::new);
         Self {
             config,
             storage,
-            faucet: Arc::new(Mutex::new(FaucetState::new())),
+            faucet: Arc::new(Mutex::new(faucet)),
+            data_dir,
             info,
         }
     }
@@ -258,6 +280,9 @@ impl RpcServer {
         }
 
         let transaction_hash = mine_transaction(&mut storage, transaction);
+        if let Err(error) = self.persist_chain_storage(&storage) {
+            return json_error(id, -32000, &error);
+        }
 
         json_result_string(id, &transaction_hash.to_string())
     }
@@ -335,6 +360,12 @@ impl RpcServer {
 
         let transaction_hash = mine_transaction(&mut storage, transaction);
         let claimed_after = faucet.record_claim(recipient, &month_key, amount.0);
+        if let Err(error) = self.persist_chain_storage(&storage) {
+            return faucet_error(&error);
+        }
+        if let Err(error) = self.persist_faucet_state(&faucet) {
+            return faucet_error(&error);
+        }
         faucet_claim_json(
             recipient,
             &transaction_hash,
@@ -342,6 +373,24 @@ impl RpcServer {
             &month_key,
             claimed_after,
         )
+    }
+
+    fn persist_chain_storage(&self, storage: &MemoryStorage) -> Result<(), String> {
+        let Some(data_dir) = &self.data_dir else {
+            return Ok(());
+        };
+        storage
+            .save_to_dir(data_dir)
+            .map_err(|error| format!("Failed to persist chain state: {error}"))
+    }
+
+    fn persist_faucet_state(&self, faucet: &FaucetState) -> Result<(), String> {
+        let Some(data_dir) = &self.data_dir else {
+            return Ok(());
+        };
+        faucet
+            .save_to_dir(data_dir)
+            .map_err(|error| format!("Failed to persist faucet state: {error}"))
     }
 }
 
@@ -359,6 +408,72 @@ struct FaucetClaim {
 impl FaucetState {
     fn new() -> Self {
         Self::default()
+    }
+
+    fn load_from_dir(data_dir: &Path) -> std::io::Result<Self> {
+        fs::create_dir_all(data_dir)?;
+        let path = data_dir.join("faucet_claims.tsv");
+        let Ok(contents) = fs::read_to_string(&path) else {
+            return Ok(Self::new());
+        };
+
+        let mut faucet = Self::new();
+        for (line_index, line) in contents.lines().enumerate() {
+            if line.trim().is_empty() || line.starts_with('#') {
+                continue;
+            }
+            let fields: Vec<&str> = line.split('\t').collect();
+            if fields.len() != 3 {
+                return Err(std::io::Error::new(
+                    std::io::ErrorKind::InvalidData,
+                    format!(
+                        "{}:{} faucet row must have 3 fields",
+                        path.display(),
+                        line_index + 1
+                    ),
+                ));
+            }
+            let address = Address::from_str(fields[0]).map_err(|_| {
+                std::io::Error::new(
+                    std::io::ErrorKind::InvalidData,
+                    format!("{}:{} invalid address", path.display(), line_index + 1),
+                )
+            })?;
+            let claimed = fields[2].parse::<u128>().map_err(|_| {
+                std::io::Error::new(
+                    std::io::ErrorKind::InvalidData,
+                    format!(
+                        "{}:{} invalid claimed amount",
+                        path.display(),
+                        line_index + 1
+                    ),
+                )
+            })?;
+            faucet.claims.insert(
+                address,
+                FaucetClaim {
+                    month_key: fields[1].to_string(),
+                    claimed,
+                },
+            );
+        }
+        Ok(faucet)
+    }
+
+    fn save_to_dir(&self, data_dir: &Path) -> std::io::Result<()> {
+        fs::create_dir_all(data_dir)?;
+        let path = data_dir.join("faucet_claims.tsv");
+        let mut output = String::from("# address\tmonth\tclaimed\n");
+        for (address, claim) in &self.claims {
+            output.push_str(&format!(
+                "{}\t{}\t{}\n",
+                address, claim.month_key, claim.claimed
+            ));
+        }
+        let temp_path = path.with_extension("tmp");
+        fs::write(&temp_path, output)?;
+        fs::rename(temp_path, path)?;
+        Ok(())
     }
 
     fn claimed_this_month(&self, address: Address, month_key: &str) -> u128 {

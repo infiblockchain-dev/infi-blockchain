@@ -184,8 +184,9 @@ Current prototype:
 
 - static faucet page exists at `site/faucet.html`
 - public faucet page calls `/faucet/status` and `/faucet/claim`
-- RPC process enforces a server-side in-memory monthly wallet cap
-- persistent faucet accounting and abuse controls are still pending
+- RPC process enforces a server-side monthly wallet cap
+- faucet accounting persists to `faucet_claims.tsv` under `INFI_DATA_DIR`
+- production database storage and abuse controls are still pending
 
 Recommended claim policy:
 
@@ -200,7 +201,7 @@ Exit criteria:
 
 - wallet can claim test tokens
 - monthly cap works in the running RPC process
-- persistent cap storage is planned before wider public use
+- monthly cap survives restarts when `INFI_DATA_DIR` is on persistent disk
 - warning is visible
 - faucet cannot mint mainnet tokens
 

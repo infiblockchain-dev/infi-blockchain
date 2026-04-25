@@ -8,3 +8,6 @@ services:
     dockerContext: .
     healthCheckPath: /health
     autoDeployTrigger: commit
+    envVars:
+      - key: INFI_DATA_DIR
+        value: /home/infi/infi-data

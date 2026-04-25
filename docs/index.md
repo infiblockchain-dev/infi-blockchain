@@ -49,6 +49,7 @@ INFI is an EVM-compatible Layer 1 blockchain. INFI is the chain, and Invertx is 
 - [Public testnet RPC deployment](public-testnet-rpc-deployment.md)
 - [Testnet launch guide](testnet-launch.md)
 - [Testnet faucet](testnet-faucet.md)
+- [Persistent storage](persistent-storage.md)
 - [Testing strategy](testing.md)
 - [Release process](release-process.md)
 - [Observability and status](observability.md)
@@ -65,8 +66,8 @@ Current limitations:
 
 - no production consensus yet
 - no real EVM execution yet
-- no persistent database yet
-- no public RPC server yet
+- no production database yet
+- public prototype RPC is live
 - no validator networking yet
 - no staking or slashing yet
 - no public INFI Scan deployment yet

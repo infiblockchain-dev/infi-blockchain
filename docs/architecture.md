@@ -39,7 +39,13 @@ Shared domain types:
 
 State and chain storage.
 
-The first implementation is in-memory. Later this should gain:
+The first public prototype writes line-based storage files under `INFI_DATA_DIR`:
+
+- `accounts.tsv`
+- `blocks.tsv`
+- `faucet_claims.tsv`
+
+Later this should gain:
 
 - RocksDB or MDBX persistence
 - Merkle Patricia Trie state roots
@@ -91,6 +97,5 @@ The node wires all other crates together.
 4. Add signed Ethereum transaction decoding.
 5. Add `eth_sendRawTransaction`.
 6. Replace transfer-only execution with `revm`.
-7. Add persistent storage.
+7. Replace prototype file storage with RocksDB or MDBX.
 8. Add multi-validator devnet networking.
-

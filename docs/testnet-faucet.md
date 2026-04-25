@@ -127,7 +127,7 @@ Monthly cap: 100,000 test InvertX per wallet
 Single-claim cap: 10,000 test InvertX
 ```
 
-This is not a production faucet backend yet. Current cap enforcement is server-side and in-memory for the prototype process. Public community testnet still needs persistent faucet storage, IP/session rate limiting, and abuse controls.
+This is not a production faucet backend yet. Current cap enforcement is server-side and persisted to `faucet_claims.tsv` when `INFI_DATA_DIR` is preserved. Public community testnet still needs a production database, IP/session rate limiting, and abuse controls.
 
 ## Anti-Abuse Rules
 
