@@ -20,7 +20,7 @@ INFI Testnet should use `test InvertX`.
 
 ```text
 Name: test InvertX
-Symbol: tInvertX
+Symbol: tINVX
 Decimals: 18
 Real value: none
 Wallet/explorer display reference: 1 test InvertX = 1.25 USDT

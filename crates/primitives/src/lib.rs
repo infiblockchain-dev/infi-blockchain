@@ -43,7 +43,7 @@ impl NativeToken {
     pub fn test_invertx() -> Self {
         Self {
             name: "test InvertX".to_string(),
-            symbol: "tInvertX".to_string(),
+            symbol: "tINVX".to_string(),
             decimals: INVERTX_DECIMALS,
         }
     }

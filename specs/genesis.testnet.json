@@ -3,7 +3,7 @@
   "chain_id": 98402,
   "native_token": {
     "name": "test InvertX",
-    "symbol": "tInvertX",
+    "symbol": "tINVX",
     "decimals": 18,
     "real_world_value": "none",
     "tradable": false,

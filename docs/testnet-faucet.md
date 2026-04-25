@@ -18,7 +18,7 @@ http://127.0.0.1:8080/faucet.html
 
 ```text
 Name: test InvertX
-Symbol: tInvertX
+Symbol: tINVX
 Decimals: 18
 Network: INFI Testnet only
 Real value: none
@@ -150,7 +150,7 @@ The faucet UI must clearly identify the connected network. If the wallet is on m
 Wallet and dapp UIs should show:
 
 - test InvertX name
-- tInvertX symbol
+- tINVX symbol
 - InvertX logo
 - no-real-world-value warning
 - InvertX reference value display only where clearly labeled

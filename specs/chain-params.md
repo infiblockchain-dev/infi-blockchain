@@ -21,7 +21,7 @@
 ## Testnet Token Policy
 
 - Testnet token name: test InvertX
-- Testnet token symbol: tInvertX
+- Testnet token symbol: tINVX
 - Testnet token decimals: 18
 - Testnet chain ID: `98402`
 - Testnet chain ID hex: `0x18062`

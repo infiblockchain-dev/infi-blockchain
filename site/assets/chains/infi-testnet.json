@@ -4,7 +4,7 @@
   "chainName": "INFI Testnet",
   "nativeCurrency": {
     "name": "test InvertX",
-    "symbol": "tInvertX",
+    "symbol": "tINVX",
     "decimals": 18,
     "displayReference": "1 test InvertX = 1.25 USDT",
     "displayReferenceType": "invertx-reference-for-testnet-ui",

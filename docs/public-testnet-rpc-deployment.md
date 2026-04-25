@@ -21,7 +21,7 @@ Network name: INFI Testnet
 Chain ID: 98402
 Chain ID hex: 0x18062
 Native currency: test InvertX
-Symbol: tInvertX
+Symbol: tINVX
 Decimals: 18
 Current public RPC URL: https://infi-testnet-rpc.onrender.com
 Future custom RPC target: https://rpc.infi.infi

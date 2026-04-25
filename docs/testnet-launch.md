@@ -10,7 +10,7 @@ The testnet gas token should be displayed as:
 
 ```text
 Name: test InvertX
-Symbol: tInvertX
+Symbol: tINVX
 Decimals: 18
 Network: INFI Testnet only
 Real value: none
@@ -245,7 +245,7 @@ Network name: INFI Testnet
 Chain ID: 98402
 Chain ID hex: 0x18062
 Native currency: test InvertX
-Symbol: tInvertX
+Symbol: tINVX
 Decimals: 18
 RPC URL: https://infi-testnet-rpc.onrender.com
 Explorer target: https://scan.infi.infi

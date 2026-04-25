@@ -49,7 +49,7 @@ Provisional testnet metadata:
   "chainName": "INFI Testnet",
   "nativeCurrency": {
     "name": "test InvertX",
-    "symbol": "tInvertX",
+    "symbol": "tINVX",
     "decimals": 18
   },
   "rpcUrls": ["https://infi-testnet-rpc.onrender.com"],
@@ -68,7 +68,7 @@ Wallets should display:
 ```text
 Network name: INFI Testnet
 Native currency name: test InvertX
-Native currency symbol: tInvertX
+Native currency symbol: tINVX
 Native currency decimals: 18
 RPC URL: https://infi-testnet-rpc.onrender.com
 Explorer target: https://scan.infi.infi

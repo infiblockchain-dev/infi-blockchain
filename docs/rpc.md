@@ -40,7 +40,7 @@ Current public-testnet target:
 Network: INFI Testnet
 Chain ID: 98402
 Chain ID hex: 0x18062
-Native currency: test InvertX (tInvertX)
+Native currency: test InvertX (tINVX)
 Current public RPC: https://infi-testnet-rpc.onrender.com
 Future custom RPC target: https://rpc.infi.infi
 ```
@@ -144,7 +144,7 @@ Current native currency:
 
 ```text
 Name: test InvertX
-Symbol: tInvertX
+Symbol: tINVX
 Decimals: 18
 ```
 
