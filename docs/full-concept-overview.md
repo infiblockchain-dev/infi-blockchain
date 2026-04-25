@@ -39,6 +39,7 @@ Implemented prototype pieces include:
 - INFI Testnet wallet setup page
 - faucet UI
 - faucet RPC endpoints
+- static INFI Scan MVP page
 - token/logo/favicon assets
 - developer and launch documentation
 
@@ -115,6 +116,7 @@ Current pages:
 - `site/index.html` - INFI Blockchain public homepage
 - `site/testnet.html` - wallet setup page
 - `site/faucet.html` - faucet page
+- `site/scan.html` - static INFI Scan MVP
 
 The website includes:
 

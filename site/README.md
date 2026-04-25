@@ -8,6 +8,7 @@ testnet launch flow.
 - `index.html` - investor and developer landing page with animated INFI multichain hero
 - `testnet.html` - one-click wallet import and network switching page
 - `faucet.html` - public testnet faucet UI for free test InvertX
+- `scan.html` - public INFI Scan MVP for transactions, blocks, and addresses
 
 ## Brand Assets
 
@@ -81,6 +82,8 @@ The faucet page calls the public INFI Testnet RPC faucet endpoints:
 - `POST /faucet/claim`
 
 The prototype enforces a `100,000 test InvertX` monthly wallet cap in the RPC process and limits each claim to `10,000 test InvertX`. Faucet claim history persists through `INFI_DATA_DIR` when the host preserves that directory. Stronger abuse controls are still required before a broader community testnet announcement.
+
+The INFI Scan MVP calls the public INFI Testnet JSON-RPC directly. It can search transaction hashes, block numbers, block hashes, and wallet addresses. It is not a production indexer yet.
 
 ## Official Domains
 

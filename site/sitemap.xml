@@ -69,4 +69,14 @@
       <image:title>INFI Testnet Faucet — Free test InvertX (tINVX)</image:title>
     </image:image>
   </url>
+  <url>
+    <loc>https://scan.infi.infi/</loc>
+    <lastmod>2026-04-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://infi.infi/assets/brand/infi-social-preview.png</image:loc>
+      <image:title>INFI Scan — Testnet Explorer</image:title>
+    </image:image>
+  </url>
 </urlset>

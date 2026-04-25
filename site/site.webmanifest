@@ -95,6 +95,13 @@
       "description": "Claim test InvertX gas",
       "url": "/faucet.html",
       "icons": [{ "src": "/assets/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "INFI Scan",
+      "short_name": "Scan",
+      "description": "Search INFI Testnet transactions, blocks, and addresses",
+      "url": "/scan.html",
+      "icons": [{ "src": "/assets/icons/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }

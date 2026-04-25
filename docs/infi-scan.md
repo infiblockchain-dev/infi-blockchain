@@ -11,6 +11,23 @@ INFI Scan should also support INFI Domains search and domain history.
 
 ## MVP Pages
 
+Current static MVP page:
+
+```text
+https://infi-blockchain.pages.dev/scan
+```
+
+The current page reads directly from the public INFI Testnet RPC. It supports:
+
+- latest block and RPC status
+- transaction hash search
+- block number search
+- block hash search
+- address balance and nonce search
+- clear testnet-only warnings for test InvertX
+
+This is not the final production INFI Scan indexer. A production explorer still needs a backend indexer, database, pagination, contract decoding, logs, token transfers, validator views, domains, RWA transparency, and decentralized VPN provider transparency.
+
 ### Home
 
 - chain status
