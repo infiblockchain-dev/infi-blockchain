@@ -1419,6 +1419,10 @@ pre {
   box-shadow: 0 0 18px rgba(34, 255, 154, 0.14);
 }
 
+.scan-chip {
+  text-decoration: none;
+}
+
 .faucet-form {
   display: grid;
   max-width: 760px;
@@ -1434,7 +1438,8 @@ pre {
 }
 
 .faucet-form input,
-.faucet-form select {
+.faucet-form select,
+.history-filter input {
   min-height: 48px;
   width: 100%;
   padding: 10px 12px;
@@ -1446,6 +1451,32 @@ pre {
   font-weight: 720;
 }
 
+.history-filter {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) auto;
+  align-items: end;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.history-filter label {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-weight: 820;
+}
+
+.history-filter-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.history-filter .status {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
 .faucet-history {
   display: grid;
   gap: 14px;
@@ -1453,7 +1484,7 @@ pre {
 
 .faucet-history-card {
   display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1.35fr) minmax(180px, 0.9fr) minmax(150px, 0.7fr);
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.2fr) minmax(170px, 0.9fr) minmax(130px, 0.6fr) minmax(150px, 0.7fr);
   gap: 14px;
   padding: 18px;
 }
@@ -2100,6 +2131,7 @@ pre {
   .architecture-grid,
   .scan-form,
   .scan-grid,
+  .history-filter,
   .faucet-history-card,
   .device-grid,
   .ecosystem-layout,

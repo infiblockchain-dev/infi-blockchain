@@ -41,6 +41,7 @@ Current implemented prototype methods:
 - `GET /health`
 - `GET /faucet/status?address=0x...`
 - `GET /faucet/history?limit=100`
+- `GET /faucet/history?limit=100&address=0x...`
 - `POST /faucet/claim`
 
 The wallet-compatibility methods above are prototype responses so wallets such as MetaMask can recognize and inspect INFI Testnet. They are not a replacement for full production EVM execution, signed Ethereum transaction decoding, contract storage, event indexing, or finalized fee-market logic.
@@ -162,6 +163,12 @@ List current and previous faucet mint transactions:
 
 ```bash
 curl -s "http://127.0.0.1:8545/faucet/history?limit=100"
+```
+
+Filter faucet history by wallet address:
+
+```bash
+curl -s "http://127.0.0.1:8545/faucet/history?limit=100&address=0x3333333333333333333333333333333333333333"
 ```
 
 Claim 1,000 test InvertX from the faucet:

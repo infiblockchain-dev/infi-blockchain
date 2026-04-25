@@ -176,6 +176,17 @@
           <p class="eyebrow">History</p>
           <h2>Current and Previous Claims</h2>
         </div>
+        <form class="history-filter" id="history-filter">
+          <label>
+            Filter by wallet address
+            <input id="history-wallet" name="history-wallet" placeholder="0x..." autocomplete="off" spellcheck="false">
+          </label>
+          <div class="history-filter-actions">
+            <button class="button primary" type="submit">Filter History</button>
+            <button class="button secondary" id="clear-history-filter" type="button">Clear</button>
+          </div>
+          <p class="status" id="history-status">Showing all public faucet claims.</p>
+        </form>
         <div class="faucet-history" id="faucet-history" aria-live="polite">
           <p class="status">No faucet claims saved in this browser yet.</p>
         </div>
@@ -226,8 +237,11 @@
     <script>
       const status = document.getElementById("faucet-status");
       const historyPanel = document.getElementById("faucet-history");
+      const historyStatus = document.getElementById("history-status");
+      const historyWalletInput = document.getElementById("history-wallet");
       const UNIT = 1000000000000000000n;
       const HISTORY_KEY = "infi-faucet-history-v1";
+      const HISTORY_LIMIT = 100;
 
       function setStatus(message) {
         status.textContent = message;
@@ -239,6 +253,10 @@
 
       function normalizeRpcUrl(url) {
         return url.replace(/\/+$/, "");
+      }
+
+      function scanUrl(transactionHash) {
+        return `/scan.html?q=${encodeURIComponent(transactionHash)}#search`;
       }
 
       function shortHash(value) {
@@ -332,8 +350,12 @@
         return entry;
       }
 
-      async function faucetHistory(url) {
-        const response = await fetch(`${normalizeRpcUrl(url)}/faucet/history?limit=100`);
+      async function faucetHistory(url, address = "") {
+        const params = new URLSearchParams({ limit: String(HISTORY_LIMIT) });
+        if (address) {
+          params.set("address", address);
+        }
+        const response = await fetch(`${normalizeRpcUrl(url)}/faucet/history?${params}`);
         const json = await response.json();
         if (json.status !== "ok") {
           throw new Error(json.message || "Faucet history failed.");
@@ -381,9 +403,18 @@
         textArea.remove();
       }
 
-      function renderHistory(history = readHistory()) {
+      function localHistory(address = "") {
+        const history = readHistory();
+        if (!address) {
+          return history;
+        }
+        const normalizedAddress = address.toLowerCase();
+        return history.filter((entry) => String(entry.walletAddress || entry.address || "").toLowerCase() === normalizedAddress);
+      }
+
+      function renderHistory(history = readHistory(), emptyMessage = "No faucet claims found yet. New testnet faucet mints will appear here after claiming.") {
         if (!history.length) {
-          historyPanel.innerHTML = '<p class="status">No faucet claims found yet. New testnet faucet mints will appear here after claiming.</p>';
+          historyPanel.innerHTML = `<p class="status">${escapeHtml(emptyMessage)}</p>`;
           return;
         }
 
@@ -408,6 +439,10 @@
               <strong>${escapeHtml(entry.blockNumber)}</strong>
               <button class="copy-chip" type="button" data-copy="${escapeHtml(entry.blockNumber)}" data-copy-label="Block number">Copy</button>
             </div>
+            <div>
+              <span>Explorer</span>
+              <a class="copy-chip scan-chip" href="${escapeHtml(scanUrl(entry.transactionHash))}">View in INFI Scan</a>
+            </div>
           </article>
         `).join("");
       }
@@ -415,21 +450,36 @@
       function addHistoryEntry(entry) {
         const history = readHistory().filter((item) => item.transactionHash !== entry.transactionHash);
         saveHistory([entry, ...history]);
-        renderHistory();
+        renderHistory(localHistory(historyWalletInput.value.trim()));
       }
 
-      async function loadFaucetHistory(url) {
+      async function loadFaucetHistory(url, address = historyWalletInput.value.trim()) {
+        if (address && !isAddress(address)) {
+          historyStatus.textContent = "Enter a valid 0x wallet address to filter faucet claims.";
+          renderHistory([], "Enter a valid wallet address to filter faucet claims.");
+          return;
+        }
+
+        const emptyMessage = address
+          ? "No faucet claims found for this wallet yet."
+          : "No faucet claims found yet. New testnet faucet mints will appear here after claiming.";
+
         try {
-          const history = await faucetHistory(url);
+          const history = await faucetHistory(url, address);
           const transactions = Array.isArray(history.transactions) ? history.transactions : [];
-          if (transactions.length) {
-            renderHistory(transactions);
-            return;
-          }
+          renderHistory(transactions, emptyMessage);
+          historyStatus.textContent = address
+            ? `Showing ${transactions.length} public faucet claim${transactions.length === 1 ? "" : "s"} for ${shortHash(address)}.`
+            : `Showing ${transactions.length} public faucet claim${transactions.length === 1 ? "" : "s"}.`;
+          return;
         } catch (error) {
           // Keep the faucet useful while a public RPC redeploy is still warming up.
         }
-        renderHistory(readHistory());
+        const fallback = localHistory(address);
+        renderHistory(fallback, emptyMessage);
+        historyStatus.textContent = address
+          ? `Showing ${fallback.length} browser-saved claim${fallback.length === 1 ? "" : "s"} for ${shortHash(address)}.`
+          : `Showing ${fallback.length} browser-saved claim${fallback.length === 1 ? "" : "s"}.`;
       }
 
       async function faucetStatus(url, address) {
@@ -478,7 +528,7 @@
           const claim = await faucetClaim(`${normalizeRpcUrl(rpcUrl)}/faucet/claim`, wallet, amount);
           const historyEntry = await enrichClaim(rpcUrl, claim, wallet);
           addHistoryEntry(historyEntry);
-          loadFaucetHistory(rpcUrl);
+          loadFaucetHistory(rpcUrl, historyWalletInput.value.trim());
           setStatus(
             `Claim submitted: ${formatTokenAmount(claim.amount)} tINVX. ` +
             `Remaining this month: ${formatTokenAmount(claim.remainingThisMonth)} tINVX. ` +
@@ -495,6 +545,16 @@
           return;
         }
         copyValue(button.dataset.copy, button.dataset.copyLabel || "Value");
+      });
+
+      document.getElementById("history-filter").addEventListener("submit", (event) => {
+        event.preventDefault();
+        loadFaucetHistory(document.getElementById("rpc-url").value.trim(), historyWalletInput.value.trim());
+      });
+
+      document.getElementById("clear-history-filter").addEventListener("click", () => {
+        historyWalletInput.value = "";
+        loadFaucetHistory(document.getElementById("rpc-url").value.trim(), "");
       });
 
       loadFaucetHistory(document.getElementById("rpc-url").value.trim());

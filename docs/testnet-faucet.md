@@ -95,6 +95,7 @@ The current public prototype has server-side faucet endpoints on the INFI Testne
 ```text
 GET  /faucet/status?address=0x...
 GET  /faucet/history?limit=100
+GET  /faucet/history?limit=100&address=0x...
 POST /faucet/claim
 ```
 
@@ -127,6 +128,8 @@ History response lists current and previous faucet mint transactions with:
 - mint timestamp
 - block number
 - block hash
+
+The optional `address` query parameter filters history to one wallet address. The faucet UI also links each history item to INFI Scan.
 
 The prototype uses:
 

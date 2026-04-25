@@ -557,11 +557,18 @@ impl RpcServer {
             .and_then(|value| value.parse::<usize>().ok())
             .unwrap_or(100)
             .clamp(1, 500);
+        let address_filter = match query_value(path, "address") {
+            Some(value) if !value.trim().is_empty() => match Address::from_str(&value) {
+                Ok(address) => Some(address),
+                Err(_) => return faucet_error("Invalid history filter address"),
+            },
+            _ => None,
+        };
         let storage = match self.storage.lock() {
             Ok(storage) => storage,
             Err(_) => return faucet_error("Storage unavailable"),
         };
-        faucet_history_json(&storage, limit)
+        faucet_history_json(&storage, limit, address_filter)
     }
 
     fn handle_faucet_claim(&self, body: &str) -> String {
@@ -1036,7 +1043,11 @@ fn faucet_status_json(address: Address, month_key: &str, claimed: u128) -> Strin
     )
 }
 
-fn faucet_history_json(storage: &MemoryStorage, limit: usize) -> String {
+fn faucet_history_json(
+    storage: &MemoryStorage,
+    limit: usize,
+    address_filter: Option<Address>,
+) -> String {
     let faucet_address = Address::repeat(0x22);
     let mut entries = Vec::new();
 
@@ -1049,6 +1060,9 @@ fn faucet_history_json(storage: &MemoryStorage, limit: usize) -> String {
             let Some(wallet_address) = transaction.to else {
                 continue;
             };
+            if address_filter.is_some_and(|address| address != wallet_address) {
+                continue;
+            }
             entries.push(faucet_history_entry_json(
                 &transaction.hash(),
                 wallet_address,
@@ -1068,11 +1082,15 @@ fn faucet_history_json(storage: &MemoryStorage, limit: usize) -> String {
          \"status\":\"ok\",\
          \"transactions\":[{}],\
          \"count\":{},\
+         \"filteredAddress\":{},\
          \"symbol\":\"tINVX\",\
          \"warning\":\"{}\"\
          }}",
         entries.join(","),
         entries.len(),
+        address_filter
+            .map(|address| format!("\"{}\"", address))
+            .unwrap_or_else(|| "null".to_string()),
         escape_json(FAUCET_WARNING)
     )
 }
