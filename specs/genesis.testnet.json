@@ -1,0 +1,35 @@
+{
+  "chain_name": "INFI Testnet",
+  "chain_id": 98402,
+  "native_token": {
+    "name": "test InvertX",
+    "symbol": "tInvertX",
+    "decimals": 18,
+    "real_world_value": "none",
+    "tradable": false,
+    "display_reference": "1 test InvertX = 1.25 USDT"
+  },
+  "faucet_policy": {
+    "monthly_limit_per_wallet": "100000",
+    "token": "test InvertX",
+    "network": "INFI Testnet",
+    "warning": "test InvertX is a non-tradable testnet token with no redeemable real-world value."
+  },
+  "initial_accounts": [
+    {
+      "address": "0x1111111111111111111111111111111111111111",
+      "balance": "1000000000000000000000",
+      "role": "prototype-account"
+    },
+    {
+      "address": "0x2222222222222222222222222222222222222222",
+      "balance": "500000000000000000000",
+      "role": "prototype-faucet"
+    }
+  ],
+  "notes": [
+    "Prototype testnet genesis for first public RPC validation.",
+    "Replace prototype accounts with reviewed allocations before a persistent public testnet.",
+    "Do not use this file for mainnet."
+  ]
+}

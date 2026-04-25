@@ -82,6 +82,7 @@ Documentation:
 - [Bridge and cross-chain security](docs/bridge-and-cross-chain-security.md)
 - [Genesis and configuration](docs/genesis-and-config.md)
 - [Website launch guide](docs/website-launch.md)
+- [Public testnet RPC deployment](docs/public-testnet-rpc-deployment.md)
 - [Testnet launch guide](docs/testnet-launch.md)
 - [Testnet faucet](docs/testnet-faucet.md)
 - [Testing strategy](docs/testing.md)

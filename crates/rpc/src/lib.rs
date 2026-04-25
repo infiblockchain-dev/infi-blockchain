@@ -65,6 +65,8 @@ impl RpcServer {
         let request = String::from_utf8_lossy(&buffer[..bytes_read]);
         let response_body = if request.starts_with("OPTIONS ") {
             String::new()
+        } else if request.starts_with("GET /health ") || request.starts_with("GET / ") {
+            self.health_json()
         } else if let Some(body) = http_body(&request) {
             self.handle_rpc_body(body)
         } else {
@@ -94,6 +96,15 @@ impl RpcServer {
         stream.write_all(response.as_bytes())?;
         stream.flush()?;
         Ok(())
+    }
+
+    fn health_json(&self) -> String {
+        format!(
+            "{{\"status\":\"ok\",\"chain\":\"{}\",\"chainId\":\"{}\",\"clientVersion\":\"{}\"}}",
+            escape_json(&self.config.chain_name),
+            self.info.chain_id_hex,
+            escape_json(&self.info.client_version)
+        )
     }
 
     fn handle_rpc_body(&self, body: &str) -> String {

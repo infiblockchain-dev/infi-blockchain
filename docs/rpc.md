@@ -34,6 +34,16 @@ Current local RPC URL:
 http://127.0.0.1:8545
 ```
 
+Current public-testnet target:
+
+```text
+Network: INFI Testnet
+Chain ID: 98402
+Chain ID hex: 0x18062
+Native currency: test InvertX (tInvertX)
+Public RPC target: https://rpc.infi.infi
+```
+
 ## Local Test Commands
 
 Start the node:
@@ -132,8 +142,8 @@ MetaMask needs:
 Current native currency:
 
 ```text
-Name: Invertx
-Symbol: TBD
+Name: test InvertX
+Symbol: tInvertX
 Decimals: 18
 ```
 

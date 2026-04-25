@@ -2,7 +2,8 @@ use std::fmt;
 use std::str::FromStr;
 
 pub const INVERTX_DECIMALS: u8 = 18;
-pub const DEVNET_CHAIN_ID: u64 = 98_401;
+pub const INFI_TESTNET_CHAIN_ID: u64 = 98_402;
+pub const DEVNET_CHAIN_ID: u64 = INFI_TESTNET_CHAIN_ID;
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct ChainConfig {
@@ -15,9 +16,9 @@ pub struct ChainConfig {
 impl ChainConfig {
     pub fn devnet() -> Self {
         Self {
-            chain_name: "INFI Devnet".to_string(),
-            chain_id: DEVNET_CHAIN_ID,
-            native_token: NativeToken::invertx(),
+            chain_name: "INFI Testnet".to_string(),
+            chain_id: INFI_TESTNET_CHAIN_ID,
+            native_token: NativeToken::test_invertx(),
             block_time_ms: 1_000,
         }
     }
@@ -35,6 +36,14 @@ impl NativeToken {
         Self {
             name: "Invertx".to_string(),
             symbol: "TBD".to_string(),
+            decimals: INVERTX_DECIMALS,
+        }
+    }
+
+    pub fn test_invertx() -> Self {
+        Self {
+            name: "test InvertX".to_string(),
+            symbol: "tInvertX".to_string(),
             decimals: INVERTX_DECIMALS,
         }
     }

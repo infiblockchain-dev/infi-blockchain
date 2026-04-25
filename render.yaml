@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: infi-testnet-rpc
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    autoDeployTrigger: commit

@@ -1,3 +1,4 @@
+use std::env;
 use std::sync::{Arc, Mutex};
 use std::time::{SystemTime, UNIX_EPOCH};
 
@@ -75,11 +76,30 @@ fn main() {
 
     let storage = Arc::new(Mutex::new(storage));
     let rpc_server = RpcServer::new(config, storage);
-    if let Err(error) = rpc_server.serve("127.0.0.1:8545") {
-        eprintln!("Failed to start INFI JSON-RPC server on 127.0.0.1:8545: {error}");
-        eprintln!("If the port is already in use, run: lsof -nP -i :8545");
+    let bind_address = rpc_bind_address();
+    if let Err(error) = rpc_server.serve(&bind_address) {
+        eprintln!("Failed to start INFI JSON-RPC server on {bind_address}: {error}");
+        eprintln!("If the port is already in use locally, run: lsof -nP -i :8545");
         std::process::exit(1);
     }
+}
+
+fn rpc_bind_address() -> String {
+    if let Ok(bind_address) = env::var("INFI_RPC_BIND") {
+        let bind_address = bind_address.trim();
+        if !bind_address.is_empty() {
+            return bind_address.to_string();
+        }
+    }
+
+    if let Ok(port) = env::var("PORT") {
+        let port = port.trim();
+        if !port.is_empty() {
+            return format!("0.0.0.0:{port}");
+        }
+    }
+
+    "127.0.0.1:8545".to_string()
 }
 
 fn now_ms() -> u64 {
