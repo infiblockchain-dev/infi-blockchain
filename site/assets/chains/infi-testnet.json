@@ -1,0 +1,27 @@
+{
+  "chainId": "0x18062",
+  "chainIdDecimal": 98402,
+  "chainName": "INFI Testnet",
+  "nativeCurrency": {
+    "name": "test InvertX",
+    "symbol": "tInvertX",
+    "decimals": 18,
+    "displayReference": "1 test InvertX = 1.25 USDT",
+    "displayReferenceType": "invertx-reference-for-testnet-ui",
+    "realWorldValue": "none",
+    "tradable": false
+  },
+  "rpcUrls": ["https://rpc.infi.infi"],
+  "blockExplorerUrls": ["https://scan.infi.infi"],
+  "iconUrls": [
+    "https://infi.infi/assets/tokens/invertx-icon-512.png",
+    "https://infi.infi/assets/tokens/invertx-icon-256.png"
+  ],
+  "faucet": {
+    "monthlyLimitPerWallet": "100000",
+    "token": "test InvertX",
+    "network": "INFI Testnet",
+    "realWorldValue": "none"
+  },
+  "warning": "test InvertX is a non-tradable testnet token with no redeemable real-world value. Wallets may display 1 test InvertX = 1.25 USDT as the InvertX reference value for testnet UI only."
+}

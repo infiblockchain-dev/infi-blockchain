@@ -1,0 +1,10 @@
+[package]
+name = "infi-rpc"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+infi-primitives = { path = "../primitives" }
+infi-storage = { path = "../storage" }

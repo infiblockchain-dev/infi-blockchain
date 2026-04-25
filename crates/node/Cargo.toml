@@ -1,0 +1,15 @@
+[package]
+name = "infi-node"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+infi-consensus = { path = "../consensus" }
+infi-evm = { path = "../evm" }
+infi-mempool = { path = "../mempool" }
+infi-primitives = { path = "../primitives" }
+infi-rpc = { path = "../rpc" }
+infi-storage = { path = "../storage" }
+

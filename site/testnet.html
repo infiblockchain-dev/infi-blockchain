@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add INFI Testnet | test InvertX Faucet and Wallet Setup</title>
+    <meta
+      name="description"
+      content="Add INFI Testnet to an EVM wallet, view test InvertX metadata, and read the free faucet policy. test InvertX is non-tradable and testnet-only."
+    >
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <meta name="theme-color" content="#0bbf6a">
+    <link rel="canonical" href="https://infi.infi/testnet.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="INFI Blockchain">
+    <meta property="og:title" content="Add INFI Testnet">
+    <meta property="og:description" content="One-click INFI Testnet wallet setup with test InvertX metadata and faucet policy.">
+    <meta property="og:url" content="https://infi.infi/testnet.html">
+    <meta property="og:image" content="https://infi.infi/assets/tokens/invertx-icon-512.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Add INFI Testnet">
+    <meta name="twitter:description" content="Add INFI Testnet and view test InvertX metadata.">
+    <meta name="twitter:image" content="https://infi.infi/assets/tokens/invertx-icon-512.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/tokens/invertx-favicon-16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/tokens/invertx-favicon-32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/tokens/invertx-icon-256.png">
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="INFI Blockchain home">
+        <img src="/assets/brand/infi-logo.png" alt="INFI Blockchain logo" width="52" height="52">
+        <span>INFI</span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="/">Home</a>
+        <a href="#wallet">Wallet</a>
+        <a href="#faucet">Faucet</a>
+        <a href="#manual">Manual</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero testnet-hero">
+        <div class="hero-copy">
+          <p class="eyebrow">INFI Testnet</p>
+          <h1>Add INFI Testnet</h1>
+          <p class="hero-text">
+            Add INFI Testnet to an EVM wallet and use free test InvertX for development.
+            test InvertX is testnet-only, non-tradable, and has no redeemable real-world value.
+          </p>
+          <div class="hero-actions" id="wallet">
+            <button class="button primary" type="button" id="add-network">Add INFI Testnet</button>
+            <button class="button secondary" type="button" id="switch-network">Switch Network</button>
+          </div>
+          <p class="status" id="wallet-status" role="status">Wallet action status will appear here.</p>
+        </div>
+        <div class="hero-mark" aria-hidden="true">
+          <img src="/assets/tokens/invertx-logo.png" alt="">
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
+          <p class="eyebrow">test InvertX</p>
+          <h2>Testnet Token Metadata</h2>
+        </div>
+        <div class="feature-grid">
+          <article>
+            <h3>Token</h3>
+            <p>Name: test InvertX<br>Symbol: tInvertX<br>Decimals: 18</p>
+          </article>
+          <article>
+            <h3>Display Value</h3>
+            <p>1 test InvertX = 1.25 USDT<br>Displayed as the InvertX reference value for testnet UI only.</p>
+          </article>
+          <article>
+            <h3>No Real Value</h3>
+            <p>test InvertX is free testnet gas. It cannot be traded and is not redeemable or a financial promise.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="faucet">
+        <div class="section-heading">
+          <p class="eyebrow">Faucet</p>
+          <h2>Free Monthly Test Tokens</h2>
+        </div>
+        <div class="split">
+          <p>
+            Each wallet can receive up to 100,000 test InvertX per calendar month.
+            The faucet must be testnet-only and must never mint mainnet Invertx.
+          </p>
+          <a class="button secondary" href="https://scan.infi.infi" rel="noopener">Open INFI Scan</a>
+        </div>
+      </section>
+
+      <section class="section" id="manual">
+        <div class="section-heading">
+          <p class="eyebrow">Manual Setup</p>
+          <h2>Wallet Details</h2>
+        </div>
+        <div class="manual-grid">
+          <div><strong>Network name</strong><span>INFI Testnet</span></div>
+          <div><strong>Chain ID</strong><span>98402</span></div>
+          <div><strong>Chain ID hex</strong><span>0x18062</span></div>
+          <div><strong>RPC URL</strong><span>https://rpc.infi.infi</span></div>
+          <div><strong>Explorer</strong><span>https://scan.infi.infi</span></div>
+          <div><strong>Currency</strong><span>test InvertX (tInvertX)</span></div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const INFI_TESTNET = {
+        chainId: "0x18062",
+        chainName: "INFI Testnet",
+        nativeCurrency: {
+          name: "test InvertX",
+          symbol: "tInvertX",
+          decimals: 18
+        },
+        rpcUrls: ["https://rpc.infi.infi"],
+        blockExplorerUrls: ["https://scan.infi.infi"],
+        iconUrls: [
+          "https://infi.infi/assets/tokens/invertx-icon-512.png",
+          "https://infi.infi/assets/tokens/invertx-icon-256.png"
+        ]
+      };
+
+      const status = document.getElementById("wallet-status");
+
+      function setStatus(message) {
+        status.textContent = message;
+      }
+
+      async function addNetwork() {
+        if (!window.ethereum) {
+          setStatus("No injected EVM wallet found. Use WalletConnect or manual setup.");
+          return;
+        }
+
+        try {
+          await window.ethereum.request({
+            method: "wallet_addEthereumChain",
+            params: [INFI_TESTNET]
+          });
+          setStatus("INFI Testnet add request sent to wallet.");
+        } catch (error) {
+          setStatus(error && error.message ? error.message : "Wallet rejected the add network request.");
+        }
+      }
+
+      async function switchNetwork() {
+        if (!window.ethereum) {
+          setStatus("No injected EVM wallet found. Use WalletConnect or manual setup.");
+          return;
+        }
+
+        try {
+          await window.ethereum.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: INFI_TESTNET.chainId }]
+          });
+          setStatus("Wallet switched to INFI Testnet.");
+        } catch (error) {
+          if (error && error.code === 4902) {
+            await addNetwork();
+            return;
+          }
+          setStatus(error && error.message ? error.message : "Wallet rejected the switch request.");
+        }
+      }
+
+      document.getElementById("add-network").addEventListener("click", addNetwork);
+      document.getElementById("switch-network").addEventListener("click", switchNetwork);
+    </script>
+  </body>
+</html>

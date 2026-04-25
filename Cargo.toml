@@ -1,0 +1,18 @@
+[workspace]
+members = [
+    "crates/consensus",
+    "crates/evm",
+    "crates/mempool",
+    "crates/node",
+    "crates/primitives",
+    "crates/rpc",
+    "crates/storage",
+]
+resolver = "2"
+
+[workspace.package]
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/infi-chain/infi"
+version = "0.1.0"
+

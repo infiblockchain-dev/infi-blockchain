@@ -1,0 +1,24 @@
+{
+  "name": "INFI Blockchain",
+  "short_name": "INFI",
+  "description": "EVM-compatible Layer 1 blockchain with Invertx gas, INFI Scan transparency, WalletConnect onboarding, tokenized asset support, and cross-chain plans.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7faf9",
+  "theme_color": "#0bbf6a",
+  "icons": [
+    {
+      "src": "/assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
+
