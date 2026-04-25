@@ -61,6 +61,7 @@ crates/
 Documentation:
 
 - [Documentation home](docs/index.md)
+- [Full concept overview](docs/full-concept-overview.md)
 - [Developer quickstart](docs/developer-quickstart.md)
 - [Dapp developer guide](docs/dapp-developer-guide.md)
 - [Smart contract guide](docs/smart-contracts.md)

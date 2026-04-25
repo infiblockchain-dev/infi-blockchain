@@ -6,6 +6,7 @@ INFI is an EVM-compatible Layer 1 blockchain. INFI is the chain, and Invertx is 
 
 ## Start Here
 
+- [Full concept overview](full-concept-overview.md)
 - [Developer quickstart](developer-quickstart.md)
 - [Step-by-step build guide](step-by-step.md)
 - [Architecture](architecture.md)
