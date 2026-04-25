@@ -64,11 +64,12 @@ This applies only to testnet.
 
 The maximum is monthly. The default claim should be smaller.
 
-Suggested defaults:
+Current claim sizes:
 
 ```text
 Default claim: 1,000 test InvertX
 Large claim: 5,000 test InvertX
+Maximum single claim: 10,000 test InvertX
 Monthly max: 100,000 test InvertX
 ```
 
@@ -87,24 +88,46 @@ The faucet must:
 - log claims for abuse review
 - expose faucet health status
 
-## Current Prototype
+## Current Prototype Endpoint
 
-The current static faucet prototype:
+The current public prototype has server-side faucet endpoints on the INFI Testnet RPC service:
 
-- accepts a wallet address
-- reads the faucet nonce from local RPC
-- builds the temporary dev raw transaction payload
-- submits it through `eth_sendRawTransaction`
-- displays the returned transaction hash
+```text
+GET  /faucet/status?address=0x...
+POST /faucet/claim
+```
+
+Status response includes:
+
+- wallet address
+- UTC month key
+- monthly limit
+- maximum single claim
+- amount already claimed this month
+- remaining monthly allowance
+- no-real-value warning
+
+Claim request body:
+
+```json
+{
+  "address": "0x3333333333333333333333333333333333333333",
+  "amount": "1000000000000000000000"
+}
+```
+
+Claim response includes the transaction hash, claimed amount, monthly usage, remaining allowance, and warning.
 
 The prototype uses:
 
 ```text
 Faucet address: 0x2222222222222222222222222222222222222222
-Default local RPC: http://127.0.0.1:8545
+Default public RPC: https://infi-testnet-rpc.onrender.com
+Monthly cap: 100,000 test InvertX per wallet
+Single-claim cap: 10,000 test InvertX
 ```
 
-This is not a production faucet backend yet. Public testnet needs server-side enforcement for the monthly cap and abuse controls.
+This is not a production faucet backend yet. Current cap enforcement is server-side and in-memory for the prototype process. Public community testnet still needs persistent faucet storage, IP/session rate limiting, and abuse controls.
 
 ## Anti-Abuse Rules
 

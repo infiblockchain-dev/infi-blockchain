@@ -183,13 +183,15 @@ The faucet must:
 Current prototype:
 
 - static faucet page exists at `site/faucet.html`
-- local dev faucet can submit dev-only transfers through `eth_sendRawTransaction`
-- server-side monthly cap enforcement is still pending
+- public faucet page calls `/faucet/status` and `/faucet/claim`
+- RPC process enforces a server-side in-memory monthly wallet cap
+- persistent faucet accounting and abuse controls are still pending
 
 Recommended claim policy:
 
 ```text
 Maximum: 100,000 test InvertX per wallet per calendar month
+Maximum single claim: 10,000 test InvertX
 Default claim: smaller amount, such as 1,000 or 5,000 test InvertX
 Network: INFI Testnet only
 ```
@@ -197,7 +199,8 @@ Network: INFI Testnet only
 Exit criteria:
 
 - wallet can claim test tokens
-- monthly cap works
+- monthly cap works in the running RPC process
+- persistent cap storage is planned before wider public use
 - warning is visible
 - faucet cannot mint mainnet tokens
 

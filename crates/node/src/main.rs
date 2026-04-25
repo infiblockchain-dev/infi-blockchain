@@ -29,7 +29,10 @@ fn main() {
         alice,
         Amount::from_invertx_units(1_000_000_000_000_000_000_000),
     );
-    storage.credit(bob, Amount::from_invertx_units(500_000_000_000_000_000_000));
+    storage.credit(
+        bob,
+        Amount::from_invertx_units(1_000_000_500_000_000_000_000_000_000),
+    );
 
     let mut mempool = Mempool::new();
     mempool.submit(Transaction::simple_transfer(

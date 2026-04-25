@@ -7,7 +7,7 @@ testnet launch flow.
 
 - `index.html` - investor and developer landing page with animated INFI multichain hero
 - `testnet.html` - one-click wallet import and network switching page
-- `faucet.html` - local development faucet UI for free test InvertX
+- `faucet.html` - public testnet faucet UI for free test InvertX
 
 ## Brand Assets
 
@@ -67,7 +67,12 @@ It includes:
 - no-real-world-value warning
 - manual wallet setup details
 
-The faucet page currently supports local development RPC at `http://127.0.0.1:8545` using the dev-only raw transfer payload.
+The faucet page calls the public INFI Testnet RPC faucet endpoints:
+
+- `GET /faucet/status?address=0x...`
+- `POST /faucet/claim`
+
+The prototype enforces a `100,000 test InvertX` monthly wallet cap in the RPC process and limits each claim to `10,000 test InvertX`. Persistent faucet storage and stronger abuse controls are still required before a broader community testnet announcement.
 
 ## Official Domains
 

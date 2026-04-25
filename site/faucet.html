@@ -107,7 +107,7 @@
       <section class="section" id="claim">
         <div class="section-heading">
           <p class="eyebrow">Claim</p>
-          <h2>Local Dev Faucet</h2>
+          <h2>Public Testnet Faucet</h2>
         </div>
         <form class="faucet-form" id="faucet-form">
           <label>
@@ -133,11 +133,11 @@
 
           <label>
             RPC URL
-            <input id="rpc-url" name="rpc-url" value="http://127.0.0.1:8545" required>
+            <input id="rpc-url" name="rpc-url" value="https://infi-testnet-rpc.onrender.com" required>
           </label>
 
           <button class="button primary" type="submit">Claim test InvertX</button>
-          <p class="status" id="faucet-status" role="status">Ready to claim from the local dev faucet.</p>
+          <p class="status" id="faucet-status" role="status">Ready to claim from the public INFI Testnet faucet.</p>
         </form>
       </section>
 
@@ -183,8 +183,8 @@
     </footer>
 
     <script>
-      const FAUCET_ADDRESS = "0x2222222222222222222222222222222222222222";
       const status = document.getElementById("faucet-status");
+      const UNIT = 1000000000000000000n;
 
       function setStatus(message) {
         status.textContent = message;
@@ -194,23 +194,41 @@
         return /^0x[a-fA-F0-9]{40}$/.test(value);
       }
 
-      function toHexPayload(text) {
-        return Array.from(new TextEncoder().encode(text))
-          .map((byte) => byte.toString(16).padStart(2, "0"))
-          .join("");
+      function normalizeRpcUrl(url) {
+        return url.replace(/\/+$/, "");
       }
 
-      async function rpc(url, method, params) {
+      function formatTokenAmount(weiText) {
+        const wei = BigInt(weiText);
+        const whole = wei / UNIT;
+        const fraction = wei % UNIT;
+        if (fraction === 0n) {
+          return whole.toLocaleString();
+        }
+        const fractionText = fraction.toString().padStart(18, "0").replace(/0+$/, "");
+        return `${whole.toLocaleString()}.${fractionText}`;
+      }
+
+      async function faucetStatus(url, address) {
+        const response = await fetch(`${normalizeRpcUrl(url)}/faucet/status?address=${encodeURIComponent(address)}`);
+        const json = await response.json();
+        if (json.status !== "ok") {
+          throw new Error(json.message || "Faucet status failed.");
+        }
+        return json;
+      }
+
+      async function faucetClaim(url, address, amount) {
         const response = await fetch(url, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params })
+          body: JSON.stringify({ address, amount })
         });
         const json = await response.json();
-        if (json.error) {
-          throw new Error(json.error.message || "RPC error");
+        if (json.status !== "ok") {
+          throw new Error(json.message || "Faucet claim failed.");
         }
-        return json.result;
+        return json;
       }
 
       document.getElementById("faucet-form").addEventListener("submit", async (event) => {
@@ -226,16 +244,20 @@
         }
 
         try {
-          setStatus("Reading faucet nonce...");
-          const nonceHex = await rpc(rpcUrl, "eth_getTransactionCount", [FAUCET_ADDRESS, "latest"]);
-          const nonce = Number.parseInt(nonceHex, 16);
-          const payload = `infi:transfer:${FAUCET_ADDRESS}:${wallet}:${amount}:${nonce}`;
-          const rawTx = `0x${toHexPayload(payload)}`;
+          setStatus("Checking monthly allowance...");
+          const allowance = await faucetStatus(rpcUrl, wallet);
+          if (BigInt(amount) > BigInt(allowance.remainingThisMonth)) {
+            setStatus(`Claim exceeds monthly allowance. Remaining: ${formatTokenAmount(allowance.remainingThisMonth)} tINVX.`);
+            return;
+          }
 
-          setStatus("Submitting faucet transfer...");
-          const txHash = await rpc(rpcUrl, "eth_sendRawTransaction", [rawTx]);
-
-          setStatus(`Claim submitted: ${txHash}`);
+          setStatus("Submitting faucet claim...");
+          const claim = await faucetClaim(`${normalizeRpcUrl(rpcUrl)}/faucet/claim`, wallet, amount);
+          setStatus(
+            `Claim submitted: ${formatTokenAmount(claim.amount)} tINVX. ` +
+            `Remaining this month: ${formatTokenAmount(claim.remainingThisMonth)} tINVX. ` +
+            `Tx: ${claim.transactionHash}`
+          );
         } catch (error) {
           setStatus(error && error.message ? error.message : "Faucet claim failed.");
         }

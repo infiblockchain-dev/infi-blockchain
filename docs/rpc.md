@@ -21,6 +21,9 @@ Current implemented prototype methods:
 - `eth_getBalance`
 - `eth_getTransactionCount`
 - `eth_getTransactionReceipt`
+- `GET /health`
+- `GET /faucet/status?address=0x...`
+- `POST /faucet/claim`
 
 Prototype dev transaction format:
 
@@ -128,6 +131,22 @@ Expected result:
 ```
 
 Then query the receipt with that hash using `eth_getTransactionReceipt`.
+
+Check faucet allowance:
+
+```bash
+curl -s "http://127.0.0.1:8545/faucet/status?address=0x3333333333333333333333333333333333333333"
+```
+
+Claim 1,000 test InvertX from the faucet:
+
+```bash
+curl -s -X POST http://127.0.0.1:8545/faucet/claim \
+  -H "Content-Type: application/json" \
+  -d '{"address":"0x3333333333333333333333333333333333333333","amount":"1000000000000000000000"}'
+```
+
+The faucet endpoint enforces a `10,000 test InvertX` maximum per claim and a `100,000 test InvertX` monthly cap per wallet in the running RPC process.
 
 ## MetaMask Requirements
 

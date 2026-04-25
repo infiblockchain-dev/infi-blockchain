@@ -11,8 +11,10 @@ The goal is to make the RPC reachable over HTTPS so wallets and the website can 
 - `eth_getTransactionCount`
 - `eth_getTransactionReceipt`
 - temporary dev-only `eth_sendRawTransaction`
+- `GET /faucet/status?address=0x...`
+- `POST /faucet/claim`
 
-Important: this is still a prototype public RPC, not a decentralized production testnet. Real Ethereum signed transaction decoding, persistent storage, validator networking, rate limiting, faucet cap enforcement, and INFI Scan indexing still need to be completed before a community testnet announcement.
+Important: this is still a prototype public RPC, not a decentralized production testnet. Real Ethereum signed transaction decoding, persistent storage, validator networking, rate limiting, persistent faucet cap storage, and INFI Scan indexing still need to be completed before a community testnet announcement.
 
 ## Network Metadata
 
@@ -63,6 +65,26 @@ Expected:
 ```json
 {"jsonrpc":"2.0","id":1,"result":"0x18062"}
 ```
+
+Check faucet status:
+
+```bash
+curl -s "https://infi-testnet-rpc.onrender.com/faucet/status?address=0x3333333333333333333333333333333333333333"
+```
+
+Claim 1,000 test InvertX:
+
+```bash
+curl -s -X POST https://infi-testnet-rpc.onrender.com/faucet/claim \
+  -H "Content-Type: application/json" \
+  -d '{"address":"0x3333333333333333333333333333333333333333","amount":"1000000000000000000000"}'
+```
+
+The faucet enforces:
+
+- maximum single claim: `10,000 test InvertX`
+- monthly wallet allowance: `100,000 test InvertX`
+- warning: test InvertX is non-tradable and has no redeemable real-world value
 
 ## Docker Test
 
@@ -159,7 +181,7 @@ Before inviting outside users:
 - replace in-memory storage with persistent storage
 - add real Ethereum signed transaction decoding
 - add request rate limiting/proxy protection
-- add server-side faucet monthly cap enforcement
+- replace in-memory faucet accounting with persistent monthly cap storage
 - deploy INFI Scan testnet
 - run at least three independent nodes
 - publish a testnet status page
