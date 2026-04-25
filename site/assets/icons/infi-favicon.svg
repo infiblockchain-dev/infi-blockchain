@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="INFI Blockchain">
+  <defs>
+    <radialGradient id="bgGlow" cx="50%" cy="50%" r="55%">
+      <stop offset="0%" stop-color="#0a1a22"/>
+      <stop offset="60%" stop-color="#04101a"/>
+      <stop offset="100%" stop-color="#02070c"/>
+    </radialGradient>
+    <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#22ff9a" stop-opacity="0.55"/>
+      <stop offset="50%" stop-color="#20d9ff" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#02070c" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="greenLink" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#0eaa5f"/>
+      <stop offset="50%" stop-color="#22ff9a"/>
+      <stop offset="100%" stop-color="#0eaa5f"/>
+    </linearGradient>
+    <linearGradient id="blueLink" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#108fb3"/>
+      <stop offset="50%" stop-color="#20d9ff"/>
+      <stop offset="100%" stop-color="#108fb3"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Rounded dark background -->
+  <rect x="0" y="0" width="64" height="64" rx="14" fill="url(#bgGlow)"/>
+  <rect x="0.75" y="0.75" width="62.5" height="62.5" rx="13.5" fill="none" stroke="#22ff9a" stroke-opacity="0.18" stroke-width="0.8"/>
+
+  <!-- Center radial glow -->
+  <circle cx="32" cy="32" r="22" fill="url(#centerGlow)"/>
+
+  <!-- Green chain link (NW–SE diagonal) -->
+  <g transform="rotate(-45 32 32)">
+    <rect x="5" y="22" width="54" height="20" rx="10" fill="none" stroke="url(#greenLink)" stroke-width="3.2"/>
+    <rect x="5" y="22" width="54" height="20" rx="10" fill="none" stroke="#22ff9a" stroke-opacity="0.35" stroke-width="6" filter="blur(2px)"/>
+  </g>
+
+  <!-- Blue chain link (NE–SW diagonal) -->
+  <g transform="rotate(45 32 32)">
+    <rect x="5" y="22" width="54" height="20" rx="10" fill="none" stroke="url(#blueLink)" stroke-width="3.2"/>
+    <rect x="5" y="22" width="54" height="20" rx="10" fill="none" stroke="#20d9ff" stroke-opacity="0.35" stroke-width="6" filter="blur(2px)"/>
+  </g>
+
+  <!-- Center node -->
+  <circle cx="32" cy="32" r="4.5" fill="#02070c" stroke="#effff9" stroke-width="0.9"/>
+  <circle cx="32" cy="32" r="2" fill="#effff9"/>
+</svg>

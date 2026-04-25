@@ -2,79 +2,275 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>INFI Blockchain | Decentralized EVM Network for Transparent Assets</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>INFI Blockchain | Decentralized EVM Layer 1 — Decentralization · Safety · Speed · Transparency</title>
     <meta
       name="description"
-      content="INFI Blockchain is an EVM-compatible Layer 1 testnet initiative for transparent settlement, DeFi, DePIN, AI, decentralized RWA infrastructure, INFI Scan visibility, wallet onboarding, and InvertX-powered value movement."
+      content="INFI Blockchain is a public, EVM-compatible Layer 1 built on four pillars: decentralization, safety, speed, and transparency. Open validator network, fast finality, audited infrastructure, INFI Scan visibility, and InvertX gas — for DeFi, DePIN, AI, RWA, free domains, and a future decentralized VPN."
     >
     <meta
       name="keywords"
-      content="INFI Blockchain, InvertX, EVM blockchain, Layer 1 blockchain, INFI Testnet, DeFi, DePIN, AI blockchain, RWA infrastructure, tokenized assets, decentralized VPN, WalletConnect, INFI Scan, cross-chain blockchain, INFI Domains"
+      content="INFI Blockchain, InvertX, EVM blockchain, Layer 1 blockchain, decentralized blockchain, fast finality, BFT consensus, open validator network, INFI Testnet, INFI Scan, transparent blockchain, audited blockchain, DeFi, DePIN, AI blockchain, RWA infrastructure, tokenized assets, decentralized VPN, WalletConnect, INFI Domains, reproducible builds, public RPC"
     >
     <meta name="author" content="INFI Blockchain">
-    <meta name="robots" content="index, follow, max-image-preview:large">
-    <meta name="theme-color" content="#061512">
+    <meta name="publisher" content="INFI Blockchain">
+    <meta name="copyright" content="INFI Blockchain">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="bingbot" content="index, follow">
+    <meta name="rating" content="general">
+    <meta name="distribution" content="global">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="theme-color" content="#02070c" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#02070c" media="(prefers-color-scheme: light)">
+    <meta name="color-scheme" content="dark">
     <meta name="application-name" content="INFI Blockchain">
     <meta name="apple-mobile-web-app-title" content="INFI">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="msapplication-TileColor" content="#02070c">
+    <meta name="msapplication-TileImage" content="/assets/icons/icon-144.png">
+    <meta name="msapplication-config" content="none">
+    <meta name="format-detection" content="telephone=no">
     <link rel="canonical" href="https://infi.infi/">
+    <link rel="alternate" type="application/rss+xml" title="INFI Blockchain" href="https://infi.infi/sitemap.xml">
 
+    <!-- Open Graph / Facebook / LinkedIn / Discord -->
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="INFI Blockchain">
-    <meta property="og:title" content="INFI Blockchain">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="INFI Blockchain — Decentralized EVM Layer 1">
     <meta
       property="og:description"
-      content="EVM-compatible Layer 1 testnet initiative for transparent settlement, DeFi, DePIN, AI, decentralized RWA infrastructure, INFI Scan visibility, wallet onboarding, and InvertX-powered value movement."
+      content="Built on decentralization, safety, speed, and transparency. Open validator network, fast finality, audited infrastructure, INFI Scan visibility, and InvertX gas."
     >
     <meta property="og:url" content="https://infi.infi/">
     <meta property="og:image" content="https://infi.infi/assets/brand/infi-social-preview.png">
-    <meta property="og:image:alt" content="INFI Blockchain multichain logo.">
+    <meta property="og:image:secure_url" content="https://infi.infi/assets/brand/infi-social-preview.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="INFI Blockchain — Decentralized EVM Layer 1 built on decentralization, safety, speed, and transparency.">
 
+    <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="INFI Blockchain">
+    <meta name="twitter:site" content="@infiblockchain">
+    <meta name="twitter:creator" content="@infiblockchain">
+    <meta name="twitter:title" content="INFI Blockchain — Decentralized EVM Layer 1">
     <meta
       name="twitter:description"
-      content="EVM-compatible Layer 1 testnet initiative with InvertX gas, INFI Scan transparency, wallet onboarding, DeFi, DePIN, AI, RWA, and decentralized network goals."
+      content="Built on decentralization, safety, speed, and transparency. Open validator network, fast finality, audited infrastructure, and INFI Scan visibility."
     >
     <meta name="twitter:image" content="https://infi.infi/assets/brand/infi-social-preview.png">
-    <meta name="twitter:image:alt" content="INFI Blockchain logo.">
+    <meta name="twitter:image:alt" content="INFI Blockchain — Decentralized EVM Layer 1.">
+    <meta name="twitter:domain" content="infi.infi">
 
+    <!-- Favicons (modern + legacy) -->
+    <link rel="icon" type="image/svg+xml" href="/assets/icons/infi-favicon.svg">
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/icons/favicon-48.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96.png">
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/icons/icon-512.png">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/icons/icon-152.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="/assets/icons/icon-167.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
+    <link rel="mask-icon" href="/assets/icons/infi-pinned-tab.svg" color="#22ff9a">
     <link rel="manifest" href="/site.webmanifest">
+
+    <!-- Preconnect/preload for performance -->
+    <link rel="preload" as="image" href="/assets/brand/infi-logo-transparent.png" fetchpriority="high">
+    <link rel="preload" as="style" href="/styles.css">
+
     <link rel="stylesheet" href="/styles.css">
 
+    <!-- Schema.org: Organization -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "Organization",
         "name": "INFI Blockchain",
+        "alternateName": "INFI",
         "url": "https://infi.infi/",
-        "logo": "https://infi.infi/assets/brand/infi-logo-transparent.png",
-        "description": "INFI Blockchain is an EVM-compatible Layer 1 initiative focused on transparent settlement, public testnet onboarding, INFI Scan visibility, and InvertX-powered decentralized value movement.",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://infi.infi/assets/brand/infi-logo-transparent.png",
+          "width": 2432,
+          "height": 2432
+        },
+        "image": "https://infi.infi/assets/brand/infi-social-preview.png",
+        "description": "INFI Blockchain is a public, EVM-compatible Layer 1 built on four pillars: decentralization, safety, speed, and transparency.",
+        "foundingDate": "2024",
+        "knowsAbout": [
+          "Blockchain",
+          "EVM",
+          "Decentralized Finance",
+          "DePIN",
+          "Layer 1 Blockchain",
+          "Smart Contracts",
+          "Tokenized Assets"
+        ],
         "sameAs": []
       }
     </script>
+
+    <!-- Schema.org: WebSite + SearchAction -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "WebSite",
         "name": "INFI Blockchain",
+        "alternateName": "INFI",
         "url": "https://infi.infi/",
+        "description": "Decentralized EVM Layer 1 — built on decentralization, safety, speed, and transparency.",
+        "inLanguage": "en",
+        "publisher": {
+          "@type": "Organization",
+          "name": "INFI Blockchain",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://infi.infi/assets/brand/infi-logo-transparent.png"
+          }
+        },
         "potentialAction": {
           "@type": "SearchAction",
-          "target": "https://scan.infi.infi/search?q={search_term_string}",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://scan.infi.infi/search?q={search_term_string}"
+          },
           "query-input": "required name=search_term_string"
         }
+      }
+    </script>
+
+    <!-- Schema.org: SoftwareApplication (the chain itself) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "INFI Blockchain",
+        "applicationCategory": "DeveloperApplication",
+        "applicationSubCategory": "Blockchain Infrastructure",
+        "operatingSystem": "Cross-platform",
+        "description": "EVM-compatible Layer 1 blockchain built on decentralization, safety, speed, and transparency. Open validator participation, BFT-confirmed finality, lightweight Invertx gas, and INFI Scan transparency.",
+        "url": "https://infi.infi/",
+        "image": "https://infi.infi/assets/brand/infi-social-preview.png",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock",
+          "description": "Public testnet access — no purchase required"
+        }
+      }
+    </script>
+
+    <!-- Schema.org: BreadcrumbList -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://infi.infi/" },
+          { "@type": "ListItem", "position": 2, "name": "Pillars", "item": "https://infi.infi/#pillars" },
+          { "@type": "ListItem", "position": 3, "name": "Architecture", "item": "https://infi.infi/#architecture" },
+          { "@type": "ListItem", "position": 4, "name": "Decentralization", "item": "https://infi.infi/#decentralization" },
+          { "@type": "ListItem", "position": 5, "name": "Safety", "item": "https://infi.infi/#safety" }
+        ]
+      }
+    </script>
+
+    <!-- Schema.org: FAQPage about the four pillars -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What are the four pillars of INFI Blockchain?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "INFI Blockchain is built on four pillars: decentralization, safety, speed, and transparency. Open validator network, audited infrastructure, fast BFT-confirmed finality, and INFI Scan transparency."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is INFI EVM-compatible?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. INFI is a fully EVM-compatible Layer 1. Existing Solidity and Vyper contracts deploy without modification, and all standard EVM tooling works."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How can I add INFI Testnet to my wallet?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Visit infi.infi/testnet.html and click Add INFI Testnet, or import the network manually using the public RPC and Chain ID 98402."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is InvertX?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "InvertX is the native gas unit on INFI Blockchain. It is a decentralized stable protocol unit designed for cleaner value movement across decentralized environments."
+            }
+          }
+        ]
       }
     </script>
   </head>
   <body>
     <div class="node-background" aria-hidden="true">
+      <!-- Depth glow layers (new) -->
+      <div class="depth-glow depth-top"></div>
+      <div class="depth-glow depth-bottom"></div>
+      <div class="depth-glow depth-center"></div>
+
+      <!-- Hexagonal mesh grid (new) -->
+      <svg class="hex-grid" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <pattern id="hex-pattern" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse">
+            <path d="M30 1 L58 17 L58 49 L30 65 L2 49 L2 17 Z" fill="none" stroke="rgba(34, 255, 154, 0.06)" stroke-width="0.6"></path>
+          </pattern>
+          <radialGradient id="hex-fade" cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stop-color="white" stop-opacity="1"></stop>
+            <stop offset="60%" stop-color="white" stop-opacity="0.6"></stop>
+            <stop offset="100%" stop-color="white" stop-opacity="0"></stop>
+          </radialGradient>
+          <mask id="hex-mask">
+            <rect width="100%" height="100%" fill="url(#hex-fade)"></rect>
+          </mask>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#hex-pattern)" mask="url(#hex-mask)"></rect>
+      </svg>
+
+      <!-- Network topology SVG (new) - persistent connection lines between nodes -->
+      <svg class="network-topology" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 100 100">
+        <defs>
+          <linearGradient id="conn-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="rgba(32, 217, 255, 0)"></stop>
+            <stop offset="50%" stop-color="rgba(34, 255, 154, 0.18)"></stop>
+            <stop offset="100%" stop-color="rgba(32, 217, 255, 0)"></stop>
+          </linearGradient>
+        </defs>
+        <g class="topology-lines" stroke="url(#conn-grad)" stroke-width="0.12" fill="none">
+          <path d="M 8 16 Q 26 22 45 25"></path>
+          <path d="M 45 25 Q 65 30 86 38"></path>
+          <path d="M 8 16 Q 14 40 20 66"></path>
+          <path d="M 20 66 Q 50 60 76 64"></path>
+          <path d="M 76 64 Q 80 50 86 38"></path>
+          <path d="M 45 25 Q 38 48 20 66"></path>
+          <path d="M 86 38 Q 70 50 76 64"></path>
+          <path d="M 8 16 Q 30 30 45 25"></path>
+        </g>
+      </svg>
+
       <span class="mesh-line line-one"></span>
       <span class="mesh-line line-two"></span>
       <span class="mesh-line line-three"></span>
@@ -124,6 +320,8 @@
         <small>decentralized testnet architecture</small>
       </div>
       <nav aria-label="Primary navigation">
+        <a href="#pillars">Pillars</a>
+        <a href="#architecture">Architecture</a>
         <a href="#decentralization">Decentralization</a>
         <a href="#ecosystem">Ecosystem</a>
         <a href="#builders">Builders</a>
@@ -138,12 +336,14 @@
           <p class="eyebrow">INFI decentralized testnet</p>
           <h1>Decentralized EVM infrastructure for transparent assets.</h1>
           <p class="hero-text">
-            INFI Blockchain is being built as a public, wallet-friendly
-            EVM-compatible Layer 1 for transparent settlement, INFI Scan
-            visibility, free domains, tokenized assets, DeFi, DePIN, AI,
-            decentralized RWA infrastructure, and future decentralized VPN
-            services. Public materials explain the user-facing architecture;
-            sensitive core logic and operational details stay protected.
+            INFI Blockchain is a public, wallet-friendly EVM-compatible
+            Layer 1 built on four pillars—<strong>decentralization</strong>,
+            <strong>safety</strong>, <strong>speed</strong>, and
+            <strong>transparency</strong>. Open validator participation,
+            fast finality, audited infrastructure, and an explorer where
+            every block, contract, and domain is verifiable by anyone.
+            The same open foundation powers DeFi, DePIN, AI, RWA, free
+            domains, and a future decentralized VPN.
           </p>
           <div class="hero-actions" aria-label="Primary actions">
             <a class="button primary" href="/testnet.html">Add INFI Testnet</a>
@@ -157,25 +357,427 @@
           </div>
         </div>
 
-        <div class="architecture-panel" aria-label="INFI decentralization overview">
-          <div class="architecture-brand">
-            <img src="/assets/brand/infi-logo-transparent.png" alt="INFI Blockchain logo">
-            <div>
-              <strong>INFI Network</strong>
-              <span>Public testnet access, protected core intelligence</span>
+        <div class="architecture-blueprint" aria-label="INFI Blockchain architecture blueprint">
+          <header class="blueprint-header">
+            <div class="blueprint-brand">
+              <span class="blueprint-mark">
+                <img src="/assets/brand/infi-logo-transparent.png" alt="" width="42" height="42">
+              </span>
+              <div>
+                <strong>INFI Network</strong>
+                <span>Layer 1 · EVM · Chain ID <em>98402</em></span>
+              </div>
+            </div>
+            <div class="blueprint-status" aria-label="Live status">
+              <span class="live-dot"></span>
+              <span class="live-label">Block</span>
+              <em class="live-block" data-live-block>98402</em>
+            </div>
+          </header>
+
+          <!-- Live block ribbon -->
+          <div class="block-ribbon" aria-label="Recent blocks">
+            <div class="block-ribbon-track">
+              <div class="chain-block"><span class="block-num">#98399</span><span class="block-hash">0x18063</span></div>
+              <span class="chain-link"></span>
+              <div class="chain-block"><span class="block-num">#98400</span><span class="block-hash">0x18064</span></div>
+              <span class="chain-link"></span>
+              <div class="chain-block"><span class="block-num">#98401</span><span class="block-hash">0x18065</span></div>
+              <span class="chain-link"></span>
+              <div class="chain-block is-current"><span class="block-num">#98402</span><span class="block-hash">0x18066</span></div>
+              <span class="chain-link is-pending"></span>
+              <div class="chain-block is-pending"><span class="block-num">pending</span><span class="block-hash">…</span></div>
             </div>
           </div>
-          <div class="architecture-stack">
-            <div><strong>Public Access</strong><span>Users can add the testnet, claim gas, and follow network activity with clear guidance.</span></div>
-            <div><strong>Decentralized Operation</strong><span>Validator and node participation are planned for open network growth after staged security checks.</span></div>
-            <div><strong>Transparent Verification</strong><span>Blocks, balances, and transactions should remain inspectable through INFI Scan.</span></div>
-            <div><strong>Protected Core</strong><span>Private logic, operational security details, and sensitive data stay outside the public surface.</span></div>
+
+          <!-- Layered architecture stack -->
+          <ul class="layer-stack" aria-label="Protocol layers">
+            <li class="layer layer-app" style="--layer-i: 0;">
+              <span class="layer-icon" aria-hidden="true">◎</span>
+              <div class="layer-text">
+                <strong>Application</strong>
+                <span>Wallets · INFI Scan · Domains · DApps</span>
+              </div>
+              <span class="layer-tag">L4</span>
+            </li>
+            <li class="layer layer-evm" style="--layer-i: 1;">
+              <span class="layer-icon" aria-hidden="true">{ }</span>
+              <div class="layer-text">
+                <strong>EVM &amp; Smart Contracts</strong>
+                <span>Solidity · ERC-20 / 721 / 1155</span>
+              </div>
+              <span class="layer-tag">L3</span>
+            </li>
+            <li class="layer layer-consensus" style="--layer-i: 2;">
+              <span class="layer-icon" aria-hidden="true">⬡</span>
+              <div class="layer-text">
+                <strong>Consensus</strong>
+                <span>Validator set · Block finality · BFT</span>
+              </div>
+              <span class="layer-tag">L2</span>
+            </li>
+            <li class="layer layer-network" style="--layer-i: 3;">
+              <span class="layer-icon" aria-hidden="true">⌭</span>
+              <div class="layer-text">
+                <strong>Networking · Mempool</strong>
+                <span>P2P gossip · Tx pool · JSON-RPC</span>
+              </div>
+              <span class="layer-tag">L1</span>
+            </li>
+            <li class="layer layer-storage" style="--layer-i: 4;">
+              <span class="layer-icon" aria-hidden="true">▤</span>
+              <div class="layer-text">
+                <strong>Data &amp; State</strong>
+                <span>Merkle trie · Headers · Receipts</span>
+              </div>
+              <span class="layer-tag">L0</span>
+            </li>
+            <span class="layer-flow" aria-hidden="true"></span>
+          </ul>
+
+          <!-- Throughput / function rail -->
+          <div class="blueprint-rail">
+            <span><em>InvertX</em>Gas</span>
+            <span><em>DeFi</em>DePIN</span>
+            <span><em>Free</em>Domains</span>
+            <span><em>AI</em>RWA</span>
           </div>
-          <div class="architecture-rail">
-            <span>InvertX Gas</span>
-            <span>DeFi / DePIN</span>
-            <span>INFI Domains</span>
-            <span>AI / RWA</span>
+        </div>
+      </section>
+
+      <section id="architecture" class="section section-dark architecture-section">
+        <div class="section-heading arch-heading">
+          <p class="eyebrow">Architecture</p>
+          <h2>An EVM Layer 1 built as honest, inspectable layers.</h2>
+          <p>
+            INFI is shaped as a clean, open stack: a P2P networking floor,
+            a fast consensus engine, an EVM execution layer, and a
+            user-facing surface for wallets, INFI Scan, and DApps. Every
+            layer is documented, reproducible, and verifiable—designed
+            for decentralization, safety, speed, and transparency from
+            the ground up.
+          </p>
+        </div>
+
+        <div class="arch-canvas">
+          <!-- Topology diagram -->
+          <div class="arch-topology" aria-label="Validator and node topology">
+            <header class="arch-canvas-head">
+              <p class="eyebrow">Network topology</p>
+              <h3>Validator mesh &amp; transaction propagation</h3>
+            </header>
+
+            <svg class="arch-topology-svg" viewBox="0 0 600 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="INFI validator mesh with live block propagation">
+              <defs>
+                <linearGradient id="arch-line" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="rgba(34,255,154,0.0)"></stop>
+                  <stop offset="50%" stop-color="rgba(34,255,154,0.55)"></stop>
+                  <stop offset="100%" stop-color="rgba(32,217,255,0.0)"></stop>
+                </linearGradient>
+                <radialGradient id="arch-node-glow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="rgba(34,255,154,0.55)"></stop>
+                  <stop offset="60%" stop-color="rgba(34,255,154,0.15)"></stop>
+                  <stop offset="100%" stop-color="rgba(34,255,154,0)"></stop>
+                </radialGradient>
+                <radialGradient id="arch-node-glow-blue" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="rgba(32,217,255,0.5)"></stop>
+                  <stop offset="60%" stop-color="rgba(32,217,255,0.12)"></stop>
+                  <stop offset="100%" stop-color="rgba(32,217,255,0)"></stop>
+                </radialGradient>
+                <radialGradient id="leader-glow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="rgba(34,255,154,0.85)"></stop>
+                  <stop offset="40%" stop-color="rgba(34,255,154,0.35)"></stop>
+                  <stop offset="100%" stop-color="rgba(34,255,154,0)"></stop>
+                </radialGradient>
+              </defs>
+
+              <!-- background grid lines (subtle) -->
+              <g class="topology-grid" stroke="rgba(32,217,255,0.06)" stroke-width="0.5">
+                <line x1="0" y1="90" x2="600" y2="90"/>
+                <line x1="0" y1="180" x2="600" y2="180"/>
+                <line x1="0" y1="270" x2="600" y2="270"/>
+                <line x1="150" y1="0" x2="150" y2="360"/>
+                <line x1="300" y1="0" x2="300" y2="360"/>
+                <line x1="450" y1="0" x2="450" y2="360"/>
+              </g>
+
+              <!-- Finalization wave rings emanating from leader -->
+              <g class="finalization-waves" fill="none" stroke-linecap="round">
+                <circle cx="300" cy="180" r="28" stroke="rgba(34,255,154,0.85)" stroke-width="1.6">
+                  <animate attributeName="r" values="28;180" dur="3.6s" repeatCount="indefinite"/>
+                  <animate attributeName="opacity" values="0;0.85;0" dur="3.6s" repeatCount="indefinite"/>
+                  <animate attributeName="stroke-width" values="2;0.3" dur="3.6s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="300" cy="180" r="28" stroke="rgba(32,217,255,0.8)" stroke-width="1.4">
+                  <animate attributeName="r" values="28;180" dur="3.6s" begin="1.2s" repeatCount="indefinite"/>
+                  <animate attributeName="opacity" values="0;0.7;0" dur="3.6s" begin="1.2s" repeatCount="indefinite"/>
+                  <animate attributeName="stroke-width" values="2;0.3" dur="3.6s" begin="1.2s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="300" cy="180" r="28" stroke="rgba(34,255,154,0.7)" stroke-width="1.4">
+                  <animate attributeName="r" values="28;180" dur="3.6s" begin="2.4s" repeatCount="indefinite"/>
+                  <animate attributeName="opacity" values="0;0.6;0" dur="3.6s" begin="2.4s" repeatCount="indefinite"/>
+                  <animate attributeName="stroke-width" values="2;0.3" dur="3.6s" begin="2.4s" repeatCount="indefinite"/>
+                </circle>
+              </g>
+
+              <!-- connection edges (animated) -->
+              <g class="topology-edges" stroke="url(#arch-line)" stroke-width="1.5" fill="none" stroke-linecap="round">
+                <path class="edge edge-1" d="M 90 80 Q 200 130 300 180"/>
+                <path class="edge edge-2" d="M 510 80 Q 400 140 300 180"/>
+                <path class="edge edge-3" d="M 90 280 Q 190 240 300 180"/>
+                <path class="edge edge-4" d="M 510 280 Q 400 230 300 180"/>
+                <path class="edge edge-5" d="M 90 80 Q 80 180 90 280"/>
+                <path class="edge edge-6" d="M 510 80 Q 520 180 510 280"/>
+                <path class="edge edge-7" d="M 90 80 Q 300 50 510 80"/>
+                <path class="edge edge-8" d="M 90 280 Q 300 320 510 280"/>
+              </g>
+
+              <!-- Inbound packets: validators → leader (tx gossip / votes) -->
+              <g class="topology-packets-in">
+                <circle r="3.2" fill="rgba(32,217,255,1)">
+                  <animateMotion dur="3.2s" repeatCount="indefinite" path="M 90 80 Q 200 130 300 180"/>
+                </circle>
+                <circle r="3.2" fill="rgba(32,217,255,1)">
+                  <animateMotion dur="3.2s" begin="0.8s" repeatCount="indefinite" path="M 510 80 Q 400 140 300 180"/>
+                </circle>
+                <circle r="3.2" fill="rgba(32,217,255,1)">
+                  <animateMotion dur="3.2s" begin="1.6s" repeatCount="indefinite" path="M 90 280 Q 190 240 300 180"/>
+                </circle>
+                <circle r="3.2" fill="rgba(32,217,255,1)">
+                  <animateMotion dur="3.2s" begin="2.4s" repeatCount="indefinite" path="M 510 280 Q 400 230 300 180"/>
+                </circle>
+              </g>
+
+              <!-- Outbound packets: leader → validators (block proposal) -->
+              <g class="topology-packets-out">
+                <circle r="4" fill="rgba(34,255,154,1)">
+                  <animateMotion dur="2.6s" begin="2.5s" repeatCount="indefinite" path="M 300 180 Q 200 130 90 80"/>
+                  <animate attributeName="opacity" values="0.2;1;1;0.2" dur="2.6s" begin="2.5s" repeatCount="indefinite"/>
+                </circle>
+                <circle r="4" fill="rgba(34,255,154,1)">
+                  <animateMotion dur="2.6s" begin="2.7s" repeatCount="indefinite" path="M 300 180 Q 400 130 510 80"/>
+                  <animate attributeName="opacity" values="0.2;1;1;0.2" dur="2.6s" begin="2.7s" repeatCount="indefinite"/>
+                </circle>
+                <circle r="4" fill="rgba(34,255,154,1)">
+                  <animateMotion dur="2.6s" begin="2.9s" repeatCount="indefinite" path="M 300 180 Q 200 230 90 280"/>
+                  <animate attributeName="opacity" values="0.2;1;1;0.2" dur="2.6s" begin="2.9s" repeatCount="indefinite"/>
+                </circle>
+                <circle r="4" fill="rgba(34,255,154,1)">
+                  <animateMotion dur="2.6s" begin="3.1s" repeatCount="indefinite" path="M 300 180 Q 400 230 510 280"/>
+                  <animate attributeName="opacity" values="0.2;1;1;0.2" dur="2.6s" begin="3.1s" repeatCount="indefinite"/>
+                </circle>
+              </g>
+
+              <!-- Cross-validator gossip (peer-to-peer along the perimeter) -->
+              <g class="topology-packets-cross">
+                <circle r="2.6" fill="rgba(201,231,223,0.95)">
+                  <animateMotion dur="6.4s" repeatCount="indefinite" path="M 90 80 Q 300 50 510 80"/>
+                </circle>
+                <circle r="2.6" fill="rgba(201,231,223,0.95)">
+                  <animateMotion dur="6.4s" begin="1.6s" repeatCount="indefinite" path="M 510 80 Q 520 180 510 280"/>
+                </circle>
+                <circle r="2.6" fill="rgba(201,231,223,0.95)">
+                  <animateMotion dur="6.4s" begin="3.2s" repeatCount="indefinite" path="M 510 280 Q 300 320 90 280"/>
+                </circle>
+                <circle r="2.6" fill="rgba(201,231,223,0.95)">
+                  <animateMotion dur="6.4s" begin="4.8s" repeatCount="indefinite" path="M 90 280 Q 80 180 90 80"/>
+                </circle>
+              </g>
+
+              <!-- validator nodes -->
+              <g class="topology-nodes">
+                <!-- validator-01 -->
+                <g class="t-node" transform="translate(90 80)">
+                  <circle r="22" fill="url(#arch-node-glow)">
+                    <animate attributeName="opacity" values="0.55;1;0.55" dur="3s" repeatCount="indefinite"/>
+                  </circle>
+                  <circle r="14" fill="none" stroke="rgba(34,255,154,0.9)" stroke-width="1.6">
+                    <animate attributeName="r" values="14;30;14" dur="3.6s" begin="3.0s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values="0;0.9;0" dur="3.6s" begin="3.0s" repeatCount="indefinite"/>
+                  </circle>
+                  <circle r="9" fill="rgba(2,7,12,0.92)" stroke="rgba(34,255,154,0.85)" stroke-width="1.6"/>
+                  <text x="0" y="-30" text-anchor="middle" fill="rgba(201,231,223,0.95)" font-size="10" font-family="ui-monospace,monospace">validator-01</text>
+                </g>
+
+                <!-- validator-02 -->
+                <g class="t-node" transform="translate(510 80)">
+                  <circle r="22" fill="url(#arch-node-glow-blue)">
+                    <animate attributeName="opacity" values="0.55;1;0.55" dur="3s" begin="0.7s" repeatCount="indefinite"/>
+                  </circle>
+                  <circle r="14" fill="none" stroke="rgba(32,217,255,0.9)" stroke-width="1.6">
+                    <animate attributeName="r" values="14;30;14" dur="3.6s" begin="3.2s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values="0;0.9;0" dur="3.6s" begin="3.2s" repeatCount="indefinite"/>
+                  </circle>
+                  <circle r="9" fill="rgba(2,7,12,0.92)" stroke="rgba(32,217,255,0.85)" stroke-width="1.6"/>
+                  <text x="0" y="-30" text-anchor="middle" fill="rgba(201,231,223,0.95)" font-size="10" font-family="ui-monospace,monospace">validator-02</text>
+                </g>
+
+                <!-- validator-03 -->
+                <g class="t-node" transform="translate(90 280)">
+                  <circle r="22" fill="url(#arch-node-glow-blue)">
+                    <animate attributeName="opacity" values="0.55;1;0.55" dur="3s" begin="1.4s" repeatCount="indefinite"/>
+                  </circle>
+                  <circle r="14" fill="none" stroke="rgba(32,217,255,0.9)" stroke-width="1.6">
+                    <animate attributeName="r" values="14;30;14" dur="3.6s" begin="3.4s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values="0;0.9;0" dur="3.6s" begin="3.4s" repeatCount="indefinite"/>
+                  </circle>
+                  <circle r="9" fill="rgba(2,7,12,0.92)" stroke="rgba(32,217,255,0.85)" stroke-width="1.6"/>
+                  <text x="0" y="42" text-anchor="middle" fill="rgba(201,231,223,0.95)" font-size="10" font-family="ui-monospace,monospace">validator-03</text>
+                </g>
+
+                <!-- validator-04 -->
+                <g class="t-node" transform="translate(510 280)">
+                  <circle r="22" fill="url(#arch-node-glow)">
+                    <animate attributeName="opacity" values="0.55;1;0.55" dur="3s" begin="2.1s" repeatCount="indefinite"/>
+                  </circle>
+                  <circle r="14" fill="none" stroke="rgba(34,255,154,0.9)" stroke-width="1.6">
+                    <animate attributeName="r" values="14;30;14" dur="3.6s" begin="3.6s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values="0;0.9;0" dur="3.6s" begin="3.6s" repeatCount="indefinite"/>
+                  </circle>
+                  <circle r="9" fill="rgba(2,7,12,0.92)" stroke="rgba(34,255,154,0.85)" stroke-width="1.6"/>
+                  <text x="0" y="42" text-anchor="middle" fill="rgba(201,231,223,0.95)" font-size="10" font-family="ui-monospace,monospace">validator-04</text>
+                </g>
+
+                <!-- LEADER (center) -->
+                <g class="t-node t-leader" transform="translate(300 180)">
+                  <circle r="44" fill="url(#leader-glow)">
+                    <animate attributeName="r" values="38;52;38" dur="2.4s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values="0.65;1;0.65" dur="2.4s" repeatCount="indefinite"/>
+                  </circle>
+                  <circle r="24" fill="rgba(7,19,26,0.96)" stroke="rgba(34,255,154,0.95)" stroke-width="1.8"/>
+                  <text x="0" y="-2" text-anchor="middle" fill="rgba(34,255,154,1)" font-size="9" font-weight="800" font-family="ui-monospace,monospace">LEADER</text>
+                  <text x="0" y="11" text-anchor="middle" fill="rgba(201,231,223,0.9)" font-size="8" font-family="ui-monospace,monospace">#98402</text>
+                </g>
+
+                <!-- "+ block" indicator near leader -->
+                <g transform="translate(300 130)">
+                  <rect x="-26" y="-10" width="52" height="20" rx="5" fill="rgba(2,7,12,0.92)" stroke="rgba(34,255,154,0.7)" stroke-width="0.9">
+                    <animate attributeName="opacity" values="0;0;1;1;0" dur="3.6s" begin="2.4s" repeatCount="indefinite"/>
+                  </rect>
+                  <text x="0" y="3" text-anchor="middle" fill="rgba(34,255,154,1)" font-size="8" font-weight="800" font-family="ui-monospace,monospace" opacity="0">+ block
+                    <animate attributeName="opacity" values="0;0;1;1;0" dur="3.6s" begin="2.4s" repeatCount="indefinite"/>
+                  </text>
+                </g>
+              </g>
+
+              <!-- Cycle phase labels at the edges -->
+              <g class="cycle-labels" font-family="ui-monospace,monospace" font-size="8" font-weight="700">
+                <text x="14" y="184" text-anchor="start" fill="rgba(32,217,255,0.6)">tx · vote →</text>
+                <text x="586" y="184" text-anchor="end" fill="rgba(34,255,154,0.6)">← block · finality</text>
+              </g>
+            </svg>
+
+            <div class="topology-legend" aria-label="Legend">
+              <span><i class="legend-dot legend-blue"></i>tx · vote (validator → leader)</span>
+              <span><i class="legend-dot legend-green"></i>block proposal (leader → validators)</span>
+              <span><i class="legend-dot legend-pulse"></i>finality wave</span>
+            </div>
+
+            <div class="topology-params" aria-label="Network parameters">
+              <div>
+                <span class="topo-param-label">Block target</span>
+                <strong>~3s</strong>
+                <em>per block</em>
+              </div>
+              <div>
+                <span class="topo-param-label">Finality</span>
+                <strong>BFT</strong>
+                <em>validator-confirmed</em>
+              </div>
+              <div>
+                <span class="topo-param-label">Propagation</span>
+                <strong>P2P</strong>
+                <em>gossip mesh</em>
+              </div>
+              <div>
+                <span class="topo-param-label">Chain ID</span>
+                <strong>98402</strong>
+                <em>INFI testnet</em>
+              </div>
+            </div>
+          </div>
+
+          <!-- Layered breakdown -->
+          <div class="arch-layers" aria-label="Layered architecture detail">
+            <header class="arch-canvas-head">
+              <p class="eyebrow">Protocol stack</p>
+              <h3>How a transaction travels through INFI</h3>
+            </header>
+
+            <ol class="arch-layer-list">
+              <li class="arch-layer arch-layer-1">
+                <span class="arch-layer-tag">01</span>
+                <div>
+                  <strong>Wallet submits tx</strong>
+                  <p>User signs a transaction in any EVM wallet. WalletConnect or RPC sends it to a public endpoint.</p>
+                </div>
+                <span class="arch-layer-icon" aria-hidden="true">→</span>
+              </li>
+              <li class="arch-layer arch-layer-2">
+                <span class="arch-layer-tag">02</span>
+                <div>
+                  <strong>RPC &amp; mempool</strong>
+                  <p>RPC validates the signature, nonce, and gas. The tx enters the public mempool and is gossiped to peers.</p>
+                </div>
+                <span class="arch-layer-icon" aria-hidden="true">⇄</span>
+              </li>
+              <li class="arch-layer arch-layer-3">
+                <span class="arch-layer-tag">03</span>
+                <div>
+                  <strong>Consensus &amp; ordering</strong>
+                  <p>The current block leader orders pending txs and proposes a block; validators verify and finalize.</p>
+                </div>
+                <span class="arch-layer-icon" aria-hidden="true">⬡</span>
+              </li>
+              <li class="arch-layer arch-layer-4">
+                <span class="arch-layer-tag">04</span>
+                <div>
+                  <strong>EVM execution</strong>
+                  <p>Each tx runs in the EVM, mutating account state, emitting logs, and consuming InvertX gas.</p>
+                </div>
+                <span class="arch-layer-icon" aria-hidden="true">{ }</span>
+              </li>
+              <li class="arch-layer arch-layer-5">
+                <span class="arch-layer-tag">05</span>
+                <div>
+                  <strong>State commit</strong>
+                  <p>The new state root, headers, and receipts are persisted. The block is now part of the canonical chain.</p>
+                </div>
+                <span class="arch-layer-icon" aria-hidden="true">▤</span>
+              </li>
+              <li class="arch-layer arch-layer-6">
+                <span class="arch-layer-tag">06</span>
+                <div>
+                  <strong>Public visibility</strong>
+                  <p>INFI Scan indexes the new block. Wallets and DApps see the receipt; the user sees confirmation.</p>
+                </div>
+                <span class="arch-layer-icon" aria-hidden="true">◎</span>
+              </li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- Architecture metrics rail -->
+        <div class="arch-metrics" aria-label="Architecture metrics">
+          <div>
+            <span class="arch-metric-label">Execution</span>
+            <strong>EVM</strong>
+            <em>Solidity, Vyper compatible</em>
+          </div>
+          <div>
+            <span class="arch-metric-label">Consensus</span>
+            <strong>BFT-style</strong>
+            <em>Validator set with finality</em>
+          </div>
+          <div>
+            <span class="arch-metric-label">Networking</span>
+            <strong>P2P Gossip</strong>
+            <em>Tx pool · block propagation</em>
+          </div>
+          <div>
+            <span class="arch-metric-label">Data layer</span>
+            <strong>Merkle State</strong>
+            <em>Trie · headers · receipts</em>
           </div>
         </div>
       </section>
@@ -183,34 +785,34 @@
       <section id="decentralization" class="section section-dark">
         <div class="section-heading wide">
           <p class="eyebrow">Decentralization</p>
-          <h2>Public network values without exposing private core concepts.</h2>
+          <h2>Decentralization is the design—open at every layer.</h2>
           <p>
-            INFI’s public layer should make the network understandable:
-            decentralization goals, transparent verification, wallet access,
-            and safety standards. Sensitive operational data, private logic,
-            and proprietary internal concepts remain intentionally protected.
+            Decentralization isn't a slogan—it's a design choice at every
+            layer. Open validator participation, reproducible builds,
+            public RPC endpoints, and an explorer where anyone can audit
+            the network. Open code, open data, open access.
           </p>
         </div>
         <div class="architecture-grid">
           <article>
             <span class="feature-kicker">Open Network</span>
             <h3>Decentralized Participation</h3>
-            <p>INFI is planned for a broader node and validator ecosystem after testnet safety, monitoring, and governance checks mature.</p>
+            <p>INFI is planned for a broad node and validator ecosystem—anyone meeting the technical requirements can run a node, propose blocks, and earn from honest participation.</p>
           </article>
           <article>
             <span class="feature-kicker">Public Proof</span>
             <h3>Explorer Transparency</h3>
-            <p>INFI Scan should make public network activity easy to verify without exposing keys, private infrastructure, or security playbooks.</p>
+            <p>INFI Scan makes every block, transaction, validator, and contract verifiable by anyone. The full network state is public by default.</p>
           </article>
           <article>
             <span class="feature-kicker">User Control</span>
             <h3>Wallet Access</h3>
-            <p>Users should be able to add INFI Testnet, receive test gas, and inspect activity with clear notices about testnet-only value.</p>
+            <p>Users add INFI Testnet to any EVM wallet, receive test gas, and inspect on-chain activity directly—no intermediaries, no permission required.</p>
           </article>
           <article>
-            <span class="feature-kicker">Protected IP</span>
-            <h3>Private Core</h3>
-            <p>Core concepts, sensitive data, operational controls, and future governance logic are intentionally not published on this public site.</p>
+            <span class="feature-kicker">Open Code</span>
+            <h3>Reproducible Builds</h3>
+            <p>Source code, build pipelines, and release artifacts are public so anyone can audit, fork, or run their own node. No black box, no gatekeepers.</p>
           </article>
         </div>
       </section>
@@ -218,11 +820,12 @@
       <section id="network" class="section">
         <div class="section-heading wide">
           <p class="eyebrow">Network</p>
-          <h2>Designed for adoption before mainnet.</h2>
+          <h2>Public testnet, real adoption, no shortcuts.</h2>
           <p>
-            The testnet flow leads users to the actions that matter: add the
-            network, claim free gas, inspect transactions, and understand the
-            launch path before any mainnet release.
+            The testnet flow leads users to the actions that matter:
+            add the network, claim free gas, inspect transactions on
+            INFI Scan, and verify the launch path before any mainnet
+            release. Open access, open data, every step.
           </p>
         </div>
         <div class="metric-row">
@@ -246,10 +849,10 @@
           <p class="eyebrow">Ecosystem Focus</p>
           <h2>DeFi, DePIN, AI, and decentralized RWA infrastructure.</h2>
           <p>
-            INFI positions its public ecosystem around usable decentralized
-            infrastructure while keeping sensitive core concepts private.
-            InvertX is planned as a stable protocol unit for cleaner value
-            movement across decentralized environments.
+            INFI's ecosystem is built around real, useful decentralized
+            infrastructure. InvertX is planned as a stable protocol unit
+            for cleaner value movement across decentralized
+            environments—open, auditable, and with no hidden levers.
           </p>
         </div>
         <div class="ecosystem-layout">
@@ -291,31 +894,35 @@
         </div>
       </section>
 
-      <section id="investors" class="section section-dark">
+      <section id="pillars" class="section section-dark pillars-section">
         <div class="section-heading">
-          <p class="eyebrow">Why INFI</p>
-          <h2>Investor-friendly infrastructure with visible public milestones.</h2>
+          <p class="eyebrow">Four Pillars</p>
+          <h2>Built on decentralization, safety, speed, and transparency.</h2>
         </div>
-        <div class="feature-grid four">
-          <article>
-            <span class="feature-kicker">01</span>
-            <h3>Transparent Explorer</h3>
-            <p>INFI Scan is planned as the public accountability layer for blocks, transactions, validators, tokens, domains, and future VPN nodes.</p>
+        <div class="feature-grid four pillars-grid">
+          <article class="pillar pillar-decentralization">
+            <span class="pillar-icon" aria-hidden="true">⬡</span>
+            <span class="feature-kicker">01 · Decentralization</span>
+            <h3>Open Validator Network</h3>
+            <p>Anyone meeting the technical requirements can run a node, propose blocks, or query state. No central operator, no permissioned gatekeepers, no closed source.</p>
           </article>
-          <article>
-            <span class="feature-kicker">02</span>
-            <h3>Wallet-First UX</h3>
-            <p>One-click EVM network import, mobile wallet support, WalletConnect QR flows, and clear testnet notices reduce onboarding friction.</p>
+          <article class="pillar pillar-safety">
+            <span class="pillar-icon" aria-hidden="true">⛨</span>
+            <span class="feature-kicker">02 · Safety</span>
+            <h3>Audited &amp; Accountable</h3>
+            <p>Reproducible builds, third-party audits, public bug bounties, and transparent incident reporting. Trust earned through proof, not promises.</p>
           </article>
-          <article>
-            <span class="feature-kicker">03</span>
-            <h3>Real Use Cases</h3>
-            <p>Tokenized asset registries, free domains, DePIN services, AI workflows, and decentralized VPN functions create practical surfaces beyond speculation.</p>
+          <article class="pillar pillar-speed">
+            <span class="pillar-icon" aria-hidden="true">⚡</span>
+            <span class="feature-kicker">03 · Speed</span>
+            <h3>Fast Finality</h3>
+            <p>Short block targets, BFT-confirmed finality, and lightweight InvertX gas. EVM-compatible execution that keeps everyday transactions cheap and quick.</p>
           </article>
-          <article>
-            <span class="feature-kicker">04</span>
-            <h3>Open Roadmap</h3>
-            <p>Future governance and node logic will be introduced only after security review, disclosure planning, and release controls are ready.</p>
+          <article class="pillar pillar-transparency">
+            <span class="pillar-icon" aria-hidden="true">◎</span>
+            <span class="feature-kicker">04 · Transparency</span>
+            <h3>Verifiable Everything</h3>
+            <p>INFI Scan exposes every block, transaction, validator, contract, and domain. The full network state is public by default—nothing hidden, nothing assumed.</p>
           </article>
         </div>
       </section>
@@ -325,10 +932,11 @@
           <p class="eyebrow">Builders</p>
           <h2>Start with familiar EVM tooling.</h2>
           <p>
-            INFI is being shaped for familiar EVM development, wallet
-            onboarding, transparent explorer workflows, and practical
-            decentralized applications while private core concepts remain
-            separate from the public marketing surface.
+            INFI is being shaped for familiar EVM development, smooth
+            wallet onboarding, transparent explorer workflows, and
+            practical decentralized applications. Public RPC, open
+            contracts, and verifiable execution—everything you need
+            to build, ship, and audit on a chain that's open by default.
           </p>
           <div class="hero-actions">
             <a class="button primary" href="/testnet.html">Connect Wallet</a>
@@ -397,7 +1005,7 @@
       <div class="build-status footer-status" aria-label="INFI Blockchain build status">
         <span class="status-dots" aria-hidden="true"><span></span><span></span><span></span></span>
         <strong>INFI Blockchain is building</strong>
-        <small>public testnet, protected core concepts</small>
+        <small>open infrastructure, decentralized by design</small>
       </div>
       <div class="footer-links">
         <a href="/testnet.html">Testnet</a>

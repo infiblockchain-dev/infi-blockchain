@@ -321,7 +321,7 @@ No blockchain can honestly promise it "cannot be hacked." INFI should instead fo
 - public status pages
 - incident response process
 
-Public website copy should avoid exposing sensitive internal security playbooks or proprietary core concepts.
+Public website copy should focus on what the network does, how anyone can verify it, and how to participate. The protocol, source code, audit results, and chain state are public. Operational security details like incident-response playbooks and key custody procedures are documented internally—standard practice for any security-conscious project—but the protocol itself remains fully open.
 
 ## Testnet Launch Path
 
@@ -368,7 +368,7 @@ Do not launch mainnet until at least:
 - incident response plan exists
 - chain ID and genesis are final
 - testnet faucet cannot affect mainnet
-- sensitive core logic and private operational details are not exposed publicly
+- operational security playbooks (key custody, incident response procedures) are documented internally and not in marketing copy
 
 ## Key Files
 

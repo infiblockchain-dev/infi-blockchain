@@ -1,4 +1,28 @@
+# INFI Blockchain — robots.txt
 User-agent: *
 Allow: /
 
+# Disallow nothing currently — full site is crawlable
+Disallow:
+
+# Common AI crawlers — explicitly allowed; INFI is open by design
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+# Sitemap
 Sitemap: https://infi.infi/sitemap.xml
+
+# Host
+Host: https://infi.infi

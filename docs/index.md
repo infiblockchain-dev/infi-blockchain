@@ -4,8 +4,11 @@ Welcome to the INFI developer documentation.
 
 INFI is an EVM-compatible Layer 1 blockchain. INFI is the chain, and Invertx is the native gas token.
 
+INFI is built on four pillars: **decentralization**, **safety**, **speed**, and **transparency**. Every layer of the protocol—networking, consensus, execution, and the user surface—is designed to be open, verifiable, and operated by independent participants.
+
 ## Start Here
 
+- [Four pillars](four-pillars.md)
 - [Full concept overview](full-concept-overview.md)
 - [Developer quickstart](developer-quickstart.md)
 - [Step-by-step build guide](step-by-step.md)

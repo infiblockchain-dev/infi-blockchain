@@ -1,5 +1,6 @@
 (() => {
   const streams = Array.from(document.querySelectorAll(".binary-stream"));
+  const liveBlockEl = document.querySelector("[data-live-block]");
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const setupCursorEffects = () => {
@@ -59,7 +60,7 @@
       state.visible = false;
     });
 
-    const activeTargets = document.querySelectorAll("a, button, article, .architecture-panel, .invertx-focus, .metric-row div, .manual-grid div, .split, .faucet-form");
+    const activeTargets = document.querySelectorAll("a, button, article, .architecture-panel, .architecture-blueprint, .arch-topology, .arch-layers, .arch-metrics div, .arch-layer, .layer, .invertx-focus, .metric-row div, .manual-grid div, .split, .faucet-form");
     activeTargets.forEach((target) => {
       target.addEventListener("pointerenter", () => cursorLayer.classList.add("is-active"));
       target.addEventListener("pointerleave", () => cursorLayer.classList.remove("is-active"));
@@ -68,7 +69,7 @@
 
   setupCursorEffects();
 
-  if (!streams.length) {
+  if (!streams.length && !liveBlockEl) {
     return;
   }
 
@@ -98,6 +99,10 @@
       stream.textContent = renderers[index % renderers.length](offset);
       stream.dataset.count = `+${String(tx + offset).padStart(6, "0")} tx`;
     });
+
+    if (liveBlockEl) {
+      liveBlockEl.textContent = block.toLocaleString("en-US");
+    }
 
     block += 1;
     tx += 3;
