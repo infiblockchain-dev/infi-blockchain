@@ -92,9 +92,12 @@ h3 {
 }
 
 .mesh-line,
+.chain-spine,
+.architecture-band,
 .node-dot,
 .node-packet,
-.binary-stream {
+.binary-stream,
+.architecture-chip {
   position: absolute;
   display: block;
 }
@@ -165,6 +168,81 @@ h3 {
   --line-width: 52vw;
   --line-delay: 4.6s;
   rotate: 65deg;
+}
+
+.chain-spine {
+  width: var(--spine-width, 58vw);
+  height: 56px;
+  border-top: 1px solid rgba(32, 217, 255, 0.18);
+  border-bottom: 1px solid rgba(34, 255, 154, 0.14);
+  opacity: 0.36;
+  transform-origin: left center;
+  animation: spineGlow 10s ease-in-out infinite;
+}
+
+.chain-spine::before,
+.chain-spine::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  border: 1px solid rgba(32, 217, 255, 0.4);
+  border-radius: 3px;
+  translate: 0 -50%;
+  animation: blockStep 8s linear infinite;
+  animation-delay: var(--block-delay, 0s);
+  box-shadow: 0 0 18px rgba(32, 217, 255, 0.28);
+}
+
+.chain-spine::after {
+  border-color: rgba(34, 255, 154, 0.42);
+  animation-delay: calc(var(--block-delay, 0s) + 3.2s);
+  box-shadow: 0 0 18px rgba(34, 255, 154, 0.28);
+}
+
+.spine-one {
+  top: 29%;
+  left: 7%;
+  rotate: 4deg;
+}
+
+.spine-two {
+  right: 5%;
+  bottom: 22%;
+  --spine-width: 50vw;
+  --block-delay: 1.7s;
+  rotate: -7deg;
+}
+
+.architecture-band {
+  width: 28vw;
+  min-width: 260px;
+  height: 88px;
+  border: 1px solid rgba(32, 217, 255, 0.1);
+  border-radius: 8px;
+  background:
+    linear-gradient(90deg, transparent, rgba(32, 217, 255, 0.08), transparent),
+    repeating-linear-gradient(90deg, rgba(34, 255, 154, 0.08) 0 1px, transparent 1px 44px);
+  opacity: 0.22;
+  animation: bandShift 18s linear infinite;
+}
+
+.band-one {
+  top: 12%;
+  left: 54%;
+}
+
+.band-two {
+  top: 50%;
+  left: 12%;
+  animation-delay: 6s;
+}
+
+.band-three {
+  right: 8%;
+  bottom: 10%;
+  animation-delay: 12s;
 }
 
 .node-dot {
@@ -297,6 +375,45 @@ h3 {
   bottom: 9%;
   max-width: 34ch;
   animation-delay: 10s;
+}
+
+.architecture-chip {
+  min-width: 52px;
+  padding: 6px 8px;
+  border: 1px solid rgba(32, 217, 255, 0.2);
+  border-radius: 8px;
+  background: rgba(2, 7, 12, 0.62);
+  color: rgba(201, 231, 223, 0.34);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-align: center;
+  text-transform: uppercase;
+  box-shadow: 0 0 16px rgba(32, 217, 255, 0.1);
+  animation: chipConfirm 9s ease-in-out infinite;
+}
+
+.chip-one {
+  top: 30%;
+  left: 22%;
+}
+
+.chip-two {
+  top: 28%;
+  right: 28%;
+  animation-delay: 1.7s;
+}
+
+.chip-three {
+  left: 30%;
+  bottom: 25%;
+  animation-delay: 3.4s;
+}
+
+.chip-four {
+  right: 18%;
+  bottom: 31%;
+  animation-delay: 5.1s;
 }
 
 .site-header,
@@ -897,6 +1014,65 @@ pre {
   }
 }
 
+@keyframes spineGlow {
+  0%,
+  100% {
+    opacity: 0.22;
+    filter: saturate(0.9);
+  }
+
+  50% {
+    opacity: 0.42;
+    filter: saturate(1.25);
+  }
+}
+
+@keyframes blockStep {
+  0% {
+    left: 0;
+    opacity: 0;
+    rotate: 0deg;
+  }
+
+  12%,
+  78% {
+    opacity: 0.85;
+  }
+
+  100% {
+    left: calc(100% - 12px);
+    opacity: 0;
+    rotate: 180deg;
+  }
+}
+
+@keyframes bandShift {
+  from {
+    background-position: 0 0, 0 0;
+  }
+
+  to {
+    background-position: 240px 0, 88px 0;
+  }
+}
+
+@keyframes chipConfirm {
+  0%,
+  100% {
+    border-color: rgba(32, 217, 255, 0.12);
+    color: rgba(201, 231, 223, 0.22);
+    opacity: 0.45;
+  }
+
+  45%,
+  55% {
+    border-color: rgba(34, 255, 154, 0.42);
+    color: rgba(239, 255, 249, 0.62);
+    opacity: 0.75;
+    box-shadow: 0 0 20px rgba(34, 255, 154, 0.18);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -1012,6 +1188,16 @@ pre {
 
   .binary-two {
     left: 4%;
+  }
+
+  .architecture-band,
+  .architecture-chip {
+    display: none;
+  }
+
+  .chain-spine {
+    width: 78vw;
+    opacity: 0.2;
   }
 
   .architecture-panel,
