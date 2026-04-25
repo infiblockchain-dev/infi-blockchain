@@ -29,7 +29,9 @@
   <body>
     <header class="site-header">
       <a class="brand" href="/" aria-label="INFI Blockchain home">
-        <img src="/assets/brand/infi-logo.png" alt="INFI Blockchain logo" width="52" height="52">
+        <span class="brand-mark">
+          <img src="/assets/brand/infi-logo.png" alt="" width="44" height="44">
+        </span>
         <span>INFI</span>
       </a>
       <nav aria-label="Primary navigation">
@@ -38,6 +40,7 @@
         <a href="#faucet">Faucet</a>
         <a href="#manual">Manual</a>
       </nav>
+      <a class="nav-action" href="/faucet.html">Open Faucet</a>
     </header>
 
     <main>
@@ -55,8 +58,12 @@
           </div>
           <p class="status" id="wallet-status" role="status">Wallet action status will appear here.</p>
         </div>
-        <div class="hero-mark" aria-hidden="true">
+        <div class="token-showcase" aria-label="test InvertX token logo">
           <img src="/assets/tokens/invertx-logo.png" alt="">
+          <div>
+            <strong>test InvertX</strong>
+            <span>Testnet gas only</span>
+          </div>
         </div>
       </section>
 
@@ -110,6 +117,20 @@
         </div>
       </section>
     </main>
+
+    <footer class="site-footer">
+      <div class="footer-brand">
+        <span class="brand-mark small">
+          <img src="/assets/brand/infi-logo.png" alt="" width="32" height="32">
+        </span>
+        <span>INFI Blockchain</span>
+      </div>
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="/faucet.html">Faucet</a>
+        <a href="https://github.com/infiblockchain-dev/infi-blockchain/tree/main/docs" rel="noopener">Docs</a>
+      </div>
+    </footer>
 
     <script>
       const INFI_TESTNET = {

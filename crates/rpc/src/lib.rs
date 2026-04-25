@@ -107,10 +107,11 @@ impl RpcServer {
             "eth_chainId" => json_result_string(&id, &self.info.chain_id_hex),
             "net_version" => json_result_string(&id, &self.config.chain_id.to_string()),
             "eth_blockNumber" => {
-                let block_number = self
-                    .storage
-                    .lock()
-                    .expect("RPC storage mutex poisoned")
+                let storage = match self.storage.lock() {
+                    Ok(storage) => storage,
+                    Err(_) => return json_error(&id, -32000, "Storage unavailable"),
+                };
+                let block_number = storage
                     .latest_block()
                     .map(|block| block.header.number)
                     .unwrap_or(0);
@@ -134,10 +135,11 @@ impl RpcServer {
             Err(_) => return json_error(id, -32602, "Invalid address"),
         };
 
-        let balance = self
-            .storage
-            .lock()
-            .expect("RPC storage mutex poisoned")
+        let storage = match self.storage.lock() {
+            Ok(storage) => storage,
+            Err(_) => return json_error(id, -32000, "Storage unavailable"),
+        };
+        let balance = storage
             .account(&address)
             .map(|account| account.balance.0)
             .unwrap_or(0);
@@ -159,10 +161,11 @@ impl RpcServer {
             Err(_) => return json_error(id, -32602, "Invalid address"),
         };
 
-        let nonce = self
-            .storage
-            .lock()
-            .expect("RPC storage mutex poisoned")
+        let storage = match self.storage.lock() {
+            Ok(storage) => storage,
+            Err(_) => return json_error(id, -32000, "Storage unavailable"),
+        };
+        let nonce = storage
             .account(&address)
             .map(|account| account.nonce)
             .unwrap_or(0);
@@ -184,7 +187,10 @@ impl RpcServer {
             None => return json_error(id, -32602, "Invalid transaction hash"),
         };
 
-        let storage = self.storage.lock().expect("RPC storage mutex poisoned");
+        let storage = match self.storage.lock() {
+            Ok(storage) => storage,
+            Err(_) => return json_error(id, -32000, "Storage unavailable"),
+        };
         let Some(receipt) = storage.receipt(&transaction_hash) else {
             return json_result_raw(id, "null");
         };
@@ -207,10 +213,16 @@ impl RpcServer {
         };
 
         let transaction_hash = transaction.hash();
-        let mut storage = self.storage.lock().expect("RPC storage mutex poisoned");
+        let Some(to) = transaction.to else {
+            return json_error(id, -32602, "Dev transfer requires a recipient");
+        };
+        let mut storage = match self.storage.lock() {
+            Ok(storage) => storage,
+            Err(_) => return json_error(id, -32000, "Storage unavailable"),
+        };
         if let Err(error) = storage.transfer(
             transaction.from,
-            transaction.to.expect("dev transfer requires recipient"),
+            to,
             transaction.value,
             transaction.fee(),
             transaction.nonce,
@@ -298,7 +310,10 @@ fn json_result_string(id: &str, result: &str) -> String {
 }
 
 fn json_result_raw(id: &str, result: &str) -> String {
-    format!("{{\"jsonrpc\":\"2.0\",\"id\":{},\"result\":{}}}", id, result)
+    format!(
+        "{{\"jsonrpc\":\"2.0\",\"id\":{},\"result\":{}}}",
+        id, result
+    )
 }
 
 fn json_error(id: &str, code: i64, message: &str) -> String {
@@ -411,6 +426,6 @@ fn decode_hex(value: &str) -> Option<Vec<u8>> {
 fn now_ms() -> u64 {
     SystemTime::now()
         .duration_since(UNIX_EPOCH)
-        .expect("system clock before Unix epoch")
-        .as_millis() as u64
+        .map(|duration| duration.as_millis() as u64)
+        .unwrap_or(0)
 }

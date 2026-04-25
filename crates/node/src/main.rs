@@ -24,7 +24,10 @@ fn main() {
     let bob = Address::repeat(0x22);
 
     let mut storage = MemoryStorage::new();
-    storage.credit(alice, Amount::from_invertx_units(1_000_000_000_000_000_000_000));
+    storage.credit(
+        alice,
+        Amount::from_invertx_units(1_000_000_000_000_000_000_000),
+    );
     storage.credit(bob, Amount::from_invertx_units(500_000_000_000_000_000_000));
 
     let mut mempool = Mempool::new();
@@ -57,7 +60,11 @@ fn main() {
     let block = consensus.propose_block(Hash::ZERO, 1, now_ms(), transactions);
     storage.push_block(block);
 
-    println!("Finalized block #{}", storage.latest_block().unwrap().header.number);
+    let latest_block_number = storage
+        .latest_block()
+        .map(|block| block.header.number)
+        .unwrap_or(0);
+    println!("Finalized block #{}", latest_block_number);
     println!("Accounts:");
     for account in storage.accounts() {
         println!(
@@ -68,14 +75,16 @@ fn main() {
 
     let storage = Arc::new(Mutex::new(storage));
     let rpc_server = RpcServer::new(config, storage);
-    rpc_server
-        .serve("127.0.0.1:8545")
-        .expect("failed to start INFI JSON-RPC server");
+    if let Err(error) = rpc_server.serve("127.0.0.1:8545") {
+        eprintln!("Failed to start INFI JSON-RPC server on 127.0.0.1:8545: {error}");
+        eprintln!("If the port is already in use, run: lsof -nP -i :8545");
+        std::process::exit(1);
+    }
 }
 
 fn now_ms() -> u64 {
     SystemTime::now()
         .duration_since(UNIX_EPOCH)
-        .expect("system clock before Unix epoch")
-        .as_millis() as u64
+        .map(|duration| duration.as_millis() as u64)
+        .unwrap_or(0)
 }

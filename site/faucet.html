@@ -29,7 +29,9 @@
   <body>
     <header class="site-header">
       <a class="brand" href="/" aria-label="INFI Blockchain home">
-        <img src="/assets/brand/infi-logo.png" alt="INFI Blockchain logo" width="52" height="52">
+        <span class="brand-mark">
+          <img src="/assets/brand/infi-logo.png" alt="" width="44" height="44">
+        </span>
         <span>INFI</span>
       </a>
       <nav aria-label="Primary navigation">
@@ -38,6 +40,7 @@
         <a href="#claim">Claim</a>
         <a href="#policy">Policy</a>
       </nav>
+      <a class="nav-action" href="/testnet.html">Add Testnet</a>
     </header>
 
     <main>
@@ -50,8 +53,12 @@
             non-tradable, testnet-only, and has no redeemable real-world value.
           </p>
         </div>
-        <div class="hero-mark" aria-hidden="true">
+        <div class="token-showcase" aria-label="test InvertX token logo">
           <img src="/assets/tokens/invertx-logo.png" alt="">
+          <div>
+            <strong>1 tInvertX</strong>
+            <span>1.25 USDT reference display</span>
+          </div>
         </div>
       </section>
 
@@ -114,6 +121,20 @@
       </section>
     </main>
 
+    <footer class="site-footer">
+      <div class="footer-brand">
+        <span class="brand-mark small">
+          <img src="/assets/brand/infi-logo.png" alt="" width="32" height="32">
+        </span>
+        <span>INFI Blockchain</span>
+      </div>
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="/testnet.html">Testnet</a>
+        <a href="https://github.com/infiblockchain-dev/infi-blockchain/tree/main/docs" rel="noopener">Docs</a>
+      </div>
+    </footer>
+
     <script>
       const FAUCET_ADDRESS = "0x2222222222222222222222222222222222222222";
       const status = document.getElementById("faucet-status");
@@ -175,4 +196,3 @@
     </script>
   </body>
 </html>
-

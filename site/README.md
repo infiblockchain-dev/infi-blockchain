@@ -1,6 +1,13 @@
 # INFI Website
 
-This folder contains the first static INFI website.
+This folder contains the static INFI website for the current prototype and
+testnet launch flow.
+
+## Pages
+
+- `index.html` - investor and developer landing page with animated INFI multichain hero
+- `testnet.html` - one-click wallet import and network switching page
+- `faucet.html` - local development faucet UI for free test InvertX
 
 ## Brand Assets
 
@@ -37,6 +44,10 @@ The site includes:
 - favicon links
 - `robots.txt`
 - `sitemap.xml`
+
+The public canonical URLs are currently written for the planned official
+domains. Until `.infi` resolution is live in normal browsers, Cloudflare Pages
+will remain the practical hosted preview/deployment URL.
 
 ## Testnet Wallet Page
 

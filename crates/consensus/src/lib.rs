@@ -58,4 +58,3 @@ impl DevnetConsensus {
         self.config.max_transactions_per_block
     }
 }
-

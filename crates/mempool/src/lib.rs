@@ -29,4 +29,3 @@ impl Mempool {
         self.pending.is_empty()
     }
 }
-

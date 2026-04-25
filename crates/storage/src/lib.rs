@@ -5,8 +5,16 @@ use infi_primitives::{Account, Address, Amount, Block, Hash, Transaction};
 #[derive(Debug)]
 pub enum StorageError {
     AccountMissing(Address),
-    InsufficientBalance { address: Address, balance: Amount, required: Amount },
-    BadNonce { address: Address, expected: u64, actual: u64 },
+    InsufficientBalance {
+        address: Address,
+        balance: Amount,
+        required: Amount,
+    },
+    BadNonce {
+        address: Address,
+        expected: u64,
+        actual: u64,
+    },
 }
 
 pub trait ChainStorage {
@@ -124,7 +132,8 @@ impl ChainStorage for MemoryStorage {
         for (index, transaction) in block.transactions.iter().enumerate() {
             let transaction_hash = transaction.hash();
             cumulative_gas_used += transaction.gas_limit;
-            self.transactions.insert(transaction_hash, transaction.clone());
+            self.transactions
+                .insert(transaction_hash, transaction.clone());
             self.receipts.insert(
                 transaction_hash,
                 TransactionReceipt {

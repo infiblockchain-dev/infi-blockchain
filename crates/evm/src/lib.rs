@@ -26,13 +26,17 @@ impl EvmExecutor {
         storage: &mut MemoryStorage,
         transaction: &Transaction,
     ) -> Result<ExecutionReceipt, ExecutionError> {
-        if !transaction.input.is_empty() || transaction.to.is_none() {
+        let Some(to) = transaction.to else {
+            return Err(ExecutionError::ContractExecutionNotImplemented);
+        };
+
+        if !transaction.input.is_empty() {
             return Err(ExecutionError::ContractExecutionNotImplemented);
         }
 
         storage.transfer(
             transaction.from,
-            transaction.to.expect("checked above"),
+            to,
             transaction.value,
             transaction.fee(),
             transaction.nonce,
@@ -44,4 +48,3 @@ impl EvmExecutor {
         })
     }
 }
-

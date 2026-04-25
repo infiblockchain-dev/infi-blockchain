@@ -436,6 +436,47 @@ nav a:hover,
   box-shadow: 0 24px 70px rgba(107, 75, 16, 0.28);
 }
 
+.token-showcase {
+  width: min(100%, 430px);
+  min-height: 430px;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 18px;
+  margin-inline: auto;
+  padding: 34px;
+  border: 1px solid rgba(233, 180, 76, 0.24);
+  border-radius: 999px;
+  background:
+    linear-gradient(145deg, rgba(233, 180, 76, 0.16), rgba(8, 167, 216, 0.08)),
+    #071411;
+  box-shadow: 0 26px 80px rgba(6, 21, 18, 0.24);
+}
+
+.token-showcase img {
+  width: min(100%, 300px);
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 999px;
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.38);
+}
+
+.token-showcase div {
+  display: grid;
+  gap: 4px;
+  color: #ffffff;
+  text-align: center;
+}
+
+.token-showcase strong {
+  font-size: 1.18rem;
+}
+
+.token-showcase span {
+  color: var(--muted-light);
+  font-weight: 720;
+}
+
 .section {
   padding: 82px 56px;
   border-top: 1px solid var(--line);
@@ -807,6 +848,16 @@ pre {
 
   .multichain-stage {
     width: min(100%, 360px);
+  }
+
+  .token-showcase {
+    width: min(100%, 360px);
+    min-height: 360px;
+    padding: 28px;
+  }
+
+  .token-showcase img {
+    width: min(100%, 236px);
   }
 
   .chain-link {
