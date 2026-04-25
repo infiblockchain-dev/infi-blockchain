@@ -5088,3 +5088,16 @@ nav a,
   color: var(--ink-strong);
   text-shadow: none;
 }
+
+/* ---------- Hero proof pills — light mode ---------- */
+[data-theme="light"] .hero-proof span {
+  background:
+    linear-gradient(135deg, rgba(10, 138, 77, 0.04), rgba(13, 125, 163, 0.03)),
+    rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(13, 125, 163, 0.22);
+  color: var(--muted-strong);
+  box-shadow: 0 1px 2px rgba(6, 32, 40, 0.04);
+}
+[data-theme="light"] .hero-proof strong {
+  color: var(--ink);
+}
