@@ -102,7 +102,7 @@ h3 {
   z-index: -1;
   overflow: hidden;
   pointer-events: none;
-  background: #02070c;
+  background: var(--bg);
 }
 
 .mesh-line,
@@ -4552,4 +4552,53 @@ nav a,
 }
 [data-theme="light"] .topology-nodes rect[stroke*="rgba(34,255,154"] {
   stroke: var(--green) !important;
+}
+
+/* ============================================================
+   FIX-001: Header column count for theme-toggle
+   ============================================================
+   The header is a CSS grid with 4 explicit columns, but with the
+   theme toggle added we now have 5 children. The 5th (.nav-action)
+   was wrapping to a new row. Fix: grow the grid to handle 5 items.
+   ============================================================ */
+
+.site-header {
+  grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+}
+
+/* On narrow screens the build-status pill hides anyway; collapse to 4 cols */
+@media (max-width: 920px) {
+  .site-header {
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+  }
+}
+
+/* Extra-narrow: nav goes to drawer, just keep brand + toggle + action */
+@media (max-width: 640px) {
+  .site-header {
+    grid-template-columns: 1fr auto auto;
+    gap: 12px;
+    padding: 12px 18px;
+  }
+}
+
+/* ============================================================
+   FIX-002: Light-mode polish — make sure body is paintable
+   even if cached CSS misbehaves.
+   ============================================================ */
+
+[data-theme="light"] {
+  /* Make sure body and node-background always paint the light bg */
+  background: var(--bg);
+}
+
+[data-theme="light"] .node-background {
+  background: var(--bg) !important;
+}
+
+/* Sections that aren't .section-dark need light bg too */
+[data-theme="light"] main,
+[data-theme="light"] .hero,
+[data-theme="light"] .section:not(.section-dark) {
+  background: transparent;
 }
