@@ -265,8 +265,25 @@ h3 {
   border: 1px solid var(--blue);
   border-radius: 999px;
   background: rgba(32, 217, 255, 0.18);
+  color: var(--blue);
   box-shadow: 0 0 20px rgba(32, 217, 255, 0.65);
   animation: nodePulse 5.6s ease-in-out infinite;
+}
+
+.node-dot::before,
+.node-dot::after {
+  content: "";
+  position: absolute;
+  inset: -12px;
+  border: 1px solid currentColor;
+  border-radius: inherit;
+  opacity: 0;
+  animation: nodeRing 6s ease-out infinite;
+}
+
+.node-dot::after {
+  inset: -22px;
+  animation-delay: 2.2s;
 }
 
 .node-two,
@@ -274,6 +291,7 @@ h3 {
 .node-six {
   border-color: var(--green);
   background: rgba(34, 255, 154, 0.16);
+  color: var(--green);
   box-shadow: 0 0 20px rgba(34, 255, 154, 0.62);
   animation-delay: 1.5s;
 }
@@ -309,13 +327,22 @@ h3 {
 }
 
 .node-packet {
-  width: 7px;
-  height: 7px;
+  width: 9px;
+  height: 9px;
   border-radius: 999px;
-  background: var(--green);
+  background: radial-gradient(circle, #effff9 0 18%, var(--green) 19% 62%, transparent 63%);
   box-shadow: 0 0 18px rgba(34, 255, 154, 0.8);
   opacity: 0;
   animation: packetRun 9s linear infinite;
+}
+
+.node-packet::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border: 1px solid rgba(34, 255, 154, 0.34);
+  border-radius: inherit;
+  animation: packetHalo 1.6s ease-out infinite;
 }
 
 .packet-one {
@@ -330,7 +357,7 @@ h3 {
   left: 45.4%;
   --tx: 40vw;
   --ty: 12vh;
-  background: var(--blue);
+  background: radial-gradient(circle, #effff9 0 18%, var(--blue) 19% 62%, transparent 63%);
   box-shadow: 0 0 18px rgba(32, 217, 255, 0.75);
   animation-delay: 2.8s;
 }
@@ -348,7 +375,7 @@ h3 {
   left: 20.4%;
   --tx: 25vw;
   --ty: -41vh;
-  background: var(--blue);
+  background: radial-gradient(circle, #effff9 0 18%, var(--blue) 19% 62%, transparent 63%);
   box-shadow: 0 0 18px rgba(32, 217, 255, 0.75);
   animation-delay: 1.6s;
 }
@@ -362,25 +389,41 @@ h3 {
 }
 
 .binary-stream {
-  max-width: 28ch;
-  color: rgba(143, 255, 216, 0.18);
+  max-width: 38ch;
+  padding: 8px 10px;
+  color: rgba(143, 255, 216, 0.16);
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 0.75rem;
   line-height: 1.8;
-  text-shadow: 0 0 12px rgba(34, 255, 154, 0.24);
+  text-shadow: 0 0 14px rgba(34, 255, 154, 0.26);
   white-space: normal;
-  animation: binaryDrift 18s linear infinite;
+  opacity: 0.52;
+  animation: binaryDrift 24s ease-in-out infinite;
+}
+
+.binary-stream::after {
+  content: attr(data-count);
+  display: block;
+  width: max-content;
+  margin-top: 2px;
+  color: rgba(32, 217, 255, 0.2);
+  font-size: 0.68rem;
+  text-shadow: 0 0 12px rgba(32, 217, 255, 0.26);
 }
 
 .binary-one {
   top: 10%;
   right: 9%;
+  --binary-x: -16vw;
+  --binary-y: 11vh;
 }
 
 .binary-two {
   top: 48%;
   left: 6%;
-  color: rgba(32, 217, 255, 0.15);
+  color: rgba(32, 217, 255, 0.14);
+  --binary-x: 22vw;
+  --binary-y: -10vh;
   animation-delay: 5s;
 }
 
@@ -388,6 +431,8 @@ h3 {
   right: 10%;
   bottom: 9%;
   max-width: 34ch;
+  --binary-x: -18vw;
+  --binary-y: -13vh;
   animation-delay: 10s;
 }
 
@@ -1209,19 +1254,49 @@ pre {
   }
 }
 
-@keyframes binaryDrift {
+@keyframes nodeRing {
   0% {
-    translate: 0 -16px;
-    opacity: 0;
+    opacity: 0.34;
+    scale: 0.42;
   }
 
-  12%,
-  78% {
-    opacity: 1;
+  72%,
+  100% {
+    opacity: 0;
+    scale: 1.22;
+  }
+}
+
+@keyframes packetHalo {
+  0% {
+    opacity: 0.5;
+    scale: 0.6;
   }
 
   100% {
-    translate: 0 28px;
+    opacity: 0;
+    scale: 1.65;
+  }
+}
+
+@keyframes binaryDrift {
+  0% {
+    translate: 0 0;
+    opacity: 0;
+  }
+
+  14%,
+  74% {
+    opacity: 0.52;
+  }
+
+  48% {
+    translate: var(--binary-x, 18vw) var(--binary-y, 12vh);
+    opacity: 0.34;
+  }
+
+  100% {
+    translate: calc(var(--binary-x, 18vw) * 1.45) calc(var(--binary-y, 12vh) * 1.25);
     opacity: 0;
   }
 }
@@ -1482,8 +1557,10 @@ pre {
   }
 
   .binary-stream {
-    opacity: 0.45;
+    max-width: 30ch;
+    opacity: 0.34;
     font-size: 0.66rem;
+    animation-duration: 30s;
   }
 
   .binary-ribbon {
