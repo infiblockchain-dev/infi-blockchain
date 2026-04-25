@@ -19,6 +19,12 @@ Current implemented prototype methods:
 - `net_version`
 - `eth_blockNumber`
 - `eth_getBalance`
+- `eth_getTransactionCount`
+- `eth_getTransactionReceipt`
+
+Prototype placeholder:
+
+- `eth_sendRawTransaction` returns a clear not-implemented error until signed Ethereum transaction decoding is added.
 
 Current local RPC URL:
 
@@ -64,6 +70,28 @@ Check balance:
 curl -s -X POST http://127.0.0.1:8545 \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","id":1,"method":"eth_getBalance","params":["0x1111111111111111111111111111111111111111","latest"]}'
+```
+
+Check transaction count:
+
+```bash
+curl -s -X POST http://127.0.0.1:8545 \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"eth_getTransactionCount","params":["0x1111111111111111111111111111111111111111","latest"]}'
+```
+
+Check raw transaction placeholder:
+
+```bash
+curl -s -X POST http://127.0.0.1:8545 \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"eth_sendRawTransaction","params":["0x00"]}'
+```
+
+Expected placeholder error:
+
+```json
+{"jsonrpc":"2.0","id":1,"error":{"code":-32000,"message":"Raw Ethereum transaction decoding is not implemented yet"}}
 ```
 
 ## MetaMask Requirements

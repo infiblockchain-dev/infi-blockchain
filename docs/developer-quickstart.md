@@ -49,6 +49,14 @@ curl -s -X POST http://127.0.0.1:8545 \
   -d '{"jsonrpc":"2.0","id":1,"method":"eth_chainId","params":[]}'
 ```
 
+Check Alice's nonce:
+
+```bash
+curl -s -X POST http://127.0.0.1:8545 \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"eth_getTransactionCount","params":["0x1111111111111111111111111111111111111111","latest"]}'
+```
+
 ## 5. Learn the Crates
 
 ```text
@@ -65,9 +73,9 @@ crates/node        node binary
 
 The first implementation priorities are:
 
-1. real JSON-RPC server
-2. persistent state
-3. signed transaction decoding
+1. signed transaction decoding
+2. `eth_sendRawTransaction`
+3. persistent state
 4. real EVM execution
 5. INFI Scan indexer
 6. wallet import and WalletConnect support

@@ -1,6 +1,6 @@
 use std::collections::BTreeMap;
 
-use infi_primitives::{Account, Address, Amount, Block};
+use infi_primitives::{Account, Address, Amount, Block, Hash, Transaction};
 
 #[derive(Debug)]
 pub enum StorageError {
@@ -16,10 +16,25 @@ pub trait ChainStorage {
     fn latest_block(&self) -> Option<&Block>;
 }
 
+#[derive(Clone, Debug)]
+pub struct TransactionReceipt {
+    pub transaction_hash: Hash,
+    pub transaction_index: u64,
+    pub block_number: u64,
+    pub block_hash: Hash,
+    pub from: Address,
+    pub to: Option<Address>,
+    pub gas_used: u64,
+    pub cumulative_gas_used: u64,
+    pub status: bool,
+}
+
 #[derive(Default)]
 pub struct MemoryStorage {
     accounts: BTreeMap<Address, Account>,
     blocks: Vec<Block>,
+    receipts: BTreeMap<Hash, TransactionReceipt>,
+    transactions: BTreeMap<Hash, Transaction>,
 }
 
 impl MemoryStorage {
@@ -82,6 +97,14 @@ impl MemoryStorage {
     pub fn accounts(&self) -> impl Iterator<Item = &Account> {
         self.accounts.values()
     }
+
+    pub fn receipt(&self, transaction_hash: &Hash) -> Option<&TransactionReceipt> {
+        self.receipts.get(transaction_hash)
+    }
+
+    pub fn transaction(&self, transaction_hash: &Hash) -> Option<&Transaction> {
+        self.transactions.get(transaction_hash)
+    }
 }
 
 impl ChainStorage for MemoryStorage {
@@ -94,6 +117,30 @@ impl ChainStorage for MemoryStorage {
     }
 
     fn push_block(&mut self, block: Block) {
+        let block_number = block.header.number;
+        let block_hash = Hash::from_bytes(format!("{:?}", block.header).as_bytes());
+        let mut cumulative_gas_used = 0_u64;
+
+        for (index, transaction) in block.transactions.iter().enumerate() {
+            let transaction_hash = transaction.hash();
+            cumulative_gas_used += transaction.gas_limit;
+            self.transactions.insert(transaction_hash, transaction.clone());
+            self.receipts.insert(
+                transaction_hash,
+                TransactionReceipt {
+                    transaction_hash,
+                    transaction_index: index as u64,
+                    block_number,
+                    block_hash,
+                    from: transaction.from,
+                    to: transaction.to,
+                    gas_used: transaction.gas_limit,
+                    cumulative_gas_used,
+                    status: true,
+                },
+            );
+        }
+
         self.blocks.push(block);
     }
 
@@ -101,4 +148,3 @@ impl ChainStorage for MemoryStorage {
         self.blocks.last()
     }
 }
-

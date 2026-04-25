@@ -3,8 +3,8 @@ use std::net::{TcpListener, TcpStream};
 use std::str::FromStr;
 use std::sync::{Arc, Mutex};
 
-use infi_primitives::{Address, ChainConfig};
-use infi_storage::{ChainStorage, MemoryStorage};
+use infi_primitives::{Address, ChainConfig, Hash};
+use infi_storage::{ChainStorage, MemoryStorage, TransactionReceipt};
 
 pub struct RpcInfo {
     pub chain_id_hex: String,
@@ -116,6 +116,13 @@ impl RpcServer {
                 json_result_string(&id, &format!("0x{block_number:x}"))
             }
             "eth_getBalance" => self.handle_get_balance(&id, body),
+            "eth_getTransactionCount" => self.handle_get_transaction_count(&id, body),
+            "eth_getTransactionReceipt" => self.handle_get_transaction_receipt(&id, body),
+            "eth_sendRawTransaction" => json_error(
+                &id,
+                -32000,
+                "Raw Ethereum transaction decoding is not implemented yet",
+            ),
             _ => json_error(&id, -32601, "Method not found"),
         }
     }
@@ -139,6 +146,53 @@ impl RpcServer {
             .unwrap_or(0);
 
         json_result_string(id, &format!("0x{balance:x}"))
+    }
+
+    fn handle_get_transaction_count(&self, id: &str, body: &str) -> String {
+        let Some(address_text) = first_params_string(body) else {
+            return json_error(
+                id,
+                -32602,
+                "eth_getTransactionCount requires an address parameter",
+            );
+        };
+
+        let address = match Address::from_str(&address_text) {
+            Ok(address) => address,
+            Err(_) => return json_error(id, -32602, "Invalid address"),
+        };
+
+        let nonce = self
+            .storage
+            .lock()
+            .expect("RPC storage mutex poisoned")
+            .account(&address)
+            .map(|account| account.nonce)
+            .unwrap_or(0);
+
+        json_result_string(id, &format!("0x{nonce:x}"))
+    }
+
+    fn handle_get_transaction_receipt(&self, id: &str, body: &str) -> String {
+        let Some(hash_text) = first_params_string(body) else {
+            return json_error(
+                id,
+                -32602,
+                "eth_getTransactionReceipt requires a transaction hash parameter",
+            );
+        };
+
+        let transaction_hash = match parse_hash(&hash_text) {
+            Some(hash) => hash,
+            None => return json_error(id, -32602, "Invalid transaction hash"),
+        };
+
+        let storage = self.storage.lock().expect("RPC storage mutex poisoned");
+        let Some(receipt) = storage.receipt(&transaction_hash) else {
+            return json_result_raw(id, "null");
+        };
+
+        json_result_raw(id, &receipt_json(receipt))
     }
 }
 
@@ -200,6 +254,10 @@ fn json_result_string(id: &str, result: &str) -> String {
     )
 }
 
+fn json_result_raw(id: &str, result: &str) -> String {
+    format!("{{\"jsonrpc\":\"2.0\",\"id\":{},\"result\":{}}}", id, result)
+}
+
 fn json_error(id: &str, code: i64, message: &str) -> String {
     format!(
         "{{\"jsonrpc\":\"2.0\",\"id\":{},\"error\":{{\"code\":{},\"message\":\"{}\"}}}}",
@@ -216,4 +274,55 @@ fn escape_json(value: &str) -> String {
         .replace('\n', "\\n")
         .replace('\r', "\\r")
         .replace('\t', "\\t")
+}
+
+fn parse_hash(value: &str) -> Option<Hash> {
+    let hex = value.strip_prefix("0x").unwrap_or(value);
+    if hex.len() != 64 {
+        return None;
+    }
+
+    let mut bytes = [0_u8; 32];
+    for index in 0..32 {
+        let start = index * 2;
+        let end = start + 2;
+        bytes[index] = u8::from_str_radix(&hex[start..end], 16).ok()?;
+    }
+
+    Some(Hash(bytes))
+}
+
+fn receipt_json(receipt: &TransactionReceipt) -> String {
+    let to = receipt
+        .to
+        .map(|address| format!("\"{}\"", address))
+        .unwrap_or_else(|| "null".to_string());
+    let status = if receipt.status { "0x1" } else { "0x0" };
+
+    format!(
+        "{{\
+         \"transactionHash\":\"{}\",\
+         \"transactionIndex\":\"0x{:x}\",\
+         \"blockNumber\":\"0x{:x}\",\
+         \"blockHash\":\"{}\",\
+         \"from\":\"{}\",\
+         \"to\":{},\
+         \"cumulativeGasUsed\":\"0x{:x}\",\
+         \"gasUsed\":\"0x{:x}\",\
+         \"contractAddress\":null,\
+         \"logs\":[],\
+         \"logsBloom\":\"0x{}\",\
+         \"status\":\"{}\"\
+         }}",
+        receipt.transaction_hash,
+        receipt.transaction_index,
+        receipt.block_number,
+        receipt.block_hash,
+        receipt.from,
+        to,
+        receipt.cumulative_gas_used,
+        receipt.gas_used,
+        "0".repeat(512),
+        status
+    )
 }

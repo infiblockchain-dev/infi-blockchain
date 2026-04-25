@@ -139,6 +139,22 @@ impl Transaction {
     pub fn fee(&self) -> Amount {
         Amount(self.gas_limit as u128 * self.gas_price.0)
     }
+
+    pub fn hash(&self) -> Hash {
+        let mut bytes = Vec::new();
+        bytes.extend_from_slice(&self.from.0);
+        if let Some(to) = self.to {
+            bytes.extend_from_slice(&to.0);
+        } else {
+            bytes.extend_from_slice(&Address::ZERO.0);
+        }
+        bytes.extend_from_slice(&self.value.0.to_be_bytes());
+        bytes.extend_from_slice(&self.gas_limit.to_be_bytes());
+        bytes.extend_from_slice(&self.gas_price.0.to_be_bytes());
+        bytes.extend_from_slice(&self.nonce.to_be_bytes());
+        bytes.extend_from_slice(&self.input);
+        Hash::from_bytes(&bytes)
+    }
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -157,10 +173,44 @@ pub struct Block {
     pub transactions: Vec<Transaction>,
 }
 
-#[derive(Clone, Copy, Debug, Default, Eq, Hash, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Hash(pub [u8; 32]);
 
 impl Hash {
     pub const ZERO: Self = Self([0_u8; 32]);
+
+    pub fn from_bytes(bytes: &[u8]) -> Self {
+        let mut output = [0_u8; 32];
+        let mut state = [
+            0x6a09_e667_f3bc_c908_u64,
+            0xbb67_ae85_84ca_a73b_u64,
+            0x3c6e_f372_fe94_f82b_u64,
+            0xa54f_f53a_5f1d_36f1_u64,
+        ];
+
+        for (index, byte) in bytes.iter().enumerate() {
+            let lane = index % state.len();
+            state[lane] ^= *byte as u64;
+            state[lane] = state[lane]
+                .rotate_left(5)
+                .wrapping_mul(0x100_0000_01b3)
+                .wrapping_add(index as u64);
+        }
+
+        for (index, lane) in state.iter().enumerate() {
+            output[index * 8..index * 8 + 8].copy_from_slice(&lane.to_be_bytes());
+        }
+
+        Self(output)
+    }
 }
 
+impl fmt::Display for Hash {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "0x")?;
+        for byte in self.0 {
+            write!(f, "{byte:02x}")?;
+        }
+        Ok(())
+    }
+}

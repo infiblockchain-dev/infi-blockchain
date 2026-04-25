@@ -91,9 +91,9 @@ Current prototype progress:
 - `net_version`: implemented
 - `eth_blockNumber`: implemented
 - `eth_getBalance`: implemented
-- `eth_getTransactionCount`: pending
-- `eth_sendRawTransaction`: pending
-- `eth_getTransactionReceipt`: pending
+- `eth_getTransactionCount`: implemented
+- `eth_getTransactionReceipt`: implemented for indexed prototype transactions
+- `eth_sendRawTransaction`: placeholder error until signed transaction decoding is implemented
 
 Exit criteria:
 
