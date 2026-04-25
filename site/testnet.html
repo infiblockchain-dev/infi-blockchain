@@ -516,30 +516,56 @@
         }
       }
 
+      let walletConnectOpenPending = false;
+
+      function openWalletConnect(walletConnect) {
+        try {
+          const openResult = walletConnect.open();
+          if (openResult && typeof openResult.catch === "function") {
+            openResult.catch((error) => {
+              setStatus(error && error.message ? error.message : "WalletConnect QR could not open. Use a wallet browser link or manual setup.");
+            });
+          }
+        } catch (error) {
+          setStatus(error && error.message ? error.message : "WalletConnect QR could not open. Use a wallet browser link or manual setup.");
+        }
+      }
+
       function showWalletConnectStatus() {
         const walletConnect = window.INFI_WALLETCONNECT;
 
         if (walletConnect && walletConnect.ready && walletConnect.open) {
+          walletConnectOpenPending = false;
           setStatus("Opening WalletConnect QR. Scan it with a supported wallet, then approve INFI Testnet.");
-          walletConnect.open();
+          openWalletConnect(walletConnect);
           return;
         }
 
         if (walletConnect && walletConnect.error) {
+          walletConnectOpenPending = false;
           setStatus("WalletConnect QR could not load here. Use a wallet browser link, injected wallet, or manual setup.");
           return;
         }
 
-        setStatus("WalletConnect QR is loading. Try again in a moment, or use a wallet browser link.");
+        walletConnectOpenPending = true;
+        setStatus("WalletConnect QR is loading for desktop, laptop, mobile, and tablet. It will open automatically when ready.");
       }
 
       document.addEventListener("infi:walletconnect-ready", () => {
+        const walletConnect = window.INFI_WALLETCONNECT;
+        if (walletConnectOpenPending && walletConnect && walletConnect.ready && walletConnect.open) {
+          walletConnectOpenPending = false;
+          setStatus("Opening WalletConnect QR. Scan it with a supported wallet, then approve INFI Testnet.");
+          openWalletConnect(walletConnect);
+          return;
+        }
         if (status.textContent.includes("WalletConnect")) {
-          setStatus("WalletConnect QR is ready. Tap WalletConnect QR to connect from desktop, mobile, or tablet.");
+          setStatus("WalletConnect QR is ready for desktop, laptop, mobile, and tablet.");
         }
       });
 
       document.addEventListener("infi:walletconnect-error", () => {
+        walletConnectOpenPending = false;
         if (status.textContent.includes("WalletConnect")) {
           setStatus("WalletConnect QR could not load here. Use a wallet browser link, injected wallet, or manual setup.");
         }

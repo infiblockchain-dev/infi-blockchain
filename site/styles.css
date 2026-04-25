@@ -105,69 +105,6 @@ h3 {
   background: #02070c;
 }
 
-.cursor-effects {
-  position: fixed;
-  inset: 0;
-  z-index: 90;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 180ms ease;
-}
-
-.cursor-effects.is-visible {
-  opacity: 1;
-}
-
-.cursor-ring,
-.cursor-orb,
-.cursor-trail {
-  position: fixed;
-  top: 0;
-  left: 0;
-  border-radius: 999px;
-  translate: -50% -50%;
-  transform: translate3d(var(--cursor-x, 50vw), var(--cursor-y, 50vh), 0);
-  transition: width 180ms ease, height 180ms ease, border-color 180ms ease, opacity 180ms ease;
-  animation-delay: var(--cursor-delay, 0s);
-}
-
-.cursor-ring {
-  width: 46px;
-  height: 46px;
-  border: 1px solid rgba(32, 217, 255, 0.34);
-  box-shadow: 0 0 22px rgba(32, 217, 255, 0.16), inset 0 0 16px rgba(34, 255, 154, 0.08);
-  animation: cursorRingPulse 2.4s ease-in-out infinite;
-}
-
-.cursor-orb {
-  width: 10px;
-  height: 10px;
-  background: var(--green);
-  box-shadow: 0 0 18px rgba(34, 255, 154, 0.72), 0 0 16px rgba(32, 217, 255, 0.44);
-}
-
-.cursor-trail {
-  width: 22px;
-  height: 22px;
-  background: radial-gradient(circle, rgba(32, 217, 255, 0.22), transparent 68%);
-  opacity: 0.52;
-  transition-duration: 260ms;
-}
-
-.trail-two {
-  width: 34px;
-  height: 34px;
-  background: radial-gradient(circle, rgba(34, 255, 154, 0.16), transparent 70%);
-  transition-duration: 360ms;
-}
-
-.cursor-effects.is-active .cursor-ring {
-  width: 66px;
-  height: 66px;
-  border-color: rgba(34, 255, 154, 0.48);
-  box-shadow: 0 0 28px rgba(34, 255, 154, 0.22), inset 0 0 20px rgba(32, 217, 255, 0.1);
-}
-
 .mesh-line,
 .chain-spine,
 .architecture-band,
@@ -1507,19 +1444,6 @@ pre {
   background: rgba(2, 7, 12, 0.9);
   font: inherit;
   font-weight: 720;
-}
-
-@keyframes cursorRingPulse {
-  0%,
-  100% {
-    opacity: 0.42;
-    scale: 0.92;
-  }
-
-  50% {
-    opacity: 0.82;
-    scale: 1.08;
-  }
 }
 
 @keyframes headerScan {
@@ -3528,4 +3452,3 @@ nav a:hover {
   background: radial-gradient(ellipse at 50% 47%, rgba(34, 255, 154, 0.045), transparent 65%);
   border-radius: 10px;
 }
-
