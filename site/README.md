@@ -62,6 +62,7 @@ It includes:
 
 - one-click `wallet_addEthereumChain`
 - one-click `wallet_switchEthereumChain`
+- Check RPC button for Render cold starts and wallet connectivity warnings
 - desktop and laptop injected wallet support
 - mobile and tablet wallet browser support
 - mobile links for MetaMask, Coinbase Wallet, and Trust Wallet

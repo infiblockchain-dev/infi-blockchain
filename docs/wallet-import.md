@@ -105,6 +105,7 @@ The current public testnet page supports:
 - desktop and laptop injected EVM wallets through `wallet_switchEthereumChain`
 - mobile and tablet wallet browsers that inject `window.ethereum`
 - mobile deep links for common wallets that open the setup page inside the wallet browser
+- public RPC check/wake button before wallet import
 - copyable full setup text for wallets that do not support automatic import
 - copyable individual manual fields
 - downloadable chain metadata at `/assets/chains/infi-testnet.json`
@@ -118,6 +119,21 @@ Trust Wallet: https://link.trustwallet.com/open_url?coin_id=60&url=https%3A%2F%2
 ```
 
 Important: WalletConnect QR support is still a planned dapp session flow. It should be added through WalletConnect/Reown AppKit after the project has a production WalletConnect project ID and the final INFI Scan dapp flow.
+
+If a wallet shows an RPC connectivity warning such as "Unable to connect to INFI Testnet", first verify:
+
+```text
+https://infi-testnet-rpc.onrender.com/health
+```
+
+The expected response includes:
+
+```text
+"status":"ok"
+"chainId":"0x18062"
+```
+
+Free hosted RPC services can have a cold start. If the first wallet attempt times out, wake the RPC with the health URL or the Check RPC button, then retry adding or switching the network.
 
 ## Mainnet Metadata
 

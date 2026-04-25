@@ -254,6 +254,7 @@ Current implemented setup support:
 - injected mobile and tablet wallet browsers
 - one-click add network
 - one-click switch network
+- Check RPC button to wake and verify the public endpoint
 - mobile deep links for MetaMask, Coinbase Wallet, and Trust Wallet
 - copyable full network setup
 - copyable manual setup fields
