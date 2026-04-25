@@ -67,7 +67,7 @@ async function loadAppKit() {
     metadata,
     projectId: REOWN_PROJECT_ID,
     customRpcUrls: {
-      [INFI_TESTNET_CAIP_ID]: INFI_RPC_URL
+      [INFI_TESTNET_CAIP_ID]: [{ url: INFI_RPC_URL }]
     },
     chainImages: {
       [INFI_TESTNET_CHAIN_ID]: INFI_CHAIN_ICON_URL
