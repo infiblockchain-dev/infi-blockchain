@@ -14,6 +14,7 @@ testnet launch flow.
 The supplied logo image was converted into:
 
 - `assets/brand/infi-logo.png`
+- `assets/brand/infi-logo-transparent.png`
 - `assets/brand/infi-social-preview.png`
 - `assets/icons/favicon-16.png`
 - `assets/icons/favicon-32.png`
@@ -21,6 +22,7 @@ The supplied logo image was converted into:
 - `assets/icons/icon-192.png`
 - `assets/icons/icon-512.png`
 - `assets/tokens/invertx-logo.png`
+- `assets/tokens/invertx-logo-transparent.png`
 - `assets/tokens/invertx-icon-512.png`
 - `assets/tokens/invertx-icon-256.png`
 - `assets/tokens/invertx-icon-128.png`
@@ -73,3 +75,10 @@ The faucet page currently supports local development RPC at `http://127.0.0.1:85
 - `https://scan.infi.infi/`
 
 Important: `.infi` requires a real DNS/resolution strategy before it will work in normal public browsers.
+
+## Public Disclosure Boundary
+
+The public website should focus on decentralization, transparency, wallet
+onboarding, testnet safety, and user experience. Internal core concepts,
+security playbooks, private operational details, and sensitive data should not
+be published in public website copy.
