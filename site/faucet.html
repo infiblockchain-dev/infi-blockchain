@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>INFI Testnet Faucet | Free test InvertX</title>
+    <meta
+      name="description"
+      content="Claim free INFI Testnet test InvertX for development. test InvertX is non-tradable and has no redeemable real-world value."
+    >
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <meta name="theme-color" content="#0bbf6a">
+    <link rel="canonical" href="https://infi.infi/faucet.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="INFI Blockchain">
+    <meta property="og:title" content="INFI Testnet Faucet">
+    <meta property="og:description" content="Claim free test InvertX for INFI Testnet development.">
+    <meta property="og:url" content="https://infi.infi/faucet.html">
+    <meta property="og:image" content="https://infi.infi/assets/tokens/invertx-icon-512.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="INFI Testnet Faucet">
+    <meta name="twitter:description" content="Claim free test InvertX for INFI Testnet development.">
+    <meta name="twitter:image" content="https://infi.infi/assets/tokens/invertx-icon-512.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/tokens/invertx-favicon-16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/tokens/invertx-favicon-32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/tokens/invertx-icon-256.png">
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="INFI Blockchain home">
+        <img src="/assets/brand/infi-logo.png" alt="INFI Blockchain logo" width="52" height="52">
+        <span>INFI</span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="/">Home</a>
+        <a href="/testnet.html">Testnet</a>
+        <a href="#claim">Claim</a>
+        <a href="#policy">Policy</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero testnet-hero">
+        <div class="hero-copy">
+          <p class="eyebrow">INFI Testnet Faucet</p>
+          <h1>Claim test InvertX</h1>
+          <p class="hero-text">
+            Get free testnet gas for local INFI development. test InvertX is
+            non-tradable, testnet-only, and has no redeemable real-world value.
+          </p>
+        </div>
+        <div class="hero-mark" aria-hidden="true">
+          <img src="/assets/tokens/invertx-logo.png" alt="">
+        </div>
+      </section>
+
+      <section class="section" id="claim">
+        <div class="section-heading">
+          <p class="eyebrow">Claim</p>
+          <h2>Local Dev Faucet</h2>
+        </div>
+        <form class="faucet-form" id="faucet-form">
+          <label>
+            Wallet address
+            <input
+              id="wallet-address"
+              name="wallet-address"
+              inputmode="text"
+              autocomplete="off"
+              placeholder="0x1111111111111111111111111111111111111111"
+              required
+            >
+          </label>
+
+          <label>
+            Amount
+            <select id="claim-amount" name="claim-amount">
+              <option value="1000000000000000000000">1,000 test InvertX</option>
+              <option value="5000000000000000000000">5,000 test InvertX</option>
+              <option value="10000000000000000000000">10,000 test InvertX</option>
+            </select>
+          </label>
+
+          <label>
+            RPC URL
+            <input id="rpc-url" name="rpc-url" value="http://127.0.0.1:8545" required>
+          </label>
+
+          <button class="button primary" type="submit">Claim test InvertX</button>
+          <p class="status" id="faucet-status" role="status">Ready to claim from the local dev faucet.</p>
+        </form>
+      </section>
+
+      <section class="section" id="policy">
+        <div class="section-heading">
+          <p class="eyebrow">Policy</p>
+          <h2>Testnet Only</h2>
+        </div>
+        <div class="feature-grid">
+          <article>
+            <h3>Monthly Limit</h3>
+            <p>Maximum 100,000 test InvertX per wallet per calendar month on public testnet.</p>
+          </article>
+          <article>
+            <h3>Reference Display</h3>
+            <p>1 test InvertX = 1.25 USDT is the InvertX reference value display for testnet UI only.</p>
+          </article>
+          <article>
+            <h3>Not Tradable</h3>
+            <p>test InvertX cannot be traded, redeemed, sold, or treated as a financial asset.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const FAUCET_ADDRESS = "0x2222222222222222222222222222222222222222";
+      const status = document.getElementById("faucet-status");
+
+      function setStatus(message) {
+        status.textContent = message;
+      }
+
+      function isAddress(value) {
+        return /^0x[a-fA-F0-9]{40}$/.test(value);
+      }
+
+      function toHexPayload(text) {
+        return Array.from(new TextEncoder().encode(text))
+          .map((byte) => byte.toString(16).padStart(2, "0"))
+          .join("");
+      }
+
+      async function rpc(url, method, params) {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params })
+        });
+        const json = await response.json();
+        if (json.error) {
+          throw new Error(json.error.message || "RPC error");
+        }
+        return json.result;
+      }
+
+      document.getElementById("faucet-form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const wallet = document.getElementById("wallet-address").value.trim();
+        const amount = document.getElementById("claim-amount").value;
+        const rpcUrl = document.getElementById("rpc-url").value.trim();
+
+        if (!isAddress(wallet)) {
+          setStatus("Enter a valid 0x wallet address.");
+          return;
+        }
+
+        try {
+          setStatus("Reading faucet nonce...");
+          const nonceHex = await rpc(rpcUrl, "eth_getTransactionCount", [FAUCET_ADDRESS, "latest"]);
+          const nonce = Number.parseInt(nonceHex, 16);
+          const payload = `infi:transfer:${FAUCET_ADDRESS}:${wallet}:${amount}:${nonce}`;
+          const rawTx = `0x${toHexPayload(payload)}`;
+
+          setStatus("Submitting faucet transfer...");
+          const txHash = await rpc(rpcUrl, "eth_sendRawTransaction", [rawTx]);
+
+          setStatus(`Claim submitted: ${txHash}`);
+        } catch (error) {
+          setStatus(error && error.message ? error.message : "Faucet claim failed.");
+        }
+      });
+    </script>
+  </body>
+</html>
+

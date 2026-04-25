@@ -43,6 +43,7 @@ The site includes:
 The testnet wallet setup page is:
 
 - `testnet.html`
+- `faucet.html`
 
 It includes:
 
@@ -52,6 +53,8 @@ It includes:
 - InvertX reference value display for testnet
 - no-real-world-value warning
 - manual wallet setup details
+
+The faucet page currently supports local development RPC at `http://127.0.0.1:8545` using the dev-only raw transfer payload.
 
 ## Official Domains
 

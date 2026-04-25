@@ -180,6 +180,12 @@ The faucet must:
 - log claims for transparency
 - expose faucet status
 
+Current prototype:
+
+- static faucet page exists at `site/faucet.html`
+- local dev faucet can submit dev-only transfers through `eth_sendRawTransaction`
+- server-side monthly cap enforcement is still pending
+
 Recommended claim policy:
 
 ```text

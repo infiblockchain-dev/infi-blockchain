@@ -26,6 +26,7 @@ site/
 - `site/assets/tokens/invertx-icon-512.png`
 - `site/assets/chains/infi-testnet.json`
 - `site/testnet.html`
+- `site/faucet.html`
 
 ## Step 1: Confirm the Official Domains
 

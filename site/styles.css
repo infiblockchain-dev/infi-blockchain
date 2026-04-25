@@ -256,6 +256,36 @@ article p,
   gap: 14px;
 }
 
+.faucet-form {
+  display: grid;
+  max-width: 760px;
+  gap: 18px;
+  padding: 26px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+}
+
+.faucet-form label {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.faucet-form input,
+.faucet-form select {
+  min-height: 48px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  background: #fff;
+  font: inherit;
+  font-weight: 700;
+}
+
 .manual-grid div {
   display: grid;
   gap: 6px;

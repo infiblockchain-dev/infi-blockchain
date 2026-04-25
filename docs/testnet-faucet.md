@@ -2,6 +2,18 @@
 
 The INFI Testnet faucet distributes free test InvertX tokens.
 
+Prototype page:
+
+```text
+https://infi.infi/faucet.html
+```
+
+Local development preview:
+
+```text
+http://127.0.0.1:8080/faucet.html
+```
+
 ## Token Identity
 
 ```text
@@ -74,6 +86,25 @@ The faucet must:
 - link every claim to INFI Scan
 - log claims for abuse review
 - expose faucet health status
+
+## Current Prototype
+
+The current static faucet prototype:
+
+- accepts a wallet address
+- reads the faucet nonce from local RPC
+- builds the temporary dev raw transaction payload
+- submits it through `eth_sendRawTransaction`
+- displays the returned transaction hash
+
+The prototype uses:
+
+```text
+Faucet address: 0x2222222222222222222222222222222222222222
+Default local RPC: http://127.0.0.1:8545
+```
+
+This is not a production faucet backend yet. Public testnet needs server-side enforcement for the monthly cap and abuse controls.
 
 ## Anti-Abuse Rules
 
