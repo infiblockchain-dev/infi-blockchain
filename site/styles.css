@@ -97,6 +97,8 @@ h3 {
 .node-dot,
 .node-packet,
 .binary-stream,
+.binary-ribbon,
+.transfer-pulse,
 .architecture-chip {
   position: absolute;
   display: block;
@@ -120,6 +122,18 @@ h3 {
   background: linear-gradient(90deg, transparent, rgba(34, 255, 154, 0.8), transparent);
   filter: blur(1px);
   animation: lineFlow 7.5s linear infinite;
+  animation-delay: var(--line-delay, 0s);
+}
+
+.mesh-line::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(32, 217, 255, 0.18), rgba(34, 255, 154, 0.22), rgba(32, 217, 255, 0.12));
+  opacity: 0;
+  scale: 0 1;
+  transform-origin: left center;
+  animation: lineConnect 11s ease-in-out infinite;
   animation-delay: var(--line-delay, 0s);
 }
 
@@ -375,6 +389,84 @@ h3 {
   bottom: 9%;
   max-width: 34ch;
   animation-delay: 10s;
+}
+
+.binary-ribbon {
+  min-width: 36ch;
+  color: rgba(201, 231, 223, 0.16);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.68rem;
+  font-weight: 760;
+  letter-spacing: 0;
+  text-shadow: 0 0 12px rgba(32, 217, 255, 0.18);
+  white-space: nowrap;
+  animation: ribbonTravel 24s linear infinite;
+}
+
+.binary-ribbon::after {
+  content: "  +1  tx  0110  verify  transfer  settle";
+  color: rgba(34, 255, 154, 0.2);
+}
+
+.ribbon-one {
+  top: 22%;
+  left: -42ch;
+}
+
+.ribbon-two {
+  top: 58%;
+  right: -48ch;
+  color: rgba(34, 255, 154, 0.14);
+  animation-name: ribbonTravelReverse;
+  animation-delay: 7s;
+}
+
+.ribbon-three {
+  left: -52ch;
+  bottom: 20%;
+  animation-delay: 14s;
+}
+
+.transfer-pulse {
+  min-width: 34px;
+  padding: 5px 7px;
+  border: 1px solid rgba(34, 255, 154, 0.22);
+  border-radius: 8px;
+  background: rgba(2, 7, 12, 0.62);
+  color: rgba(239, 255, 249, 0.38);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.66rem;
+  font-weight: 900;
+  text-align: center;
+  text-transform: uppercase;
+  opacity: 0;
+  box-shadow: 0 0 16px rgba(34, 255, 154, 0.12);
+  animation: transferAcross 12s linear infinite;
+}
+
+.transfer-one {
+  top: 33%;
+  left: 11%;
+  --move-x: 70vw;
+  --move-y: 6vh;
+}
+
+.transfer-two {
+  top: 54%;
+  right: 8%;
+  --move-x: -62vw;
+  --move-y: 18vh;
+  border-color: rgba(32, 217, 255, 0.25);
+  box-shadow: 0 0 16px rgba(32, 217, 255, 0.12);
+  animation-delay: 4s;
+}
+
+.transfer-three {
+  left: 18%;
+  bottom: 12%;
+  --move-x: 56vw;
+  --move-y: -38vh;
+  animation-delay: 8s;
 }
 
 .architecture-chip {
@@ -777,6 +869,8 @@ nav a:hover,
   width: min(100%, 300px);
   aspect-ratio: 1;
   object-fit: contain;
+  mix-blend-mode: screen;
+  filter: drop-shadow(0 0 22px rgba(233, 180, 76, 0.22));
 }
 
 .token-showcase div {
@@ -823,11 +917,25 @@ nav a:hover,
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.ecosystem-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.42fr);
+  gap: 18px;
+  align-items: stretch;
+}
+
+.ecosystem-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
 .feature-grid.four {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 article,
+.invertx-focus,
 .metric-row div,
 .manual-grid div,
 .split,
@@ -844,6 +952,7 @@ article {
 }
 
 article p,
+.invertx-focus p,
 .split p,
 .safety p,
 .builder-copy p {
@@ -857,6 +966,27 @@ article p,
   color: var(--green);
   font-size: 0.84rem;
   font-weight: 920;
+}
+
+.invertx-focus {
+  display: grid;
+  align-content: center;
+  gap: 20px;
+  padding: 24px;
+  border-color: rgba(233, 180, 76, 0.28);
+  box-shadow: 0 0 28px rgba(233, 180, 76, 0.1), var(--shadow-blue);
+}
+
+.invertx-focus img {
+  width: min(100%, 220px);
+  justify-self: center;
+  object-fit: contain;
+  mix-blend-mode: screen;
+  filter: drop-shadow(0 0 18px rgba(233, 180, 76, 0.2));
+}
+
+.invertx-focus h3 {
+  color: var(--ink);
 }
 
 .metric-row {
@@ -1048,6 +1178,20 @@ pre {
   }
 }
 
+@keyframes lineConnect {
+  0%,
+  100% {
+    opacity: 0;
+    scale: 0 1;
+  }
+
+  28%,
+  64% {
+    opacity: 0.72;
+    scale: 1 1;
+  }
+}
+
 @keyframes packetRun {
   0% {
     translate: 0 0;
@@ -1078,6 +1222,57 @@ pre {
 
   100% {
     translate: 0 28px;
+    opacity: 0;
+  }
+}
+
+@keyframes ribbonTravel {
+  0% {
+    translate: 0 0;
+    opacity: 0;
+  }
+
+  10%,
+  78% {
+    opacity: 0.72;
+  }
+
+  100% {
+    translate: calc(100vw + 60ch) 0;
+    opacity: 0;
+  }
+}
+
+@keyframes ribbonTravelReverse {
+  0% {
+    translate: 0 0;
+    opacity: 0;
+  }
+
+  10%,
+  78% {
+    opacity: 0.62;
+  }
+
+  100% {
+    translate: calc(-100vw - 60ch) 0;
+    opacity: 0;
+  }
+}
+
+@keyframes transferAcross {
+  0% {
+    translate: 0 0;
+    opacity: 0;
+  }
+
+  12%,
+  72% {
+    opacity: 0.66;
+  }
+
+  100% {
+    translate: var(--move-x, 60vw) var(--move-y, 0);
     opacity: 0;
   }
 }
@@ -1203,6 +1398,10 @@ pre {
   .feature-grid.four {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .ecosystem-layout {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 820px) {
@@ -1287,6 +1486,28 @@ pre {
     font-size: 0.66rem;
   }
 
+  .binary-ribbon {
+    min-width: 30ch;
+    color: rgba(201, 231, 223, 0.12);
+    font-size: 0.58rem;
+    animation-duration: 30s;
+  }
+
+  .binary-ribbon::after {
+    color: rgba(34, 255, 154, 0.14);
+  }
+
+  .ribbon-three,
+  .transfer-three {
+    display: none;
+  }
+
+  .transfer-pulse {
+    scale: 0.82;
+    color: rgba(239, 255, 249, 0.3);
+    animation-duration: 14s;
+  }
+
   .binary-one,
   .binary-three {
     right: 4%;
@@ -1324,6 +1545,8 @@ pre {
   .section-heading.wide,
   .builders-band,
   .architecture-grid,
+  .ecosystem-layout,
+  .ecosystem-grid,
   .feature-grid,
   .feature-grid.four,
   .metric-row,
